@@ -36,7 +36,7 @@ enabling users to skip tracks, pause, and resume music playback with ease.
 
 - [x] **Customizable Delays**: Adjust the long-press delay to fit your preferred interaction speed.
 
-- [ ] **Onboarding Screen**: Introduce users to SoundTap's features and functionality with an
+- [x] **Onboarding Screen**: Introduce users to SoundTap's features and functionality with an
   interactive onboarding screen.
 
 - [x] **Notifications**: Control media playback from the notification shade with SoundTap's
