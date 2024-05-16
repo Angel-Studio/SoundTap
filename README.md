@@ -39,9 +39,6 @@ enabling users to skip tracks, pause, and resume music playback with ease.
 - [x] **Onboarding Screen**: Introduce users to SoundTap's features and functionality with an
   interactive onboarding screen.
 
-- [x] **Notifications**: Control media playback from the notification shade with SoundTap's
-  integrated controls.
-
 ## 🌏 Languages
 
 - [x] **en-US**
