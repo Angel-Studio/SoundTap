@@ -45,6 +45,10 @@ enabling users to skip tracks, pause, and resume music playback with ease.
 ## 🌏 Languages
 
 - [x] **en-US**
+- [ ] **fr-FR**
+- [ ] **es-ES**
+- [ ] **de-DE**
+- More languages coming soon!
 
 ## 🚀 Getting Started
 
