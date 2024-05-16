@@ -3,6 +3,10 @@ package fr.angel.soundtap.ui
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -12,14 +16,20 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.SettingsAccessibility
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -62,6 +72,10 @@ fun OnboardingScreen(
 	val context = LocalContext.current
 	val accessibilityServiceUiState by SoundTapAccessibilityService.uiState.collectAsStateWithLifecycle()
 	val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
+
+	var hasAcceptedAccessibilityServiceConditions by rememberSaveable { mutableStateOf(false) }
+	var dialogVisibility by rememberSaveable { mutableStateOf(false) }
+
 	val onboardingPages: List<OnboardingPage> = listOf(
 		OnboardingPage(
 			title = "Welcome to SoundTap",
@@ -105,10 +119,16 @@ fun OnboardingScreen(
 						"\n\nThe Accessibility Service only allows SoundTap to detect volume button presses and does not collect any other personal data or information. It does NOT read the screen." +
 						"\n\nTo enable the Accessibility Service, tap the button below and enable SoundTap from the list."
 			),
-			nextButtonEnabled = accessibilityServiceUiState.isRunning,
+			nextButtonEnabled = accessibilityServiceUiState.isRunning && hasAcceptedAccessibilityServiceConditions,
 			animationImage = R.raw.empty,
 			actionButtonLabel = "Open Accessibility Settings",
-			actionButtonOnClick = { GlobalHelper.openAccessibilitySettings(context) },
+			actionButtonOnClick = {
+				if (hasAcceptedAccessibilityServiceConditions.not()) {
+					dialogVisibility = true
+				} else {
+					GlobalHelper.openAccessibilitySettings(context)
+				}
+			},
 		),
 		OnboardingPage(
 			title = "All Set!",
@@ -130,6 +150,12 @@ fun OnboardingScreen(
 	)
 
 	var currentPage by rememberSaveable { mutableIntStateOf(0) }
+
+	LaunchedEffect(key1 = currentPage) {
+		if (hasAcceptedAccessibilityServiceConditions.not()) {
+			dialogVisibility = true
+		}
+	}
 
 	Column(
 		modifier = modifier.fillMaxSize(),
@@ -191,6 +217,12 @@ fun OnboardingScreen(
 			}
 		}
 	}
+
+	AcceptAccessibilityServiceDialog(
+		visible = dialogVisibility,
+		onAccept = { hasAcceptedAccessibilityServiceConditions = true },
+		onDismiss = { dialogVisibility = false }
+	)
 }
 
 @Composable
@@ -265,5 +297,54 @@ private fun TemplatePage(
 		Spacer(modifier = Modifier.weight(1f))
 
 		bottomContent()
+	}
+}
+
+@Composable
+private fun AcceptAccessibilityServiceDialog(
+	modifier: Modifier = Modifier,
+	visible: Boolean,
+	onAccept: () -> Unit,
+	onDismiss: () -> Unit,
+) {
+	AnimatedVisibility(
+		visible = visible,
+		modifier = modifier,
+		enter = fadeIn() + scaleIn(),
+		exit = fadeOut() + scaleOut()
+	) {
+		AlertDialog(
+			icon = {
+				Icon(
+					imageVector = Icons.Default.SettingsAccessibility,
+					contentDescription = null,
+				)
+			},
+			title = {
+				Text(text = "Accessibility Service")
+			},
+			text = {
+				Text(
+					text = "SoundTap requires the Accessibility Service permission to detect volume button presses and control your music playback." +
+							"\nThe Accessibility Service only allows SoundTap to detect volume button presses and does not collect any other personal data or information. It does NOT read the screen." +
+							"\n\nBy accepting, you agree to the Accessibility Service conditions."
+				)
+			},
+			confirmButton = {
+				Button(
+					onClick = onAccept
+				) {
+					Text("Accept")
+				}
+			},
+			dismissButton = {
+				TextButton(
+					onClick = onDismiss
+				) {
+					Text("Reject")
+				}
+			},
+			onDismissRequest = onDismiss
+		)
 	}
 }
