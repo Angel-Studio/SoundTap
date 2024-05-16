@@ -222,7 +222,10 @@ fun OnboardingScreen(
 
 	AcceptAccessibilityServiceDialog(
 		visible = dialogVisibility,
-		onAccept = { hasAcceptedAccessibilityServiceConditions = true },
+		onAccept = {
+			hasAcceptedAccessibilityServiceConditions = true
+			dialogVisibility = false
+		},
 		onDismiss = { dialogVisibility = false }
 	)
 }
