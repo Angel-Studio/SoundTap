@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SoundTap</string>
+    <string name="accessibility_service_label">SoundTap</string>
+    <string name="accessibility_service_description">SoundTap uses the accessibility service to receive events of the volume buttons getting pressed.\n\nNo data other than volume buttons events is collected.</string>
+</resources>

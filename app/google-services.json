@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "971847955728",
+    "project_id": "soundtap-android",
+    "storage_bucket": "soundtap-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:971847955728:android:79a90c95099fdfb65ca195",
+        "android_client_info": {
+          "package_name": "fr.angel.soundtap"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVDiAsQB2J83hr_wg3VkHKW693G-eyZaw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
