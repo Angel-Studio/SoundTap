@@ -152,7 +152,9 @@ fun OnboardingScreen(
 	var currentPage by rememberSaveable { mutableIntStateOf(0) }
 
 	LaunchedEffect(key1 = currentPage) {
-		if (hasAcceptedAccessibilityServiceConditions.not()) {
+		if (hasAcceptedAccessibilityServiceConditions.not()
+			&& currentPage == onboardingPages.indexOfLast { it.title == "Accessibility Service" }
+		) {
 			dialogVisibility = true
 		}
 	}
