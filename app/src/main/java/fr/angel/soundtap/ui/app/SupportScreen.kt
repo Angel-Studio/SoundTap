@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import fr.angel.soundtap.GlobalHelper
 import fr.angel.soundtap.ui.components.SettingsItem
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -117,16 +118,16 @@ fun SharedTransitionScope.SupportScreen(
 					onClick = { uriHandler.openUri("https://discord.gg/8NfBrxKs4T") }
 				)
 				SettingsItem(
-					title = "Terms & Conditions",
-					subtitle = "Read the terms and conditions of the app",
-					icon = Icons.Default.Gavel,
-					onClick = { uriHandler.openUri("https://github.com/Angel-Studio/SoundTap/blob/master/TERMS-CONDITIONS.MD") }
-				)
-				SettingsItem(
 					title = "Privacy Policy",
 					subtitle = "Read the privacy policy of the app",
 					icon = Icons.Default.Policy,
-					onClick = { uriHandler.openUri("https://github.com/Angel-Studio/SoundTap/blob/master/PRIVACY-POLICY.MD") }
+					onClick = { uriHandler.openUri(GlobalHelper.PRIVACY_POLICY_URL) }
+				)
+				SettingsItem(
+					title = "Terms of Service",
+					subtitle = "Read the terms of service of the app",
+					icon = Icons.Default.Gavel,
+					onClick = { uriHandler.openUri(GlobalHelper.TERMS_OF_SERVICE_URL) }
 				)
 				Spacer(modifier = Modifier.height(8.dp))
 			}

@@ -7,6 +7,12 @@ import android.provider.Settings
 
 
 object GlobalHelper {
+
+	const val PRIVACY_POLICY_URL =
+		"https://github.com/Angel-Studio/SoundTap/blob/master/PRIVACY-POLICY.MD"
+	const val TERMS_OF_SERVICE_URL =
+		"https://github.com/Angel-Studio/SoundTap/blob/master/TERMS-CONDITIONS.MD"
+
 	fun openAccessibilitySettings(context: Context) {
 		val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
