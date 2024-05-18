@@ -3,40 +3,48 @@ package fr.angel.soundtap.ui
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.SettingsAccessibility
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withLink
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
@@ -52,6 +60,7 @@ import fr.angel.soundtap.GlobalHelper
 import fr.angel.soundtap.MainViewModel
 import fr.angel.soundtap.R
 import fr.angel.soundtap.service.SoundTapAccessibilityService
+import kotlinx.coroutines.launch
 
 data class OnboardingPage(
 	val title: String,
@@ -64,18 +73,26 @@ data class OnboardingPage(
 	val nextButtonEnabled: Boolean = true,
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardingScreen(
 	modifier: Modifier = Modifier,
 	mainViewModel: MainViewModel,
 ) {
 	val context = LocalContext.current
+	val density = LocalDensity.current
+
 	val accessibilityServiceUiState by SoundTapAccessibilityService.uiState.collectAsStateWithLifecycle()
 	val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
 
+	var hasAcceptedPrivacyPolicy by rememberSaveable { mutableStateOf(false) }
 	var hasAcceptedAccessibilityServiceConditions by rememberSaveable { mutableStateOf(false) }
-	var dialogVisibility by rememberSaveable { mutableStateOf(false) }
 
+	val sheetState = rememberModalBottomSheetState(
+		skipPartiallyExpanded = true,
+	)
+	val scope = rememberCoroutineScope()
+	var showBottomSheet by remember { mutableStateOf(false) }
 	val onboardingPages: List<OnboardingPage> = listOf(
 		OnboardingPage(
 			title = "Welcome to SoundTap",
@@ -84,7 +101,52 @@ fun OnboardingScreen(
 						"\n\nWith intuitive volume button controls, customizable settings, and seamless integration with your favorite media players, SoundTap makes managing your music a breeze." +
 						"\n\nJoin us on this journey to enhance your music listening experience!"
 			),
+			nextButtonEnabled = hasAcceptedPrivacyPolicy,
 			animationImage = R.raw.welcome_music,
+			bottomContent = {
+				Spacer(modifier = Modifier.weight(1f))
+				Row(
+					verticalAlignment = Alignment.CenterVertically,
+				) {
+					Checkbox(
+						checked = hasAcceptedPrivacyPolicy,
+						onCheckedChange = { hasAcceptedPrivacyPolicy = it },
+					)
+					Text(
+						text = buildAnnotatedString {
+							append("I have read and agree to the ")
+
+							withLink(link = LinkAnnotation.Url(GlobalHelper.PRIVACY_POLICY_URL)) {
+								withStyle(
+									style = SpanStyle(
+										color = MaterialTheme.colorScheme.primary,
+										fontWeight = FontWeight.Bold
+									)
+								) {
+									append("privacy policy")
+								}
+							}
+
+							append(" and the ")
+
+							withLink(link = LinkAnnotation.Url(GlobalHelper.TERMS_OF_SERVICE_URL)) {
+								withStyle(
+									style = SpanStyle(
+										color = MaterialTheme.colorScheme.primary,
+										fontWeight = FontWeight.Bold
+									)
+								) {
+									append("terms of service")
+								}
+							}
+
+							append(".")
+						},
+						style = MaterialTheme.typography.bodyMedium,
+					)
+				}
+				Spacer(modifier = Modifier.weight(1f))
+			},
 		),
 		OnboardingPage(
 			title = "Access Media Controls",
@@ -124,7 +186,7 @@ fun OnboardingScreen(
 			actionButtonLabel = "Open Accessibility Settings",
 			actionButtonOnClick = {
 				if (hasAcceptedAccessibilityServiceConditions.not()) {
-					dialogVisibility = true
+					showBottomSheet = true
 				} else {
 					GlobalHelper.openAccessibilitySettings(context)
 				}
@@ -155,79 +217,159 @@ fun OnboardingScreen(
 		if (hasAcceptedAccessibilityServiceConditions.not()
 			&& currentPage == onboardingPages.indexOfLast { it.title == "Accessibility Service" }
 		) {
-			dialogVisibility = true
+			showBottomSheet = true
 		}
 	}
-
-	Column(
-		modifier = modifier.fillMaxSize(),
-		verticalArrangement = Arrangement.Bottom
-	) {
-		AnimatedContent(
-			modifier = Modifier.weight(1f),
-			targetState = currentPage,
-			label = "Onboarding screen",
-		) { page ->
-			val onboardingPage = onboardingPages[page]
-			TemplatePage(
-				modifier = Modifier.fillMaxSize(),
-				title = onboardingPage.title,
-				description = onboardingPage.description,
-				animationImage = onboardingPage.animationImage,
-				tintedAnimation = onboardingPage.tintedAnimation,
-				bottomContent = onboardingPage.bottomContent,
-				actionButtonOnClick = onboardingPage.actionButtonOnClick,
-				actionButtonLabel = onboardingPage.actionButtonLabel,
-				nextButtonEnabled = onboardingPage.nextButtonEnabled,
-			)
-		}
-
-		Row(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(vertical = 16.dp, horizontal = 32.dp),
-			horizontalArrangement = Arrangement.End
+	Scaffold(
+		modifier = modifier.fillMaxSize()
+	) { contentPadding ->
+		Column(
+			modifier = Modifier.padding(contentPadding),
+			verticalArrangement = Arrangement.Bottom
 		) {
-			AnimatedVisibility(visible = currentPage > 0) {
-				TextButton(
-					onClick = { currentPage = (currentPage - 1).coerceAtLeast(0) }
-				) {
-					Text("Previous")
-				}
-			}
-
-			Spacer(modifier = Modifier.weight(1f))
-
-			Button(
-				onClick = {
-					if (currentPage == onboardingPages.size - 1) {
-						mainViewModel.onboardingCompleted()
-						return@Button
-					}
-					currentPage = (currentPage + 1).coerceAtMost(onboardingPages.size - 1)
-				},
-				enabled = onboardingPages[currentPage].nextButtonEnabled
-			) {
-				Text(
-					modifier = Modifier.animateContentSize(),
-					text = when (currentPage) {
-						0 -> "Start"
-						onboardingPages.size - 1 -> "Finish"
-						else -> "Next"
-					}
+			AnimatedContent(
+				modifier = Modifier.weight(1f),
+				targetState = currentPage,
+				label = "Onboarding screen",
+			) { page ->
+				val onboardingPage = onboardingPages[page]
+				TemplatePage(
+					modifier = Modifier.fillMaxSize(),
+					title = onboardingPage.title,
+					description = onboardingPage.description,
+					animationImage = onboardingPage.animationImage,
+					tintedAnimation = onboardingPage.tintedAnimation,
+					bottomContent = onboardingPage.bottomContent,
+					actionButtonOnClick = onboardingPage.actionButtonOnClick,
+					actionButtonLabel = onboardingPage.actionButtonLabel,
+					nextButtonEnabled = onboardingPage.nextButtonEnabled,
 				)
 			}
+
+			Row(
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(vertical = 16.dp, horizontal = 32.dp),
+				horizontalArrangement = Arrangement.End
+			) {
+				AnimatedVisibility(visible = currentPage > 0) {
+					TextButton(
+						onClick = { currentPage = (currentPage - 1).coerceAtLeast(0) }
+					) {
+						Text("Previous")
+					}
+				}
+
+				Spacer(modifier = Modifier.weight(1f))
+
+				Button(
+					onClick = {
+						if (currentPage == onboardingPages.size - 1) {
+							mainViewModel.onboardingCompleted()
+							return@Button
+						}
+						currentPage = (currentPage + 1).coerceAtMost(onboardingPages.size - 1)
+					},
+					enabled = onboardingPages[currentPage].nextButtonEnabled
+				) {
+					Text(
+						modifier = Modifier.animateContentSize(),
+						text = when (currentPage) {
+							0 -> "Start"
+							onboardingPages.size - 1 -> "Finish"
+							else -> "Next"
+						}
+					)
+				}
+			}
+		}
+
+		if (showBottomSheet) {
+			ModalBottomSheet(
+				onDismissRequest = { showBottomSheet = false },
+				sheetState = sheetState,
+				windowInsets = WindowInsets(
+					bottom = BottomSheetDefaults.windowInsets.getBottom(density)
+				)
+			) {
+				Column(
+					modifier = Modifier.padding(16.dp),
+					verticalArrangement = Arrangement.spacedBy(16.dp)
+				) {
+					Text(
+						"Accessibility Service Usage",
+						style = MaterialTheme.typography.headlineMedium
+					)
+
+					Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+						Text(
+							"Personal and Sensitive User Data:",
+							style = MaterialTheme.typography.titleSmall
+						)
+						Text(
+							"SoundTap uses the accessibility service to register volume button click events only. This allows you to control your music playback using volume buttons without unlocking your phone or switching apps. No personal or sensitive user data is collected, stored, or shared.",
+							style = MaterialTheme.typography.bodySmall
+						)
+					}
+
+					Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+						Text(
+							"Core Functionality:",
+							style = MaterialTheme.typography.titleSmall
+						)
+						Text(
+							"To function properly, SoundTap requires accessibility permission to detect volume button presses. This permission is necessary for the core functionality of the app and ensures that you can seamlessly control your music playback. By granting this permission, you acknowledge and consent to its use for this purpose only.",
+							style = MaterialTheme.typography.bodySmall
+						)
+					}
+
+					Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+						Text(
+							"Data Security & Privacy:",
+							style = MaterialTheme.typography.titleSmall
+						)
+						Text(
+							"SoundTap strictly uses the accessibility service for registering volume button events and does not access, collect, or transmit any personal or sensitive data. Your privacy is our top priority." +
+									"\n\nSoundTap does not collect or share any personal data or information through the accessibility service. All operations are conducted locally on your device, ensuring your data remains secure and private." +
+									"\n\nFor more information, please refer to our Privacy Policy.",
+							style = MaterialTheme.typography.bodySmall
+						)
+					}
+
+					Text(
+						"By enabling the accessibility service for SoundTap, you consent to the app using this service solely for detecting volume button events to control media playback. You can disable this permission at any time through your device's accessibility settings.",
+						style = MaterialTheme.typography.bodySmall
+					)
+
+					Row(
+						modifier = Modifier.fillMaxWidth(),
+						horizontalArrangement = Arrangement.SpaceBetween,
+						verticalAlignment = Alignment.CenterVertically
+					) {
+						TextButton(onClick = {
+							scope.launch { sheetState.hide() }.invokeOnCompletion {
+								if (!sheetState.isVisible) {
+									showBottomSheet = false
+								}
+							}
+						}) {
+							Text("Decline")
+						}
+						Button(onClick = {
+							hasAcceptedAccessibilityServiceConditions = true
+							scope.launch { sheetState.hide() }.invokeOnCompletion {
+								if (!sheetState.isVisible) {
+									showBottomSheet = false
+								}
+							}
+						}) {
+							Text("Agree & Continue")
+						}
+					}
+				}
+			}
 		}
 	}
-
-	AcceptAccessibilityServiceDialog(
-		visible = dialogVisibility,
-		onAccept = {
-			hasAcceptedAccessibilityServiceConditions = true
-			dialogVisibility = false
-		},
-		onDismiss = { dialogVisibility = false }
-	)
 }
 
 @Composable
@@ -302,54 +444,5 @@ private fun TemplatePage(
 		Spacer(modifier = Modifier.weight(1f))
 
 		bottomContent()
-	}
-}
-
-@Composable
-private fun AcceptAccessibilityServiceDialog(
-	modifier: Modifier = Modifier,
-	visible: Boolean,
-	onAccept: () -> Unit,
-	onDismiss: () -> Unit,
-) {
-	AnimatedVisibility(
-		visible = visible,
-		modifier = modifier,
-		enter = fadeIn() + scaleIn(),
-		exit = fadeOut() + scaleOut()
-	) {
-		AlertDialog(
-			icon = {
-				Icon(
-					imageVector = Icons.Default.SettingsAccessibility,
-					contentDescription = null,
-				)
-			},
-			title = {
-				Text(text = "Accessibility Service")
-			},
-			text = {
-				Text(
-					text = "SoundTap requires the Accessibility Service permission to detect volume button presses and control your music playback." +
-							"\nThe Accessibility Service only allows SoundTap to detect volume button presses and does not collect any other personal data or information. It does NOT read the screen." +
-							"\n\nBy accepting, you agree to the Accessibility Service conditions."
-				)
-			},
-			confirmButton = {
-				Button(
-					onClick = onAccept
-				) {
-					Text("Accept")
-				}
-			},
-			dismissButton = {
-				TextButton(
-					onClick = onDismiss
-				) {
-					Text("Reject")
-				}
-			},
-			onDismissRequest = onDismiss
-		)
 	}
 }
