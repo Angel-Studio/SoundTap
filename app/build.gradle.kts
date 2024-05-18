@@ -12,11 +12,13 @@ android {
 	namespace = "fr.angel.soundtap"
 	compileSdk = 34
 
+	ndkVersion = "27.0.11718014"
+
 	defaultConfig {
 		applicationId = "fr.angel.soundtap"
 		minSdk = 30
 		targetSdk = 34
-		versionCode = 3
+		versionCode = 11
 		versionName = "1.0.1"
 
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -26,12 +28,19 @@ android {
 	}
 
 	buildTypes {
+
 		release {
-			isMinifyEnabled = false
+			isMinifyEnabled = true
+			isShrinkResources = true
+
 			proguardFiles(
 				getDefaultProguardFile("proguard-android-optimize.txt"),
 				"proguard-rules.pro"
 			)
+
+			ndk {
+				debugSymbolLevel = "FULL"
+			}
 		}
 	}
 	compileOptions {
