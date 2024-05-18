@@ -16,6 +16,7 @@ data class Song(
 	val album: String,
 	val duration: Long,
 	val cover: String,
+	val addedTime: Long = System.currentTimeMillis(),
 ) {
 	companion object {
 		fun bitmapToBase64(bitmap: Bitmap): String {
@@ -45,7 +46,7 @@ data class Song(
 		if (duration != other.duration) return false
 		if (cover != other.cover) return false
 
-		return false
+		return true
 	}
 
 	override fun hashCode(): Int {

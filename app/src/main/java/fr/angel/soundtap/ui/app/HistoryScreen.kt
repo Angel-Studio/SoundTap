@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -54,7 +53,13 @@ fun SharedTransitionScope.HistoryScreen(
 	animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
 	val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
+
 	val songsList = remember(uiState.history) { uiState.history.toList().reversed() }
+	val isHistoryEmpty = songsList.isEmpty()
+
+	val totalSongsPlayed = uiState.totalSongsPlayed
+	val totalSongsSkipped = uiState.totalSongsSkipped
+	val analyticsEnabled = uiState.analyticsEnabled
 
 	Card(
 		modifier = modifier
@@ -103,7 +108,7 @@ fun SharedTransitionScope.HistoryScreen(
 				)
 			}
 			HorizontalDivider()
-			if (songsList.isEmpty()) {
+			if (isHistoryEmpty) {
 				val time by produceState(0f) {
 					while (true) {
 						withInfiniteAnimationFrameMillis {
@@ -115,11 +120,7 @@ fun SharedTransitionScope.HistoryScreen(
 				val shader = remember { RuntimeShader(WOBBLE_SHADER) }
 
 				Column(
-					modifier = Modifier
-						.fillMaxSize()
-						.offset(
-							y = (-48).dp
-						),
+					modifier = Modifier.fillMaxSize(),
 					verticalArrangement = Arrangement.Center,
 					horizontalAlignment = Alignment.CenterHorizontally,
 				) {
@@ -155,21 +156,61 @@ fun SharedTransitionScope.HistoryScreen(
 						fontWeight = FontWeight.SemiBold,
 					)
 					Text(
-						text = "Your history will be displayed here",
+						text = "Your history and stats will be displayed here",
 						modifier = Modifier.align(Alignment.CenterHorizontally),
 						style = MaterialTheme.typography.bodyMedium,
 					)
 				}
-			}
-			LazyColumn(
-				verticalArrangement = Arrangement.spacedBy(4.dp),
-				contentPadding = PaddingValues(4.dp),
-			) {
-				items(songsList) { item ->
-					SongRow(
-						modifier = Modifier.fillMaxWidth(),
-						song = item,
-					)
+			} else {
+				LazyColumn(
+					verticalArrangement = Arrangement.spacedBy(4.dp),
+					contentPadding = PaddingValues(4.dp),
+				) {
+					item {
+						Row(
+							modifier = Modifier
+								.fillMaxWidth()
+								.padding(vertical = 16.dp),
+							horizontalArrangement = Arrangement.spacedBy(16.dp),
+						) {
+							Column(
+								modifier = Modifier.weight(1f),
+								verticalArrangement = Arrangement.spacedBy(8.dp),
+								horizontalAlignment = Alignment.CenterHorizontally,
+							) {
+								Text(
+									text = "Total songs played",
+									style = MaterialTheme.typography.labelSmall,
+								)
+								Text(
+									text = totalSongsPlayed.toString(),
+									style = MaterialTheme.typography.labelLarge,
+									fontWeight = FontWeight.Black
+								)
+							}
+							Column(
+								modifier = Modifier.weight(1f),
+								verticalArrangement = Arrangement.spacedBy(8.dp),
+								horizontalAlignment = Alignment.CenterHorizontally,
+							) {
+								Text(
+									text = "Total songs skipped",
+									style = MaterialTheme.typography.labelSmall,
+								)
+								Text(
+									text = totalSongsSkipped.toString(),
+									style = MaterialTheme.typography.labelLarge,
+									fontWeight = FontWeight.Black
+								)
+							}
+						}
+					}
+					items(songsList, key = { it.addedTime }) { item ->
+						SongRow(
+							modifier = Modifier.fillMaxWidth(),
+							song = item,
+						)
+					}
 				}
 			}
 		}

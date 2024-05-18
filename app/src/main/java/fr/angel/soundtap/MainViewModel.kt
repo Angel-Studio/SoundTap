@@ -33,6 +33,9 @@ data class MainUiState(
 	val workingMode: WorkingMode = WorkingMode.SCREEN_ON_OFF,
 	val longPressDuration: Long = 400L,
 	val history: Set<Song> = emptySet(),
+	val totalSongsPlayed: Int = 0,
+	val totalSongsSkipped: Int = 0,
+	val analyticsEnabled: Boolean = true,
 ) {
 	val defaultScreen: Screens
 		get() = if (onboardingPageCompleted) Screens.App else Screens.Onboarding
@@ -80,6 +83,21 @@ class MainViewModel @Inject constructor(
 		scope.launch {
 			dataStore.history.collect { state ->
 				_uiState.value = _uiState.value.copy(history = state)
+			}
+		}
+		scope.launch {
+			dataStore.totalSongsPlayed.collect { state ->
+				_uiState.value = _uiState.value.copy(totalSongsPlayed = state)
+			}
+		}
+		scope.launch {
+			dataStore.totalSongsSkipped.collect { state ->
+				_uiState.value = _uiState.value.copy(totalSongsSkipped = state)
+			}
+		}
+		scope.launch {
+			dataStore.analyticsEnabled.collect { state ->
+				_uiState.value = _uiState.value.copy(analyticsEnabled = state)
 			}
 		}
 

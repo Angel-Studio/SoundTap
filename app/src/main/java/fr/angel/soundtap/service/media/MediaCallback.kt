@@ -25,6 +25,10 @@ class MediaCallback @Inject constructor(
 	private var playbackState: MutableState<PlaybackState?> = mutableStateOf(null)
 	var playingSong: Song? by mutableStateOf(null)
 
+	private val scope by lazy { CoroutineScope(Dispatchers.IO) }
+
+	var debounceCount = 0
+
 	var isPlaying: Boolean
 		get() = playbackState.value?.state == PlaybackState.STATE_PLAYING
 		set(value) {
@@ -45,10 +49,15 @@ class MediaCallback @Inject constructor(
 		}
 	}
 
-	fun skipToNext() = mediaController.transportControls.skipToNext()
+	fun skipToNext() {
+		mediaController.transportControls.skipToNext()
+		scope.launch { dataStore.incrementTotalSongsSkipped() }
+	}
 
-
-	fun skipToPrevious() = mediaController.transportControls.skipToPrevious()
+	fun skipToPrevious() {
+		mediaController.transportControls.skipToPrevious()
+		scope.launch { dataStore.incrementTotalSongsSkipped() }
+	}
 
 	fun togglePlayPause() = if (isPlaying) {
 		mediaController.transportControls.pause()
@@ -87,11 +96,29 @@ class MediaCallback @Inject constructor(
 					?: Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
 			)
 		).run {
-			playingSong = this
+
+			val isSameAsPrevious = playingSong?.title != title
+					&& playingSong?.artist != artist
+					&& playingSong?.album != album
+					&& playingSong?.duration != duration
+					&& playingSong?.cover == cover
+
+			if (
+				this == playingSong || isSameAsPrevious && debounceCount < 1
+			) {
+				debounceCount++
+				return
+			}
+
+			debounceCount = 0
 
 			CoroutineScope(Dispatchers.IO).launch {
 				dataStore.addToHistory(this@run)
 			}
+
+			scope.launch { dataStore.incrementTotalSongsPlayed() }
+
+			playingSong = this
 		}
 	}
 

@@ -29,8 +29,6 @@ class DataStore @Inject constructor(
 		/* KEYS */
 		val ONBOARDING_COMPLETED = booleanPreferencesKey("onboarding_completed")
 
-		val HISTORY = stringSetPreferencesKey("history")
-
 		/* PREFERENCES */
 		val HAPTIC_FEEDBACK = intPreferencesKey("haptic_feedback")
 		val WORKING_MODE = intPreferencesKey("working_mode")
@@ -39,6 +37,12 @@ class DataStore @Inject constructor(
 
 		/* SETTINGS */
 		val REMOVED_SUPPORTED_MEDIA_PLAYERS = stringSetPreferencesKey("supported_media_players")
+
+		/* ANALYTICS */
+		val ANALYTICS_ENABLED = booleanPreferencesKey("analytics_enabled")
+		val HISTORY = stringSetPreferencesKey("history")
+		val TOTAL_SONGS_PLAYED = intPreferencesKey("total_songs_played")
+		val TOTAL_SONGS_SKIPPED = intPreferencesKey("total_songs_skipped")
 	}
 
 	suspend fun clearHistory() {
@@ -127,5 +131,37 @@ class DataStore @Inject constructor(
 
 	val onboardingCompleted: Flow<Boolean> = application.dataStore.data.map { preferences ->
 		preferences[ONBOARDING_COMPLETED] ?: false
+	}
+
+	suspend fun setAnalyticsEnabled(value: Boolean) {
+		application.dataStore.edit { preferences ->
+			preferences[ANALYTICS_ENABLED] = value
+		}
+	}
+
+	val analyticsEnabled: Flow<Boolean> = application.dataStore.data.map { preferences ->
+		preferences[ANALYTICS_ENABLED] ?: true
+	}
+
+	suspend fun incrementTotalSongsPlayed() {
+		application.dataStore.edit { preferences ->
+			val totalSongsPlayed = preferences[TOTAL_SONGS_PLAYED] ?: 0
+			preferences[TOTAL_SONGS_PLAYED] = totalSongsPlayed + 1
+		}
+	}
+
+	suspend fun incrementTotalSongsSkipped() {
+		application.dataStore.edit { preferences ->
+			val totalSongsSkipped = preferences[TOTAL_SONGS_SKIPPED] ?: 0
+			preferences[TOTAL_SONGS_SKIPPED] = totalSongsSkipped + 1
+		}
+	}
+
+	val totalSongsPlayed: Flow<Int> = application.dataStore.data.map { preferences ->
+		preferences[TOTAL_SONGS_PLAYED] ?: 0
+	}
+
+	val totalSongsSkipped: Flow<Int> = application.dataStore.data.map { preferences ->
+		preferences[TOTAL_SONGS_SKIPPED] ?: 0
 	}
 }
