@@ -6,3 +6,13 @@ plugins {
 	alias(libs.plugins.dagger.hilt.android) apply false
 	alias(libs.plugins.google.services) apply false
 }
+
+buildscript {
+	repositories {
+		google()
+		mavenCentral()
+	}
+	dependencies {
+		classpath(libs.build.gradle)
+	}
+}
