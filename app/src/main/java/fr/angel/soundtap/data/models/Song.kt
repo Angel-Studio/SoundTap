@@ -37,10 +37,7 @@ data class Song(
 	}
 
 	override fun equals(other: Any?): Boolean {
-		if (this === other) return true
-		if (javaClass != other?.javaClass) return false
-
-		other as Song
+		if (other !is Song) return false
 
 		if (title != other.title) return false
 		if (artist != other.artist) return false
@@ -48,7 +45,7 @@ data class Song(
 		if (duration != other.duration) return false
 		if (cover != other.cover) return false
 
-		return true
+		return false
 	}
 
 	override fun hashCode(): Int {
