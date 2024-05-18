@@ -87,8 +87,6 @@ class MediaCallback @Inject constructor(
 					?: Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
 			)
 		).run {
-			if (playingSong != null && playingSong != this) return
-
 			playingSong = this
 
 			CoroutineScope(Dispatchers.IO).launch {
