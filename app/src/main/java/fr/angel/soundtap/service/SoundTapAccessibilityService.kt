@@ -30,12 +30,11 @@ data class AccessibilityServiceState(
 	val volumeUpLastPressedTime: Long = 0,
 	val volumeDownLastPressedTime: Long = 0,
 
-	// Pending events
-	val pendingEvents: Map<Int, KeyEvent> = hashMapOf(),
+	val lastEventTime: Long = 0,
 ) {
-	private val isVolumeUpPressed: Boolean
+	val isVolumeUpPressed: Boolean
 		get() = volumeUpLastPressedTime > 0
-	private val isVolumeDownPressed: Boolean
+	val isVolumeDownPressed: Boolean
 		get() = volumeDownLastPressedTime > 0
 
 	fun isVolumeUpLongPressed(longPressThreshold: Long): Boolean =
@@ -57,6 +56,7 @@ data class AccessibilityServiceState(
 class SoundTapAccessibilityService : AccessibilityService() {
 
 	private val scope by lazy { CoroutineScope(Dispatchers.IO) }
+	private val listenerScope by lazy { CoroutineScope(Dispatchers.IO) }
 
 	private lateinit var audioManager: AudioManager
 	private lateinit var wakeLock: PowerManager.WakeLock
@@ -74,6 +74,7 @@ class SoundTapAccessibilityService : AccessibilityService() {
 
 		const val DEFAULT_LONG_PRESS_THRESHOLD = 400L
 		const val DEFAULT_DOUBLE_PRESS_THRESHOLD = 400L
+		const val DEFAULT_DELAY_BETWEEN_EVENTS = 1000L
 
 		private val _uiState = MutableStateFlow(AccessibilityServiceState())
 		val uiState: StateFlow<AccessibilityServiceState> = _uiState.asStateFlow()
@@ -96,11 +97,14 @@ class SoundTapAccessibilityService : AccessibilityService() {
 	}
 
 	override fun onKeyEvent(event: KeyEvent?): Boolean {
+
+		// Skip the event if the service is not activated or that no media receiver is registered
 		if (event == null
 			|| _uiState.value.isActivated.not()
 			|| MediaReceiver.firstCallback == null
 		) return super.onKeyEvent(null)
 
+		// Filter events based on the working mode
 		when (workingMode) {
 			WorkingMode.SCREEN_ON_OFF -> {}
 			WorkingMode.SCREEN_ON -> {
@@ -125,9 +129,19 @@ class SoundTapAccessibilityService : AccessibilityService() {
 		val action = event.action
 		val keyCode = event.keyCode
 
-		_uiState.value = _uiState.value.copy(
-			pendingEvents = _uiState.value.pendingEvents + hashMapOf(keyCode to event)
-		)
+		val eventName = when (action) {
+			KeyEvent.ACTION_DOWN -> "ACTION_DOWN"
+			KeyEvent.ACTION_UP -> "ACTION_UP"
+			else -> "UNKNOWN"
+		}
+
+		val keyName = when (keyCode) {
+			KeyEvent.KEYCODE_VOLUME_UP -> "KEYCODE_VOLUME_UP"
+			KeyEvent.KEYCODE_VOLUME_DOWN -> "KEYCODE_VOLUME_DOWN"
+			else -> "UNKNOWN"
+		}
+
+		Log.i(TAG, "onKeyEvent: $eventName:$keyName")
 
 		when (action) {
 			KeyEvent.ACTION_DOWN -> {
@@ -142,6 +156,8 @@ class SoundTapAccessibilityService : AccessibilityService() {
 							_uiState.value.copy(volumeDownLastPressedTime = System.currentTimeMillis())
 					}
 				}
+
+				listenerScope.launch { listenForEvents() }
 
 				return true
 			}
@@ -171,11 +187,12 @@ class SoundTapAccessibilityService : AccessibilityService() {
 					}
 				}
 
+				// listenerScope.cancel()
+
 				return true
 			}
 
 			else -> return super.onKeyEvent(event)
-
 		}
 	}
 
@@ -198,7 +215,7 @@ class SoundTapAccessibilityService : AccessibilityService() {
 		try {
 			MediaReceiver.register(this.application)
 		} catch (e: Exception) {
-			e.printStackTrace()
+			Log.e(TAG, "Failed to register media receiver, is the permission granted?", e)
 			disableSelf()
 		}
 
@@ -211,57 +228,14 @@ class SoundTapAccessibilityService : AccessibilityService() {
 		}
 
 		// Observe the state of the volume buttons
-		scope.launch(Dispatchers.Main) {
+		/*scope.launch(Dispatchers.Main) {
 
 			while (true) {
-				suspend fun executeEvent() {
-					var event: (() -> Unit)? = null
-
-					if (uiState.value.isBothVolumeLongPressed(doublePressThreshold)) {
-						event = { bothVolumePressed() }
-					} else {
-						if (uiState.value.isVolumeUpLongPressed(longPressThreshold)) {
-							event = { volumeUpLongPressed() }
-						}
-						if (uiState.value.isVolumeDownLongPressed(longPressThreshold)) {
-							event = { volumeDownLongPressed() }
-						}
-					}
-
-					event?.let {
-						it.invoke()
-						delay(1000L)
-					}
+				if (_uiState.value.isActivated) {
+					listenForEvents()
 				}
-
-				when (workingMode) {
-					// Do nothing
-					WorkingMode.SCREEN_ON_OFF -> {
-						executeEvent()
-					}
-					// Skip the event if the screen is off
-					WorkingMode.SCREEN_ON -> {
-						if (displayManager.displays.any {
-								it.state == Display.STATE_ON
-							}) {
-							executeEvent()
-						}
-					}
-					// Skip the event if the screen is on
-					WorkingMode.SCREEN_OFF -> {
-						if (displayManager.displays.any {
-								it.state == Display.STATE_DOZE ||
-										it.state == Display.STATE_OFF ||
-										it.state == Display.STATE_DOZE_SUSPEND
-							}) {
-							executeEvent()
-						}
-					}
-				}
-
-				delay(50L)
 			}
-		}
+		}*/
 	}
 
 	override fun onDestroy() {
@@ -273,6 +247,7 @@ class SoundTapAccessibilityService : AccessibilityService() {
 
 		// Release scope
 		scope.cancel()
+		listenerScope.cancel()
 
 		super.onDestroy()
 	}
@@ -280,6 +255,66 @@ class SoundTapAccessibilityService : AccessibilityService() {
 	override fun onAccessibilityEvent(event: AccessibilityEvent?) {}
 
 	override fun onInterrupt() {}
+
+	/**
+	 * EVENT:
+	 * Execute the event based on the state of the volume buttons.
+	 * **/
+	private suspend fun listenForEvents() {
+		while (_uiState.value.isVolumeUpPressed || _uiState.value.isVolumeDownPressed) {
+
+			Log.i(TAG, "Listening for events...")
+
+			// Delay between events
+			delay(50)
+
+			when (workingMode) {
+				// Do nothing
+				WorkingMode.SCREEN_ON_OFF -> {
+					executeEvent()
+				}
+				// Skip the event if the screen is off
+				WorkingMode.SCREEN_ON -> {
+					if (displayManager.displays.any {
+							it.state == Display.STATE_ON
+						}) {
+						executeEvent()
+					}
+				}
+				// Skip the event if the screen is on
+				WorkingMode.SCREEN_OFF -> {
+					if (displayManager.displays.any {
+							it.state == Display.STATE_DOZE ||
+									it.state == Display.STATE_OFF ||
+									it.state == Display.STATE_DOZE_SUSPEND
+						}) {
+						executeEvent()
+					}
+				}
+			}
+		}
+	}
+
+	private suspend fun executeEvent() {
+		var event: (() -> Unit)? = null
+
+		if (uiState.value.isBothVolumeLongPressed(doublePressThreshold)) {
+			event = { bothVolumePressed() }
+		} else {
+			if (uiState.value.isVolumeUpLongPressed(longPressThreshold)) {
+				event = { volumeUpLongPressed() }
+			}
+			if (uiState.value.isVolumeDownLongPressed(longPressThreshold)) {
+				event = { volumeDownLongPressed() }
+			}
+		}
+
+		event?.let {
+			it()
+			_uiState.value = _uiState.value.copy(lastEventTime = System.currentTimeMillis())
+			delay(DEFAULT_DELAY_BETWEEN_EVENTS)
+		}
+	}
 
 	/**
 	 * ACTIONS:
