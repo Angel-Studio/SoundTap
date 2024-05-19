@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import fr.angel.soundtap.data.enums.HapticFeedback
@@ -37,9 +38,9 @@ class DataStore @Inject constructor(
 
 		/* SETTINGS */
 		val REMOVED_SUPPORTED_MEDIA_PLAYERS = stringSetPreferencesKey("supported_media_players")
+		val PREFERRED_MEDIA_PLAYER = stringPreferencesKey("preferred_media_player")
 
 		/* ANALYTICS */
-		val ANALYTICS_ENABLED = booleanPreferencesKey("analytics_enabled")
 		val HISTORY = stringSetPreferencesKey("history")
 		val TOTAL_SONGS_PLAYED = intPreferencesKey("total_songs_played")
 		val TOTAL_SONGS_SKIPPED = intPreferencesKey("total_songs_skipped")
@@ -133,16 +134,6 @@ class DataStore @Inject constructor(
 		preferences[ONBOARDING_COMPLETED] ?: false
 	}
 
-	suspend fun setAnalyticsEnabled(value: Boolean) {
-		application.dataStore.edit { preferences ->
-			preferences[ANALYTICS_ENABLED] = value
-		}
-	}
-
-	val analyticsEnabled: Flow<Boolean> = application.dataStore.data.map { preferences ->
-		preferences[ANALYTICS_ENABLED] ?: true
-	}
-
 	suspend fun incrementTotalSongsPlayed() {
 		application.dataStore.edit { preferences ->
 			val totalSongsPlayed = preferences[TOTAL_SONGS_PLAYED] ?: 0
@@ -163,5 +154,19 @@ class DataStore @Inject constructor(
 
 	val totalSongsSkipped: Flow<Int> = application.dataStore.data.map { preferences ->
 		preferences[TOTAL_SONGS_SKIPPED] ?: 0
+	}
+
+	suspend fun setPreferredMediaPlayer(value: String?) {
+		application.dataStore.edit { preferences ->
+			value?.let {
+				preferences[PREFERRED_MEDIA_PLAYER] = it
+			} ?: run {
+				preferences.remove(PREFERRED_MEDIA_PLAYER)
+			}
+		}
+	}
+
+	val preferredMediaPlayer: Flow<String?> = application.dataStore.data.map { preferences ->
+		preferences[PREFERRED_MEDIA_PLAYER]
 	}
 }

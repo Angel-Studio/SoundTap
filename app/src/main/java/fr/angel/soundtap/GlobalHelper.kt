@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import android.view.KeyEvent
 
 
 object GlobalHelper {
@@ -41,5 +42,16 @@ object GlobalHelper {
 		}
 
 		context.startActivity(batteryOptimizationIntent)
+	}
+
+	fun startMediaPlayer(context: Context, packageName: String) {
+		val playSpotify = Intent(Intent.ACTION_MEDIA_BUTTON).apply {
+			putExtra(
+				Intent.EXTRA_KEY_EVENT,
+				KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY)
+			)
+			`package` = packageName
+		}
+		context.sendOrderedBroadcast(playSpotify, null)
 	}
 }
