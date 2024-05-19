@@ -59,7 +59,6 @@ fun SharedTransitionScope.HistoryScreen(
 
 	val totalSongsPlayed = uiState.totalSongsPlayed
 	val totalSongsSkipped = uiState.totalSongsSkipped
-	val analyticsEnabled = uiState.analyticsEnabled
 
 	Card(
 		modifier = modifier

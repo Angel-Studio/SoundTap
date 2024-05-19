@@ -3,6 +3,7 @@ package fr.angel.soundtap.ui.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,6 +42,7 @@ fun InfoCard(
 	title: String,
 	body: String,
 	onCardClick: () -> Unit = {},
+	bottomContent: @Composable ColumnScope.() -> Unit = {},
 ) {
 	val isBackgroundColorLight = cardType.backgroundColor.luminance() > 0.5f
 
@@ -85,6 +87,7 @@ fun InfoCard(
 				style = MaterialTheme.typography.bodyMedium,
 				textAlign = TextAlign.Justify,
 			)
+			bottomContent()
 		}
 	}
 }
