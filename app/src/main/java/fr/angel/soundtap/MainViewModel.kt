@@ -35,7 +35,7 @@ data class MainUiState(
 	val history: Set<Song> = emptySet(),
 	val totalSongsPlayed: Int = 0,
 	val totalSongsSkipped: Int = 0,
-	val analyticsEnabled: Boolean = true,
+	val preferredMediaPlayer: String = "",
 ) {
 	val defaultScreen: Screens
 		get() = if (onboardingPageCompleted) Screens.App else Screens.Onboarding
@@ -96,8 +96,12 @@ class MainViewModel @Inject constructor(
 			}
 		}
 		scope.launch {
-			dataStore.analyticsEnabled.collect { state ->
-				_uiState.value = _uiState.value.copy(analyticsEnabled = state)
+			dataStore.preferredMediaPlayer.collect { state ->
+				if (state.isNullOrBlank()) {
+					setPreferredMediaPlayer(_uiState.value.playersPackages.first().activityInfo.packageName)
+					return@collect
+				}
+				_uiState.value = _uiState.value.copy(preferredMediaPlayer = state)
 			}
 		}
 
@@ -147,6 +151,12 @@ class MainViewModel @Inject constructor(
 	fun onboardingCompleted() {
 		scope.launch {
 			dataStore.setOnboardingCompleted()
+		}
+	}
+
+	fun setPreferredMediaPlayer(packageName: String) {
+		scope.launch {
+			dataStore.setPreferredMediaPlayer(packageName)
 		}
 	}
 }

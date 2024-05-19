@@ -5,6 +5,7 @@ import android.content.Context
 import android.media.session.MediaController
 import android.media.session.MediaSessionManager
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import fr.angel.soundtap.data.DataStore
 import fr.angel.soundtap.service.NotificationService
 import kotlinx.coroutines.CoroutineScope
@@ -14,7 +15,7 @@ import kotlinx.coroutines.launch
 object MediaReceiver {
 
 	// Map of package name to callback
-	private val callbackMap = mutableStateMapOf<String, MediaCallback>()
+	val callbackMap: SnapshotStateMap<String, MediaCallback> = mutableStateMapOf()
 	private val unsupportedCallbackMap = mutableStateMapOf<String, MediaCallback>()
 	private lateinit var mediaSessionManager: MediaSessionManager
 

@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Support
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material.icons.outlined.NotificationImportant
-import androidx.compose.material.icons.outlined.Radio
 import androidx.compose.material.icons.outlined.SettingsAccessibility
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -70,12 +69,13 @@ fun SharedTransitionScope.App(
 	Column(
 		modifier = modifier
 			.fillMaxWidth()
-			.padding(horizontal = 8.dp)
 			.verticalScroll(rememberScrollState()),
 		verticalArrangement = Arrangement.spacedBy(8.dp),
 	) {
 		Text(
-			modifier = Modifier.align(Alignment.CenterHorizontally),
+			modifier = Modifier
+				.align(Alignment.CenterHorizontally)
+				.padding(horizontal = 8.dp),
 			text = "Take Control of Your Music",
 			style = MaterialTheme.typography.labelLarge,
 			fontWeight = FontWeight.SemiBold,
@@ -99,6 +99,9 @@ fun SharedTransitionScope.App(
 
 			accessibilityServiceState.isRunning.not() -> {
 				InfoCard(
+					modifier = Modifier
+						.fillMaxWidth()
+						.padding(horizontal = 8.dp),
 					cardType = InfoCardType.Accessibility,
 					icon = Icons.Outlined.SettingsAccessibility,
 					title = "Accessibility Service",
@@ -110,26 +113,42 @@ fun SharedTransitionScope.App(
 				)
 			}
 
-			(mediaCallback ?: lastCallback) == null -> {
+			/*(mediaCallback ?: lastCallback)?.playingSong == null -> {
 				InfoCard(
 					icon = Icons.Outlined.Radio,
 					title = "No Media Playing",
-					body = "No media is currently playing. Start playing music or a video to see media information."
+					body = "No media is currently playing. Start playing music or a video to see media information.",
+					bottomContent = {
+						Button(
+							modifier = Modifier
+								.align(Alignment.End),
+							onClick = {
+								GlobalHelper.startMediaPlayer(
+									context = context,
+									packageName = mainViewModel.uiState.value.preferredMediaPlayer
+								)
+							},
+						) {
+							Text("Start Preferred Media Player")
+						}
+					}
 				)
-			}
+			}*/
 
 			else -> {
 				MediaCard(
 					modifier = Modifier
 						.fillMaxWidth()
 						.height(200.dp),
-					media = (mediaCallback ?: lastCallback)!!,
+					mainViewModel = mainViewModel
 				)
 			}
 		}
 
 		Row(
-			modifier = Modifier.fillMaxWidth(),
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(horizontal = 8.dp),
 			horizontalArrangement = Arrangement.spacedBy(8.dp)
 		) {
 			GridCard(
@@ -149,7 +168,9 @@ fun SharedTransitionScope.App(
 		}
 
 		Row(
-			modifier = Modifier.fillMaxWidth(),
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(horizontal = 8.dp),
 			horizontalArrangement = Arrangement.spacedBy(8.dp)
 		) {
 			GridCard(

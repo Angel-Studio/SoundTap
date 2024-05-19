@@ -20,6 +20,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -29,11 +30,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.rounded.GridView
 import androidx.compose.material.icons.rounded.Radio
+import androidx.compose.material.icons.rounded.StarBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -127,95 +130,151 @@ fun SharedTransitionScope.SettingsScreen(
 				)
 			}
 			HorizontalDivider()
-			Spacer(Modifier.height(8.dp))
-			Column(
-				modifier = Modifier
-					.fillMaxWidth()
-					.padding(horizontal = 8.dp),
+			LazyColumn(
+				modifier = Modifier.fillMaxWidth(),
+				contentPadding = PaddingValues(8.dp),
 				verticalArrangement = Arrangement.spacedBy(8.dp)
 			) {
-				AnimatedVisibility(
-					visible = ServiceTile.isAdded.not() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU,
-					enter = fadeIn() + expandVertically(),
-					exit = fadeOut() + shrinkVertically()
-				) {
-					SettingsItem(
-						title = "Add quick tile",
-						subtitle = "Add a tile to the quick settings panel to quickly access SoundTap",
-						icon = Icons.Rounded.GridView,
+				item {
+					AnimatedVisibility(
+						visible = ServiceTile.isAdded.not() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU,
+						enter = fadeIn() + expandVertically(),
+						exit = fadeOut() + shrinkVertically()
+					) {
+						SettingsItem(
+							title = "Add quick tile",
+							subtitle = "Add a tile to the quick settings panel to quickly access SoundTap",
+							icon = Icons.Rounded.GridView,
+							onClick = {
+								if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return@SettingsItem
+								statusBarManager.requestAddTileService(
+									/* tileServiceComponentName = */ ComponentName(
+										context,
+										ServiceTile::class.java
+									),
+									/* tileLabel = */
+									context.getString(R.string.app_name),
+									/* icon = */
+									android.graphics.drawable.Icon.createWithResource(
+										context,
+										R.drawable.app_icon
+									),
+									/* resultExecutor = */
+									{ it.run() },
+									/* resultCallback = */
+									{ Log.i("Settings", "Tile added") }
+								)
+							}
+						)
+					}
+				}
+
+				item {
+					var supportedMediaPlayersExpanded by rememberSaveable {
+						mutableStateOf(
+							uiState.playersPackages.size < 5
+						)
+					}
+					SettingsItemCustomBottom(
+						title = "Supported players",
+						subtitle = "Select the players you want to control with SoundTap",
+						icon = Icons.Rounded.Radio,
+						expanded = supportedMediaPlayersExpanded,
 						onClick = {
-							if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return@SettingsItem
-							statusBarManager.requestAddTileService(
-								/* tileServiceComponentName = */ ComponentName(
-									context,
-									ServiceTile::class.java
-								),
-								/* tileLabel = */
-								context.getString(R.string.app_name),
-								/* icon = */
-								android.graphics.drawable.Icon.createWithResource(
-									context,
-									R.drawable.app_icon
-								),
-								/* resultExecutor = */
-								{ it.run() },
-								/* resultCallback = */
-								{ Log.i("Settings", "Tile added") }
-							)
+							supportedMediaPlayersExpanded = supportedMediaPlayersExpanded.not()
+						},
+						trailing = {
+							IconButton(onClick = {
+								supportedMediaPlayersExpanded = supportedMediaPlayersExpanded.not()
+							}) {
+								Icon(
+									modifier = Modifier.rotate(
+										animateFloatAsState(
+											targetValue = if (supportedMediaPlayersExpanded) 180f else 0f,
+											label = "SupportedMediaPlayerIconRotation"
+										).value
+									),
+									imageVector = Icons.Default.KeyboardArrowDown,
+									contentDescription = null
+								)
+							}
+						},
+						content = {
+							Column(
+								modifier = Modifier.fillMaxWidth(),
+								verticalArrangement = Arrangement.spacedBy(8.dp)
+							) {
+								uiState.playersPackages.forEach { mediaPackage ->
+									MediaPlayerSwitchRow(
+										modifier = Modifier.fillMaxWidth(),
+										resolveInfo = mediaPackage,
+										onClick = {
+											scope.launch {
+												mainViewModel.toggleUnsupportedMediaPlayer(
+													mediaPackage.activityInfo.packageName
+												)
+											}
+										},
+										selected = uiState.supportedPlayers.contains(mediaPackage.activityInfo.packageName)
+											.not()
+									)
+								}
+							}
 						}
 					)
 				}
 
-				var supportedMediaPlayersExpanded by rememberSaveable {
-					mutableStateOf(
-						uiState.playersPackages.size < 5
-					)
-				}
-				SettingsItemCustomBottom(
-					title = "Supported players",
-					subtitle = "Select the players you want to control with SoundTap",
-					icon = Icons.Rounded.Radio,
-					expanded = supportedMediaPlayersExpanded,
-					onClick = {
-						supportedMediaPlayersExpanded = supportedMediaPlayersExpanded.not()
-					},
-					trailing = {
-						IconButton(onClick = {
-							supportedMediaPlayersExpanded = supportedMediaPlayersExpanded.not()
-						}) {
-							Icon(
-								modifier = Modifier.rotate(
-									animateFloatAsState(
-										targetValue = if (supportedMediaPlayersExpanded) 180f else 0f,
-										label = "SupportedMediaPlayerIconRotation"
-									).value
-								),
-								imageVector = Icons.Default.KeyboardArrowDown,
-								contentDescription = null
-							)
-						}
-					},
-					content = {
-						Column(
-							modifier = Modifier.fillMaxWidth(),
-							verticalArrangement = Arrangement.spacedBy(8.dp)
-						) {
-							uiState.playersPackages.forEach { mediaPackage ->
-								MediaPlayerSwitchRow(
-									modifier = Modifier.fillMaxWidth(),
-									resolveInfo = mediaPackage,
-									onClick = {
-										scope.launch {
-											mainViewModel.toggleUnsupportedMediaPlayer(mediaPackage.activityInfo.packageName)
-										}
-									},
-									selected = uiState.supportedPlayers.contains(mediaPackage.activityInfo.packageName)
-										.not()
+				item {
+					var preferredMediaPlayerExpanded by rememberSaveable {
+						mutableStateOf(
+							uiState.playersPackages.size < 5
+						)
+					}
+					SettingsItemCustomBottom(
+						title = "Preferred player",
+						subtitle = "Select the preferred player that SoundTap should control by default",
+						icon = Icons.Rounded.StarBorder,
+						expanded = preferredMediaPlayerExpanded,
+						onClick = {
+							preferredMediaPlayerExpanded = preferredMediaPlayerExpanded.not()
+						},
+						trailing = {
+							IconButton(onClick = {
+								preferredMediaPlayerExpanded = preferredMediaPlayerExpanded.not()
+							}) {
+								Icon(
+									modifier = Modifier.rotate(
+										animateFloatAsState(
+											targetValue = if (preferredMediaPlayerExpanded) 180f else 0f,
+											label = "SupportedMediaPlayerIconRotation"
+										).value
+									),
+									imageVector = Icons.Default.KeyboardArrowDown,
+									contentDescription = null
 								)
 							}
+						},
+						content = {
+							Column(
+								modifier = Modifier.fillMaxWidth(),
+								verticalArrangement = Arrangement.spacedBy(8.dp)
+							) {
+								uiState.playersPackages.forEach { mediaPackage ->
+									MediaPlayerSwitchRow(
+										modifier = Modifier.fillMaxWidth(),
+										resolveInfo = mediaPackage,
+										onClick = {
+											scope.launch {
+												mainViewModel.setPreferredMediaPlayer(mediaPackage.activityInfo.packageName)
+											}
+										},
+										selected = uiState.preferredMediaPlayer == mediaPackage.activityInfo.packageName
+									)
+								}
+							}
 						}
-					}
-				)
+					)
+				}
 			}
 		}
 	}
