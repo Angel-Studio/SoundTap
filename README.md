@@ -1,4 +1,4 @@
-![Cover Image](/RESOURCES/Cover-1024x500.png)
+![Cover Image](/RESOURCES/Cover-1024x200.png)
 
 ![SoundTap Icon](https://github.com/Angel-Studio/SoundTap/blob/master/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp)
 
@@ -12,6 +12,16 @@ enabling users to skip tracks, pause, and resume music playback with ease.
 
 [![Play Store](https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=fr.angel.soundtap)
 [![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Angel-Studio/SoundTap/releases)
+
+<p>
+  <img alt="Light" src="./RESOURCES/Screenshot_20240515-160758.png" width="20%">
+&nbsp; &nbsp;
+  <img alt="Dark" src="./RESOURCES/Screenshot_20240515-160826.png" width="20%">
+&nbsp; &nbsp;
+  <img alt="Dark" src="./RESOURCES/Screenshot_20240515-160834.png" width="20%">
+&nbsp; &nbsp;
+  <img alt="Dark" src="./RESOURCES/Screenshot_20240515-160841.png" width="20%">
+</p>
 
 ## ✨ Features
 
