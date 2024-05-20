@@ -64,7 +64,7 @@ enabling users to skip tracks, pause, and resume music playback with ease.
 Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/SoundTap.git
+git clone https://github.com/Angel-Studio/SoundTap.git
 ```
 
 Open the project in Android Studio and build the APK file to install on your Android device.
