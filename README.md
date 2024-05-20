@@ -1,7 +1,5 @@
 ![Cover Image](/RESOURCES/Cover-1024x200.png)
 
-![SoundTap Icon](https://github.com/Angel-Studio/SoundTap/blob/master/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp)
-
 # SoundTap - Android Volume Media Controller App
 
 SoundTap is a simple and intuitive Android app that allows users to control their media playback
