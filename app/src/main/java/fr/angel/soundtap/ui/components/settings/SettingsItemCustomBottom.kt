@@ -1,10 +1,14 @@
-package fr.angel.soundtap.ui.components
+package fr.angel.soundtap.ui.components.settings
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,35 +28,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SettingsItem(
+fun SettingsItemCustomBottom(
 	modifier: Modifier = Modifier,
 	title: String,
 	subtitle: String? = null,
 	icon: ImageVector? = null,
 	enabled: Boolean = true,
-	backgroundColor: Color = MaterialTheme.colorScheme.surface,
+	expanded: Boolean = true,
+	content: @Composable (() -> Unit)? = null,
 	trailing: @Composable (() -> Unit)? = null,
 	onClick: () -> Unit = {},
 	onLongClick: () -> Unit = {},
 ) {
-	val background by animateColorAsState(
-		label = "color",
-		targetValue = if (!enabled) {
-			MaterialTheme.colorScheme.onSurface.copy(0.1f)
-		} else if (trailing != null) {
-			MaterialTheme.colorScheme.onSurface.copy(0.05f)
-		} else {
-			backgroundColor
-		}
-	)
-
 	val iconBackgroundColor by animateColorAsState(
 		label = "iconBackgroundColor",
 		targetValue = if (enabled) {
@@ -79,13 +72,18 @@ fun SettingsItem(
 				onLongClick = { if (enabled) onLongClick() }
 			),
 		shape = MaterialTheme.shapes.medium,
-		color = background
+		tonalElevation = if (!enabled) {
+			4.dp
+		} else if (content != null) {
+			64.dp
+		} else {
+			4.dp
+		}
 	) {
 		Column(
 			modifier = Modifier
 				.fillMaxWidth()
 				.padding(16.dp),
-			verticalArrangement = Arrangement.spacedBy(16.dp)
 		) {
 			Row(
 				modifier = Modifier
@@ -113,6 +111,7 @@ fun SettingsItem(
 						.alpha(if (enabled) 1f else 0.6f)
 				) {
 					Text(
+
 						text = title,
 						style = MaterialTheme.typography.titleMedium,
 						maxLines = 1,
@@ -132,6 +131,18 @@ fun SettingsItem(
 				if (trailing != null) {
 					Spacer(modifier = Modifier.width(16.dp))
 					trailing()
+				}
+			}
+			if (content != null) {
+				AnimatedVisibility(
+					visible = expanded,
+					enter = fadeIn() + expandVertically(),
+					exit = fadeOut() + shrinkVertically()
+				) {
+					Column {
+						Spacer(modifier = Modifier.height(16.dp))
+						content()
+					}
 				}
 			}
 		}

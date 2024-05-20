@@ -69,6 +69,7 @@ import fr.angel.soundtap.MainViewModel
 import fr.angel.soundtap.data.models.Song
 import fr.angel.soundtap.service.media.MediaCallback
 import fr.angel.soundtap.service.media.MediaReceiver
+import fr.angel.soundtap.supportedStartMediaPlayerPackages
 
 @Composable
 fun MediaCard(
@@ -80,7 +81,7 @@ fun MediaCard(
 	val initialPage = remember {
 		uiState.playersPackages.indexOfFirst {
 			MediaReceiver.callbackMap[it.activityInfo.packageName] != null
-		}
+		}.coerceAtLeast(0)
 	}
 
 	val pagerState = rememberPagerState(
@@ -168,16 +169,18 @@ fun EmptyPlayerCard(
 					style = MaterialTheme.typography.labelSmall,
 					color = Color.Black,
 				)
-				Spacer(modifier = Modifier.weight(0.5f))
-				Button(
-					onClick = {
-						GlobalHelper.startMediaPlayer(
-							context = context,
-							packageName = packageInfo.activityInfo.packageName
-						)
-					},
-				) {
-					Text(text = "Start media player")
+				if (packageInfo.activityInfo.packageName in supportedStartMediaPlayerPackages) {
+					Spacer(modifier = Modifier.weight(0.5f))
+					Button(
+						onClick = {
+							GlobalHelper.startMediaPlayer(
+								context = context,
+								packageName = packageInfo.activityInfo.packageName
+							)
+						},
+					) {
+						Text(text = "Start media player")
+					}
 				}
 				Spacer(modifier = Modifier.weight(1f))
 			}

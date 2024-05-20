@@ -25,29 +25,36 @@ enabling users to skip tracks, pause, and resume music playback with ease.
 
 - [x] **Volume Button Controls**: Skip tracks forward or backward by long-pressing the volume up or
   down buttons.
-
 - [x] **Media Playback Pause/Resume**: Pause and resume media playback by long-pressing both buttons
   simultaneously.
-
 - [x] **Working Mode**: Choose when the actions should be available (when screen is on, off, or
   always).
-
 - [ ] **Customizable Controls**: Customize which actions (skip forward, skip backward, pause,
   resume) are performed by long-pressing or double-pressing the volume buttons.
-
 - [x] **Widget**: Includes a widget for quick access to media playback controls directly from the
   home screen.
-
 - [x] **Supported Players**: SoundTap works with popular media players like Spotify, YouTube Music,
   and more.
-
-- [x] **Haptic Feedbacks**: Get tactile feedback when performing volume button actions for a better
-  user experience.
-
+- [x] **Auto-Play**: Automatically start media playback when the volume buttons are long-pressed or
+  when a headset is connected.
+- [x] **Customizable Haptics**: Adjust the haptic feedback intensity to suit your preferences.
 - [x] **Customizable Delays**: Adjust the long-press delay to fit your preferred interaction speed.
-
+- [ ] **Localization**: Available in multiple languages for a global audience.
+- [x] **Dark Mode**: Supports both light and dark themes for a comfortable viewing experience.
+- [x] **Accessibility**: Designed with accessibility in mind to ensure a seamless user experience
+  for all users.
+- [x] **Privacy**: Respects user privacy by collecting only necessary data for app functionality.
+- [x] **Offline Support**: Works without an internet connection for uninterrupted media playback.
+- [x] **Lightweight**: Lightweight app with minimal system resource usage for optimal performance.
+- [x] **No Ads**: Completely ad-free experience for users to enjoy media playback without
+  interruptions.
+- [x] **Free & Open Source**: Free to use and open source for transparency and community
+  contributions.
 - [x] **Onboarding Screen**: Introduce users to SoundTap's features and functionality with an
   interactive onboarding screen.
+- [x] **Material You Theming**: Adapts to the system-wide theme on Android 12 devices for a
+  consistent user experience.
+- [x] **Analytics**: Collects usage data to improve the app and provide a better user experience.
 
 ## 🌏 Languages
 

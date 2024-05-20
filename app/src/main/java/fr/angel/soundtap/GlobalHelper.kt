@@ -6,6 +6,9 @@ import android.net.Uri
 import android.provider.Settings
 import android.view.KeyEvent
 
+val supportedStartMediaPlayerPackages = listOf(
+	"com.spotify.music"
+)
 
 object GlobalHelper {
 

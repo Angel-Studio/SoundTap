@@ -6,6 +6,7 @@ import android.os.PowerManager
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import fr.angel.soundtap.data.DataStore
+import fr.angel.soundtap.data.enums.AutoPlayMode
 import fr.angel.soundtap.data.enums.HapticFeedback
 import fr.angel.soundtap.data.enums.WorkingMode
 import fr.angel.soundtap.data.models.Song
@@ -36,6 +37,8 @@ data class MainUiState(
 	val totalSongsPlayed: Int = 0,
 	val totalSongsSkipped: Int = 0,
 	val preferredMediaPlayer: String = "",
+	val autoPlay: Boolean = false,
+	val autoPlayMode: AutoPlayMode = AutoPlayMode.ON_HEADSET_CONNECTED,
 ) {
 	val defaultScreen: Screens
 		get() = if (onboardingPageCompleted) Screens.App else Screens.Onboarding
@@ -97,11 +100,25 @@ class MainViewModel @Inject constructor(
 		}
 		scope.launch {
 			dataStore.preferredMediaPlayer.collect { state ->
-				if (state.isNullOrBlank()) {
-					setPreferredMediaPlayer(_uiState.value.playersPackages.first().activityInfo.packageName)
+				if (state.isNullOrBlank() || state !in supportedStartMediaPlayerPackages) {
+					setPreferredMediaPlayer(
+						_uiState.value.playersPackages
+							.firstOrNull { supportedStartMediaPlayerPackages.contains(it.activityInfo.packageName) }
+							?.activityInfo?.packageName
+					)
 					return@collect
 				}
 				_uiState.value = _uiState.value.copy(preferredMediaPlayer = state)
+			}
+		}
+		scope.launch {
+			dataStore.autoPlayEnabled.collect { state ->
+				_uiState.value = _uiState.value.copy(autoPlay = state)
+			}
+		}
+		scope.launch {
+			dataStore.autoPlayMode.collect { state ->
+				_uiState.value = _uiState.value.copy(autoPlayMode = state)
 			}
 		}
 
@@ -154,9 +171,21 @@ class MainViewModel @Inject constructor(
 		}
 	}
 
-	fun setPreferredMediaPlayer(packageName: String) {
+	fun setPreferredMediaPlayer(packageName: String?) {
 		scope.launch {
 			dataStore.setPreferredMediaPlayer(packageName)
+		}
+	}
+
+	fun setAutoPlay(autoPlay: Boolean) {
+		scope.launch {
+			dataStore.setAutoPlayEnabled(autoPlay)
+		}
+	}
+
+	fun setAutoPlayMode(autoPlayMode: AutoPlayMode) {
+		scope.launch {
+			dataStore.setAutoPlayMode(autoPlayMode)
 		}
 	}
 }

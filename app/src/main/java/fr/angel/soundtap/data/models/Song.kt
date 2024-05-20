@@ -15,7 +15,7 @@ data class Song(
 	val artist: String,
 	val album: String,
 	val duration: Long,
-	val cover: String,
+	val cover: String?,
 	val addedTime: Long = System.currentTimeMillis(),
 ) {
 	companion object {
@@ -27,7 +27,7 @@ data class Song(
 		}
 
 		// Convert the base64 string back to a bitmap
-		fun base64ToBitmap(base64: String): Bitmap {
+		fun base64ToBitmap(base64: String?): Bitmap {
 			val decodedBytes = Base64.decode(base64, 0)
 			return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
 		}
@@ -59,6 +59,6 @@ data class Song(
 	}
 
 	fun isPartial(): Boolean {
-		return title.isEmpty() || artist.isEmpty() || album.isEmpty() || duration == 0L || cover.isEmpty()
+		return title.isBlank() || artist.isBlank() || album.isBlank() || duration == 0L || cover.isNullOrBlank()
 	}
 }

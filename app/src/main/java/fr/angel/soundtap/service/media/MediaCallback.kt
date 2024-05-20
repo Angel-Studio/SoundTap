@@ -1,6 +1,5 @@
 package fr.angel.soundtap.service.media
 
-import android.graphics.Bitmap
 import android.media.MediaMetadata
 import android.media.session.MediaController
 import android.media.session.PlaybackState
@@ -27,7 +26,7 @@ class MediaCallback @Inject constructor(
 
 	private val scope by lazy { CoroutineScope(Dispatchers.IO) }
 
-	var debounceCount = 0
+	private var debounceCount = 0
 
 	var isPlaying: Boolean
 		get() = playbackState.value?.state == PlaybackState.STATE_PLAYING
@@ -91,10 +90,7 @@ class MediaCallback @Inject constructor(
 			album = mediaController.metadata!!.getString(MediaMetadata.METADATA_KEY_ALBUM)
 				?: return,
 			duration = mediaController.metadata!!.getLong(MediaMetadata.METADATA_KEY_DURATION),
-			cover = Song.bitmapToBase64(
-				mediaController.metadata!!.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART)
-					?: Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
-			)
+			cover = Song.bitmapToBase64(mediaController.metadata!!.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART))
 		).run {
 
 			val isSameAsPrevious = playingSong?.title != title
@@ -103,8 +99,10 @@ class MediaCallback @Inject constructor(
 					&& playingSong?.duration != duration
 					&& playingSong?.cover == cover
 
+			val isDataPartial = this.isPartial()
+
 			if (
-				this == playingSong || isSameAsPrevious && debounceCount < 1
+				this == playingSong || isSameAsPrevious && debounceCount < 1 || isDataPartial
 			) {
 				debounceCount++
 				return
@@ -112,12 +110,8 @@ class MediaCallback @Inject constructor(
 
 			debounceCount = 0
 
-			CoroutineScope(Dispatchers.IO).launch {
-				dataStore.addToHistory(this@run)
-			}
-
+			CoroutineScope(Dispatchers.IO).launch { dataStore.addToHistory(this@run) }
 			scope.launch { dataStore.incrementTotalSongsPlayed() }
-
 			playingSong = this
 		}
 	}

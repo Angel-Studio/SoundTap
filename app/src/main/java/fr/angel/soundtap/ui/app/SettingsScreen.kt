@@ -63,9 +63,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import fr.angel.soundtap.MainViewModel
 import fr.angel.soundtap.R
+import fr.angel.soundtap.supportedStartMediaPlayerPackages
 import fr.angel.soundtap.tiles.ServiceTile
-import fr.angel.soundtap.ui.components.SettingsItem
-import fr.angel.soundtap.ui.components.SettingsItemCustomBottom
+import fr.angel.soundtap.ui.components.settings.SettingsItem
+import fr.angel.soundtap.ui.components.settings.SettingsItemCustomBottom
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -260,6 +261,7 @@ fun SharedTransitionScope.SettingsScreen(
 								verticalArrangement = Arrangement.spacedBy(8.dp)
 							) {
 								uiState.playersPackages.forEach { mediaPackage ->
+									if (mediaPackage.activityInfo.packageName in supportedStartMediaPlayerPackages)
 									MediaPlayerSwitchRow(
 										modifier = Modifier.fillMaxWidth(),
 										resolveInfo = mediaPackage,

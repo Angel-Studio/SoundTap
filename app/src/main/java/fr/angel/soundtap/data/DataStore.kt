@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import fr.angel.soundtap.data.enums.AutoPlayMode
 import fr.angel.soundtap.data.enums.HapticFeedback
 import fr.angel.soundtap.data.enums.WorkingMode
 import fr.angel.soundtap.data.models.Song
@@ -35,6 +36,8 @@ class DataStore @Inject constructor(
 		val WORKING_MODE = intPreferencesKey("working_mode")
 		val LONG_PRESS_DURATION = longPreferencesKey("long_press_duration")
 		val DOUBLE_PRESS_DURATION = longPreferencesKey("double_press_duration")
+		val AUTO_PLAY_ENABLED = booleanPreferencesKey("auto_play_enabled")
+		val AUTO_PLAY_MODE = intPreferencesKey("auto_play_mode")
 
 		/* SETTINGS */
 		val REMOVED_SUPPORTED_MEDIA_PLAYERS = stringSetPreferencesKey("supported_media_players")
@@ -168,5 +171,26 @@ class DataStore @Inject constructor(
 
 	val preferredMediaPlayer: Flow<String?> = application.dataStore.data.map { preferences ->
 		preferences[PREFERRED_MEDIA_PLAYER]
+	}
+
+	suspend fun setAutoPlayEnabled(value: Boolean) {
+		application.dataStore.edit { preferences ->
+			preferences[AUTO_PLAY_ENABLED] = value
+		}
+	}
+
+	val autoPlayEnabled: Flow<Boolean> = application.dataStore.data.map { preferences ->
+		preferences[AUTO_PLAY_ENABLED] ?: false
+	}
+
+	suspend fun setAutoPlayMode(mode: AutoPlayMode) {
+		application.dataStore.edit { preferences ->
+			preferences[AUTO_PLAY_MODE] = mode.ordinal
+		}
+	}
+
+	val autoPlayMode: Flow<AutoPlayMode> = application.dataStore.data.map { preferences ->
+		AutoPlayMode.entries[preferences[AUTO_PLAY_MODE]
+			?: AutoPlayMode.ON_HEADSET_CONNECTED.ordinal]
 	}
 }

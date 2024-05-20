@@ -34,7 +34,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import fr.angel.soundtap.GlobalHelper
-import fr.angel.soundtap.ui.components.SettingsItem
+import fr.angel.soundtap.ui.components.settings.SettingsItem
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable

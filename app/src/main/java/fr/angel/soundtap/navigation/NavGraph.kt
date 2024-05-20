@@ -58,6 +58,7 @@ fun SoundTapNavGraph(
 						modifier = modifier,
 						mainViewModel = mainViewModel,
 						animatedVisibilityScope = this,
+						navigateToSettings = { navController.navigate(Screens.App.Settings.route) },
 					)
 				}
 				composable(Screens.App.History.route) {

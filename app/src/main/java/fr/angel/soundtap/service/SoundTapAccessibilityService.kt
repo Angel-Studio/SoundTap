@@ -9,10 +9,13 @@ import android.util.Log
 import android.view.Display
 import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
+import fr.angel.soundtap.GlobalHelper
 import fr.angel.soundtap.VibratorHelper
 import fr.angel.soundtap.data.DataStore
+import fr.angel.soundtap.data.enums.AutoPlayMode
 import fr.angel.soundtap.data.enums.HapticFeedback
 import fr.angel.soundtap.data.enums.WorkingMode
+import fr.angel.soundtap.data.enums.isOnHeadsetConnectedActive
 import fr.angel.soundtap.service.media.MediaReceiver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -68,6 +71,8 @@ class SoundTapAccessibilityService : AccessibilityService() {
 	private var longPressThreshold = DEFAULT_LONG_PRESS_THRESHOLD
 	private var doublePressThreshold = DEFAULT_DOUBLE_PRESS_THRESHOLD
 	private var workingMode = WorkingMode.SCREEN_ON_OFF
+	private var autoPlayMode = AutoPlayMode.ON_HEADSET_CONNECTED
+	private lateinit var preferredMediaPlayer: String
 
 	companion object {
 		private const val TAG = "SoundTapAccessibilityService"
@@ -101,7 +106,7 @@ class SoundTapAccessibilityService : AccessibilityService() {
 		// Skip the event if the service is not activated or that no media receiver is registered
 		if (event == null
 			|| _uiState.value.isActivated.not()
-			|| MediaReceiver.firstCallback == null
+			|| (MediaReceiver.firstCallback == null && autoPlayMode.isOnHeadsetConnectedActive.not())
 		) return super.onKeyEvent(null)
 
 		// Filter events based on the working mode
@@ -211,6 +216,14 @@ class SoundTapAccessibilityService : AccessibilityService() {
 		scope.launch { dataStore.longPressDuration.collect { longPressThreshold = it } }
 		scope.launch { dataStore.doublePressDuration.collect { doublePressThreshold = it } }
 		scope.launch { dataStore.workingMode.collect { workingMode = it } }
+		scope.launch { dataStore.autoPlayMode.collect { autoPlayMode = it } }
+		scope.launch {
+			dataStore.preferredMediaPlayer.collect {
+				if (it != null) {
+					preferredMediaPlayer = it
+				}
+			}
+		}
 
 		try {
 			MediaReceiver.register(this.application)
@@ -226,16 +239,6 @@ class SoundTapAccessibilityService : AccessibilityService() {
 				Log.i(TAG, "Wake lock acquired")
 			}
 		}
-
-		// Observe the state of the volume buttons
-		/*scope.launch(Dispatchers.Main) {
-
-			while (true) {
-				if (_uiState.value.isActivated) {
-					listenForEvents()
-				}
-			}
-		}*/
 	}
 
 	override fun onDestroy() {
@@ -332,7 +335,15 @@ class SoundTapAccessibilityService : AccessibilityService() {
 	}
 
 	private fun bothVolumePressed() {
-		vibratorHelper.createHapticFeedback(hapticFeedback)
-		MediaReceiver.firstCallback?.togglePlayPause()
+		if (MediaReceiver.firstCallback == null) {
+			preferredMediaPlayer.let {
+				vibratorHelper.doubleClick()
+				GlobalHelper.startMediaPlayer(context = this.application, packageName = it)
+			}
+		} else {
+			vibratorHelper.createHapticFeedback(hapticFeedback)
+			MediaReceiver.firstCallback?.togglePlayPause()
+		}
+
 	}
 }
