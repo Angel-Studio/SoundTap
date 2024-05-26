@@ -40,6 +40,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import fr.angel.soundtap.data.settings.customization.CustomizationSettings
+import fr.angel.soundtap.data.settings.customization.customizationSettingsDataStore
 import fr.angel.soundtap.navigation.Screens
 import fr.angel.soundtap.navigation.SoundTapNavGraph
 import fr.angel.soundtap.service.SoundTapAccessibilityService
@@ -64,27 +66,14 @@ class MainActivity : ComponentActivity() {
 		installSplashScreen()
 			.setKeepOnScreenCondition { shouldKeepSplashScreenOn.value }
 
-		/*try {
-			if (Settings.Secure.getString(contentResolver, AOD_MODE).contains("1")) {
-				Settings.Secure.putInt(
-					contentResolver,
-					AOD_MODE,
-					0
-				)
-			} else {
-				Settings.Secure.putInt(
-					contentResolver,
-					AOD_MODE,
-					1
-				)
-			}
-		} catch (e: Exception) {
-			Log.i("MainActivity", "Secure Setting not granted")
-		}*/
-
 		setContent {
 			mainViewModel = hiltViewModel<MainViewModel>()
 			val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
+
+
+			val dataStoreState by customizationSettingsDataStore.data.collectAsStateWithLifecycle(
+				initialValue = CustomizationSettings()
+			)
 
 			LaunchedEffect(key1 = Unit) {
 				mainViewModel.updatePermissionStates(this@MainActivity)

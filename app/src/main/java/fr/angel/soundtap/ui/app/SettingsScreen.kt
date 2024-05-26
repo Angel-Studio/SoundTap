@@ -42,6 +42,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -216,8 +217,9 @@ fun SharedTransitionScope.SettingsScreen(
 												)
 											}
 										},
-										selected = uiState.supportedPlayers.contains(mediaPackage.activityInfo.packageName)
-											.not()
+										selected = uiState.appSettings.unsupportedMediaPlayers.contains(
+											mediaPackage.activityInfo.packageName
+										).not()
 									)
 								}
 							}
@@ -261,8 +263,8 @@ fun SharedTransitionScope.SettingsScreen(
 								verticalArrangement = Arrangement.spacedBy(8.dp)
 							) {
 								uiState.playersPackages.forEach { mediaPackage ->
-									if (mediaPackage.activityInfo.packageName in supportedStartMediaPlayerPackages)
-									MediaPlayerSwitchRow(
+									if (mediaPackage.activityInfo.packageName !in supportedStartMediaPlayerPackages) return@forEach
+									MediaPlayerRadioRow(
 										modifier = Modifier.fillMaxWidth(),
 										resolveInfo = mediaPackage,
 										onClick = {
@@ -270,7 +272,7 @@ fun SharedTransitionScope.SettingsScreen(
 												mainViewModel.setPreferredMediaPlayer(mediaPackage.activityInfo.packageName)
 											}
 										},
-										selected = uiState.preferredMediaPlayer == mediaPackage.activityInfo.packageName
+										selected = uiState.customizationSettings.preferredMediaPlayer == mediaPackage.activityInfo.packageName
 									)
 								}
 							}
@@ -347,6 +349,76 @@ private fun MediaPlayerSwitchRow(
 		Switch(
 			checked = selected,
 			onCheckedChange = null
+		)
+		Spacer(modifier = Modifier.width(8.dp))
+	}
+}
+
+@Composable
+private fun MediaPlayerRadioRow(
+	modifier: Modifier = Modifier,
+	resolveInfo: ResolveInfo,
+	onClick: () -> Unit,
+	selected: Boolean = false,
+) {
+	val context = LocalContext.current
+	val packageManager = context.packageManager
+	val applicationInfo = try {
+		packageManager.getApplicationInfo(resolveInfo.activityInfo.packageName, 0)
+	} catch (e: Exception) {
+		return
+	}
+
+	val appName = rememberSaveable(applicationInfo) {
+		packageManager.getApplicationLabel(applicationInfo).toString()
+	}
+	val appIcon = remember(applicationInfo) { packageManager.getApplicationIcon(applicationInfo) }
+
+	val backgroundColor by animateColorAsState(
+		targetValue = if (selected) MaterialTheme.colorScheme.surfaceContainer else MaterialTheme.colorScheme.surfaceContainerHighest,
+		label = "MediaPlayerSwitchRowBackgroundColor"
+	)
+
+	Row(
+		modifier = modifier
+			.clip(MaterialTheme.shapes.medium)
+			.background(backgroundColor)
+			.clickable(onClick = onClick)
+			.padding(8.dp)
+			.height(IntrinsicSize.Min),
+		verticalAlignment = Alignment.CenterVertically
+	) {
+		AsyncImage(
+			model = appIcon,
+			contentDescription = null,
+			modifier = Modifier.size(48.dp)
+		)
+		Spacer(Modifier.width(8.dp))
+		Column(
+			modifier = Modifier
+				.fillMaxHeight()
+				.weight(1f)
+				.padding(4.dp),
+			verticalArrangement = Arrangement.SpaceEvenly
+		) {
+			Text(
+				text = appName,
+				style = MaterialTheme.typography.bodyLarge,
+				fontWeight = FontWeight.Bold,
+				maxLines = 1,
+				overflow = TextOverflow.Ellipsis
+			)
+			Text(
+				text = resolveInfo.activityInfo.packageName,
+				style = MaterialTheme.typography.bodySmall,
+				maxLines = 1,
+				overflow = TextOverflow.Ellipsis
+			)
+		}
+		Spacer(modifier = Modifier.width(8.dp))
+		RadioButton(
+			selected = selected,
+			onClick = null
 		)
 		Spacer(modifier = Modifier.width(8.dp))
 	}

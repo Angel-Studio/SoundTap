@@ -6,11 +6,10 @@ import android.media.session.MediaController
 import android.media.session.MediaSessionManager
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.snapshots.SnapshotStateMap
-import fr.angel.soundtap.data.DataStore
+import fr.angel.soundtap.data.settings.stats.statsDataStore
 import fr.angel.soundtap.service.NotificationService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 object MediaReceiver {
 
@@ -36,14 +35,14 @@ object MediaReceiver {
 					val callback =
 						MediaCallback(
 							mediaController = mediaController,
-							dataStore = DataStore(context),
 							onDestroyed = { removeMedia(mediaController) },
 							onToggleSupportedPlayer = { supported ->
 								toggleSupportedPlayer(
 									supported,
 									mediaController.packageName
 								)
-							}
+							},
+							statsDataStore = context.statsDataStore
 						)
 					callbackMap[mediaController.packageName] = callback
 					mediaController.registerCallback(callback)
@@ -56,16 +55,16 @@ object MediaReceiver {
 	}
 
 	fun register(context: Context) {
-		val dataStore = DataStore(context)
+		//val dataStore = DataStore(context)
 
-		scope.launch {
+		/*scope.launch {
 			dataStore.unsupportedMediaPlayers.collect { unsupportedPlayers ->
 				callbackMap.values.forEach { it.onUnsupportedPlayersChanged(unsupportedPlayers) }
 
 				// Update the list of unsupported players
 				this@MediaReceiver.unsupportedPlayers = unsupportedPlayers
 			}
-		}
+		}*/
 
 		// Get the media session manager
 		if (!MediaReceiver::mediaSessionManager.isInitialized) mediaSessionManager =
@@ -94,14 +93,14 @@ object MediaReceiver {
 			// Create callback for this media controller and add it to the map of callbacks
 			val mediaCallback = MediaCallback(
 				mediaController = mediaController,
-				dataStore = DataStore(context),
 				onDestroyed = { removeMedia(mediaController) },
 				onToggleSupportedPlayer = { supported ->
 					toggleSupportedPlayer(
 						supported,
 						mediaController.packageName
 					)
-				}
+				},
+				statsDataStore = context.statsDataStore
 			)
 			callbackMap[mediaController.packageName] = mediaCallback
 

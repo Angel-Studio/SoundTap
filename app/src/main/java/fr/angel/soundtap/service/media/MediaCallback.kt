@@ -7,8 +7,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import fr.angel.soundtap.data.DataStore
+import androidx.datastore.core.DataStore
 import fr.angel.soundtap.data.models.Song
+import fr.angel.soundtap.data.settings.stats.StatsSettings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,7 +19,7 @@ class MediaCallback @Inject constructor(
 	private val mediaController: MediaController,
 	val onDestroyed: () -> Unit,
 	val onToggleSupportedPlayer: (Boolean) -> Unit,
-	val dataStore: DataStore,
+	private val statsDataStore: DataStore<StatsSettings>,
 ) : MediaController.Callback() {
 
 	private var playbackState: MutableState<PlaybackState?> = mutableStateOf(null)
@@ -50,12 +51,12 @@ class MediaCallback @Inject constructor(
 
 	fun skipToNext() {
 		mediaController.transportControls.skipToNext()
-		scope.launch { dataStore.incrementTotalSongsSkipped() }
+		scope.launch { statsDataStore.updateData { it.incrementTotalSongsSkipped() } }
 	}
 
 	fun skipToPrevious() {
 		mediaController.transportControls.skipToPrevious()
-		scope.launch { dataStore.incrementTotalSongsSkipped() }
+		scope.launch { statsDataStore.updateData { it.incrementTotalSongsSkipped() } }
 	}
 
 	fun togglePlayPause() = if (isPlaying) {
@@ -110,8 +111,9 @@ class MediaCallback @Inject constructor(
 
 			debounceCount = 0
 
-			CoroutineScope(Dispatchers.IO).launch { dataStore.addToHistory(this@run) }
-			scope.launch { dataStore.incrementTotalSongsPlayed() }
+			scope.launch { statsDataStore.updateData { it.addSongToHistory(this@run) } }
+			scope.launch { statsDataStore.updateData { it.incrementTotalSongsPlayed() } }
+
 			playingSong = this
 		}
 	}
