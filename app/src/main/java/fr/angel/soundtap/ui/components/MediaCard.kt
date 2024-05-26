@@ -78,14 +78,18 @@ fun MediaCard(
 ) {
 	val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
 
+	val availablePlayers = uiState.playersPackages.filter {
+		uiState.appSettings.unsupportedMediaPlayers.contains(it.activityInfo.packageName).not()
+	}
+
 	val initialPage = remember {
-		uiState.playersPackages.indexOfFirst {
-			MediaReceiver.callbackMap[it.activityInfo.packageName] != null
+		availablePlayers.indexOfFirst {
+			MediaReceiver.callbackMap[it.activityInfo.packageName]?.playingSong != null
 		}.coerceAtLeast(0)
 	}
 
 	val pagerState = rememberPagerState(
-		pageCount = { uiState.playersPackages.size },
+		pageCount = { availablePlayers.size },
 		initialPage = initialPage
 	)
 
@@ -95,29 +99,27 @@ fun MediaCard(
 		contentPadding = PaddingValues(horizontal = 8.dp),
 		pageSpacing = 8.dp,
 	) { page ->
-		val packageInfo = uiState.playersPackages.elementAt(page)
+		val packageInfo = availablePlayers.elementAt(page)
 		val media = MediaReceiver.callbackMap[packageInfo.activityInfo.packageName]
 
 		Crossfade(
-			targetState = media != null,
+			targetState = media,
 			label = "Media card",
-		) { hasMedia ->
-			if (hasMedia) {
+		) { media ->
+			media?.let {
 				PlaybackCard(
 					modifier = Modifier
 						.fillMaxWidth()
 						.height(400.dp),
-					media = media!!,
+					media = media,
 					packageInfo = packageInfo,
 				)
-			} else {
-				EmptyPlayerCard(
-					modifier = Modifier
-						.fillMaxWidth()
-						.height(400.dp),
-					packageInfo = packageInfo,
-				)
-			}
+			} ?: EmptyPlayerCard(
+				modifier = Modifier
+					.fillMaxWidth()
+					.height(400.dp),
+				packageInfo = packageInfo,
+			)
 		}
 	}
 }

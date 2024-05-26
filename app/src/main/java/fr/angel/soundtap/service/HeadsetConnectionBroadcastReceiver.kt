@@ -6,13 +6,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import fr.angel.soundtap.GlobalHelper
-import fr.angel.soundtap.data.DataStore
-import fr.angel.soundtap.data.enums.isOnHeadsetConnectedActive
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 
 class HeadsetConnectionBroadcastReceiver : BroadcastReceiver() {
 
@@ -28,11 +23,9 @@ class HeadsetConnectionBroadcastReceiver : BroadcastReceiver() {
 
 		val state = intent.getIntExtra(BluetoothProfile.EXTRA_STATE, -1)
 
-		val dataStore = DataStore(context.applicationContext)
-
-		scope.launch {
-			val autoPlay = dataStore.autoPlayEnabled.first()
-			val autoPlayMode = dataStore.autoPlayMode.first()
+		/*scope.launch {
+			val autoPlay = customizationRepository.autoPlayEnabled.first()
+			val autoPlayMode = customizationRepository.autoPlayMode.first()
 			val preferredMediaPlayer = dataStore.preferredMediaPlayer.first()
 
 			Log.d(TAG, "Auto play: $autoPlay, preferred media player: $preferredMediaPlayer")
@@ -45,6 +38,6 @@ class HeadsetConnectionBroadcastReceiver : BroadcastReceiver() {
 				Log.i(TAG, "Headset connected, starting media player")
 				GlobalHelper.startMediaPlayer(context, preferredMediaPlayer)
 			}
-		}
+		}*/
 	}
 }

@@ -74,7 +74,7 @@ import fr.angel.soundtap.MainViewModel
 import fr.angel.soundtap.VibratorHelper
 import fr.angel.soundtap.animations.PERLIN_NOISE
 import fr.angel.soundtap.data.enums.AutoPlayMode
-import fr.angel.soundtap.data.enums.HapticFeedback
+import fr.angel.soundtap.data.enums.HapticFeedbackLevel
 import fr.angel.soundtap.data.enums.WorkingMode
 import fr.angel.soundtap.ui.components.settings.SettingsItemCustomBottom
 import kotlinx.coroutines.launch
@@ -92,11 +92,12 @@ fun SharedTransitionScope.CustomizationScreen(
 	val scope = rememberCoroutineScope()
 
 	val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
-	var longPressDurationTempValue by remember { mutableFloatStateOf(uiState.longPressDuration.toFloat()) }
 
-	LaunchedEffect(uiState.longPressDuration) {
+	var longPressDurationTempValue by remember { mutableFloatStateOf(uiState.customizationSettings.longPressThreshold.toFloat()) }
+
+	LaunchedEffect(uiState.customizationSettings.longPressThreshold) {
 		if (longPressDurationTempValue == 0f) {
-			longPressDurationTempValue = uiState.longPressDuration.toFloat()
+			longPressDurationTempValue = uiState.customizationSettings.longPressThreshold.toFloat()
 		}
 	}
 
@@ -167,7 +168,7 @@ fun SharedTransitionScope.CustomizationScreen(
 								settingsList.forEachIndexed { index, item ->
 
 									val backgroundColor by animateColorAsState(
-										targetValue = if (uiState.workingMode.ordinal == index) {
+										targetValue = if (uiState.customizationSettings.workingMode.ordinal == index) {
 											MaterialTheme.colorScheme.primary.copy(0.3f)
 										} else {
 											MaterialTheme.colorScheme.onSurface.copy(0.05f)
@@ -175,7 +176,7 @@ fun SharedTransitionScope.CustomizationScreen(
 									)
 
 									val borderColor by animateColorAsState(
-										targetValue = if (uiState.workingMode.ordinal == index) {
+										targetValue = if (uiState.customizationSettings.workingMode.ordinal == index) {
 											MaterialTheme.colorScheme.primary
 										} else {
 											MaterialTheme.colorScheme.onSurface.copy(0.1f)
@@ -183,7 +184,7 @@ fun SharedTransitionScope.CustomizationScreen(
 									)
 
 									val cornerShape by animateFloatAsState(
-										targetValue = if (uiState.workingMode.ordinal == index) {
+										targetValue = if (uiState.customizationSettings.workingMode.ordinal == index) {
 											16f
 										} else {
 											12f
@@ -209,7 +210,10 @@ fun SharedTransitionScope.CustomizationScreen(
 											}
 											.padding(8.dp)
 									) {
-										item.selectedComposable(this, uiState.workingMode == item)
+										item.selectedComposable(
+											this,
+											uiState.customizationSettings.workingMode == item
+										)
 										Text(
 											text = item.title,
 											style = MaterialTheme.typography.bodyMedium,
@@ -234,12 +238,12 @@ fun SharedTransitionScope.CustomizationScreen(
 								verticalAlignment = Alignment.CenterVertically,
 								horizontalArrangement = Arrangement.spacedBy(4.dp)
 							) {
-								val settingsList = HapticFeedback.entries
+								val settingsList = HapticFeedbackLevel.entries
 
 								settingsList.forEachIndexed { index, item ->
 
 									val backgroundColor by animateColorAsState(
-										targetValue = if (uiState.hapticFeedback.ordinal == index) {
+										targetValue = if (uiState.customizationSettings.hapticFeedbackLevel.ordinal == index) {
 											MaterialTheme.colorScheme.primary.copy(0.3f)
 										} else {
 											MaterialTheme.colorScheme.onSurface.copy(0.05f)
@@ -247,7 +251,7 @@ fun SharedTransitionScope.CustomizationScreen(
 									)
 
 									val borderColor by animateColorAsState(
-										targetValue = if (uiState.hapticFeedback.ordinal == index) {
+										targetValue = if (uiState.customizationSettings.hapticFeedbackLevel.ordinal == index) {
 											MaterialTheme.colorScheme.primary
 										} else {
 											MaterialTheme.colorScheme.onSurface.copy(0.1f)
@@ -255,7 +259,7 @@ fun SharedTransitionScope.CustomizationScreen(
 									)
 
 									val cornerShape by animateFloatAsState(
-										targetValue = if (uiState.hapticFeedback.ordinal == index) {
+										targetValue = if (uiState.customizationSettings.hapticFeedbackLevel.ordinal == index) {
 											16f
 										} else {
 											12f
@@ -282,7 +286,8 @@ fun SharedTransitionScope.CustomizationScreen(
 												}
 											}
 									) {
-										val selected = uiState.hapticFeedback.ordinal == index
+										val selected =
+											uiState.customizationSettings.hapticFeedbackLevel.ordinal == index
 										val time by produceState(0f) {
 											while (true) {
 												withInfiniteAnimationFrameMillis {
@@ -294,7 +299,7 @@ fun SharedTransitionScope.CustomizationScreen(
 										val shader = remember { RuntimeShader(PERLIN_NOISE) }
 
 										val shaderModifier =
-											if (selected && item != HapticFeedback.NONE) {
+											if (selected && item != HapticFeedbackLevel.NONE) {
 												Modifier
 													.onSizeChanged { size ->
 														shader.setFloatUniform(
@@ -475,7 +480,7 @@ fun SharedTransitionScope.CustomizationScreen(
 						icon = Icons.Default.PlayCircleOutline,
 						trailing = {
 							Switch(
-								checked = uiState.autoPlay,
+								checked = uiState.customizationSettings.autoPlay,
 								onCheckedChange = {
 									scope.launch {
 										mainViewModel.setAutoPlay(it)
@@ -485,7 +490,7 @@ fun SharedTransitionScope.CustomizationScreen(
 						},
 						onClick = {
 							scope.launch {
-								mainViewModel.setAutoPlay(!uiState.autoPlay)
+								mainViewModel.setAutoPlay(!uiState.customizationSettings.autoPlay)
 							}
 						},
 						content = {
@@ -503,7 +508,7 @@ fun SharedTransitionScope.CustomizationScreen(
 									settingsList.forEachIndexed { index, item ->
 
 										val backgroundColor by animateColorAsState(
-											targetValue = if (uiState.autoPlayMode.ordinal == index) {
+											targetValue = if (uiState.customizationSettings.autoPlayMode.ordinal == index) {
 												MaterialTheme.colorScheme.primary.copy(0.3f)
 											} else {
 												MaterialTheme.colorScheme.onSurface.copy(0.05f)
@@ -511,7 +516,7 @@ fun SharedTransitionScope.CustomizationScreen(
 										)
 
 										val borderColor by animateColorAsState(
-											targetValue = if (uiState.autoPlayMode.ordinal == index) {
+											targetValue = if (uiState.customizationSettings.autoPlayMode.ordinal == index) {
 												MaterialTheme.colorScheme.primary
 											} else {
 												MaterialTheme.colorScheme.onSurface.copy(0.1f)
@@ -519,7 +524,7 @@ fun SharedTransitionScope.CustomizationScreen(
 										)
 
 										val cornerShape by animateFloatAsState(
-											targetValue = if (uiState.autoPlayMode.ordinal == index) {
+											targetValue = if (uiState.customizationSettings.autoPlayMode.ordinal == index) {
 												16f
 											} else {
 												12f
@@ -547,7 +552,7 @@ fun SharedTransitionScope.CustomizationScreen(
 										) {
 											item.selectedComposable(
 												this,
-												uiState.autoPlayMode == item
+												uiState.customizationSettings.autoPlayMode == item
 											)
 											Text(
 												text = item.title,

@@ -11,11 +11,14 @@ import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 import fr.angel.soundtap.GlobalHelper
 import fr.angel.soundtap.VibratorHelper
-import fr.angel.soundtap.data.DataStore
 import fr.angel.soundtap.data.enums.AutoPlayMode
-import fr.angel.soundtap.data.enums.HapticFeedback
+import fr.angel.soundtap.data.enums.HapticFeedbackLevel
 import fr.angel.soundtap.data.enums.WorkingMode
 import fr.angel.soundtap.data.enums.isOnHeadsetConnectedActive
+import fr.angel.soundtap.data.settings.customization.DEFAULT_DELAY_BETWEEN_EVENTS
+import fr.angel.soundtap.data.settings.customization.DEFAULT_DOUBLE_PRESS_THRESHOLD
+import fr.angel.soundtap.data.settings.customization.DEFAULT_LONG_PRESS_THRESHOLD
+import fr.angel.soundtap.data.settings.customization.customizationSettingsDataStore
 import fr.angel.soundtap.service.media.MediaReceiver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -65,21 +68,16 @@ class SoundTapAccessibilityService : AccessibilityService() {
 	private lateinit var wakeLock: PowerManager.WakeLock
 	private lateinit var displayManager: DisplayManager
 	private lateinit var vibratorHelper: VibratorHelper
-	private lateinit var dataStore: DataStore
 
-	private var hapticFeedback = HapticFeedback.NONE
+	private var hapticFeedbackLevel = HapticFeedbackLevel.NONE
 	private var longPressThreshold = DEFAULT_LONG_PRESS_THRESHOLD
 	private var doublePressThreshold = DEFAULT_DOUBLE_PRESS_THRESHOLD
 	private var workingMode = WorkingMode.SCREEN_ON_OFF
 	private var autoPlayMode = AutoPlayMode.ON_HEADSET_CONNECTED
-	private lateinit var preferredMediaPlayer: String
+	private var preferredMediaPlayer: String? = null
 
 	companion object {
 		private const val TAG = "SoundTapAccessibilityService"
-
-		const val DEFAULT_LONG_PRESS_THRESHOLD = 400L
-		const val DEFAULT_DOUBLE_PRESS_THRESHOLD = 400L
-		const val DEFAULT_DELAY_BETWEEN_EVENTS = 1000L
 
 		private val _uiState = MutableStateFlow(AccessibilityServiceState())
 		val uiState: StateFlow<AccessibilityServiceState> = _uiState.asStateFlow()
@@ -192,8 +190,6 @@ class SoundTapAccessibilityService : AccessibilityService() {
 					}
 				}
 
-				// listenerScope.cancel()
-
 				return true
 			}
 
@@ -206,22 +202,18 @@ class SoundTapAccessibilityService : AccessibilityService() {
 		setActivated(true)
 		super.onCreate()
 
-		dataStore = DataStore(this.application)
 		audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
 		vibratorHelper = VibratorHelper(this)
 		displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
 
-		// Observe the data store settings to update the service settings
-		scope.launch { dataStore.hapticFeedback.collect { hapticFeedback = it } }
-		scope.launch { dataStore.longPressDuration.collect { longPressThreshold = it } }
-		scope.launch { dataStore.doublePressDuration.collect { doublePressThreshold = it } }
-		scope.launch { dataStore.workingMode.collect { workingMode = it } }
-		scope.launch { dataStore.autoPlayMode.collect { autoPlayMode = it } }
-		scope.launch {
-			dataStore.preferredMediaPlayer.collect {
-				if (it != null) {
-					preferredMediaPlayer = it
-				}
+		scope.launch(Dispatchers.IO) {
+			customizationSettingsDataStore.data.collect {
+				hapticFeedbackLevel = it.hapticFeedbackLevel
+				longPressThreshold = it.longPressThreshold
+				doublePressThreshold = it.doublePressThreshold
+				workingMode = it.workingMode
+				autoPlayMode = it.autoPlayMode
+				preferredMediaPlayer = it.preferredMediaPlayer
 			}
 		}
 
@@ -325,23 +317,23 @@ class SoundTapAccessibilityService : AccessibilityService() {
 	 **/
 
 	private fun volumeUpLongPressed() {
-		vibratorHelper.createHapticFeedback(hapticFeedback)
+		vibratorHelper.createHapticFeedback(hapticFeedbackLevel)
 		MediaReceiver.firstCallback?.skipToNext()
 	}
 
 	private fun volumeDownLongPressed() {
-		vibratorHelper.createHapticFeedback(hapticFeedback)
+		vibratorHelper.createHapticFeedback(hapticFeedbackLevel)
 		MediaReceiver.firstCallback?.skipToPrevious()
 	}
 
 	private fun bothVolumePressed() {
 		if (MediaReceiver.firstCallback == null) {
-			preferredMediaPlayer.let {
+			preferredMediaPlayer?.let {
 				vibratorHelper.doubleClick()
 				GlobalHelper.startMediaPlayer(context = this.application, packageName = it)
 			}
 		} else {
-			vibratorHelper.createHapticFeedback(hapticFeedback)
+			vibratorHelper.createHapticFeedback(hapticFeedbackLevel)
 			MediaReceiver.firstCallback?.togglePlayPause()
 		}
 

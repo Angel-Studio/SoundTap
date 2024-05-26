@@ -4,12 +4,14 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
 import com.google.gson.Gson
+import kotlinx.serialization.Serializable
 import java.io.ByteArrayOutputStream
 
 fun String.toSong(): Song {
 	return Gson().fromJson(this, Song::class.java)
 }
 
+@Serializable
 data class Song(
 	val title: String,
 	val artist: String,

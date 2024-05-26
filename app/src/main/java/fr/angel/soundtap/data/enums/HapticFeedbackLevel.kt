@@ -3,7 +3,7 @@ package fr.angel.soundtap.data.enums
 import androidx.annotation.DrawableRes
 import fr.angel.soundtap.R
 
-enum class HapticFeedback(
+enum class HapticFeedbackLevel(
 	val title: String,
 	@DrawableRes val icon: Int,
 ) {

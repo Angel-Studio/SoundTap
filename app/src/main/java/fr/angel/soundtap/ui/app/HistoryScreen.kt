@@ -54,11 +54,13 @@ fun SharedTransitionScope.HistoryScreen(
 ) {
 	val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
 
-	val songsList = remember(uiState.history) { uiState.history.toList().reversed() }
+	val songsList = remember(uiState.statsSettings.history) {
+		uiState.statsSettings.history.toList().reversed()
+	}
 	val isHistoryEmpty = songsList.isEmpty()
 
-	val totalSongsPlayed = uiState.totalSongsPlayed
-	val totalSongsSkipped = uiState.totalSongsSkipped
+	val totalSongsPlayed = uiState.statsSettings.totalSongsPlayed
+	val totalSongsSkipped = uiState.statsSettings.totalSongsSkipped
 
 	Card(
 		modifier = modifier
