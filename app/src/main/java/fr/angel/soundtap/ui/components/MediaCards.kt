@@ -64,15 +64,16 @@ import androidx.core.graphics.ColorUtils
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.palette.graphics.Palette
 import coil.compose.AsyncImage
+import coil.imageLoader
 import fr.angel.soundtap.GlobalHelper
 import fr.angel.soundtap.MainViewModel
-import fr.angel.soundtap.data.models.Song
+import fr.angel.soundtap.data.StorageHelper
 import fr.angel.soundtap.service.media.MediaCallback
 import fr.angel.soundtap.service.media.MediaReceiver
 import fr.angel.soundtap.supportedStartMediaPlayerPackages
 
 @Composable
-fun MediaCard(
+fun MediaCards(
 	modifier: Modifier = Modifier,
 	mainViewModel: MainViewModel,
 ) {
@@ -105,13 +106,13 @@ fun MediaCard(
 		Crossfade(
 			targetState = media,
 			label = "Media card",
-		) { media ->
-			media?.let {
+		) { callback ->
+			callback?.let {
 				PlaybackCard(
 					modifier = Modifier
 						.fillMaxWidth()
 						.height(400.dp),
-					media = media,
+					media = callback,
 					packageInfo = packageInfo,
 				)
 			} ?: EmptyPlayerCard(
@@ -145,6 +146,7 @@ fun EmptyPlayerCard(
 		) {
 			AsyncImage(
 				model = appIcon,
+				imageLoader = context.imageLoader,
 				contentDescription = null,
 				modifier = Modifier
 					.padding(16.dp)
@@ -199,9 +201,17 @@ fun PlaybackCard(
 	val context = LocalContext.current
 	val packageManager = context.packageManager
 
-	val song = media.playingSong ?: return
+	val song = media.playingSong ?: run {
+		EmptyPlayerCard(
+			modifier = modifier,
+			packageInfo = packageInfo,
+		)
+		return
+	}
 
-	val generatedBitmap: Bitmap = remember(song.cover) { Song.base64ToBitmap(song.cover) }
+	val generatedBitmap: Bitmap = remember(song.coverFilePath) {
+		StorageHelper.loadBitmapFromFile(song.coverFilePath)
+	}
 
 	val coverPalette = Palette.from(generatedBitmap).generate()
 	val dominantColor = Color(coverPalette.getVibrantColor(Color.White.toArgb()))
@@ -236,6 +246,7 @@ fun PlaybackCard(
 			AsyncImage(
 				model = appIcon,
 				contentDescription = null,
+				imageLoader = context.imageLoader,
 				modifier = Modifier
 					.padding(16.dp)
 					.align(Alignment.TopStart)
@@ -250,6 +261,7 @@ fun PlaybackCard(
 				AsyncImage(
 					model = cover,
 					contentDescription = null,
+					imageLoader = context.imageLoader,
 					contentScale = ContentScale.Crop,
 					colorFilter = ColorFilter.tint(
 						color = dominantColor.copy(alpha = 0.5f),

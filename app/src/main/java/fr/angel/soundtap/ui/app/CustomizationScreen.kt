@@ -2,6 +2,7 @@ package fr.angel.soundtap.ui.app
 
 import android.graphics.RenderEffect
 import android.graphics.RuntimeShader
+import android.os.Build
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -296,9 +297,11 @@ fun SharedTransitionScope.CustomizationScreen(
 											}
 										}
 
-										val shader = remember { RuntimeShader(PERLIN_NOISE) }
-
 										val shaderModifier =
+											if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+												val shader =
+													remember { RuntimeShader(PERLIN_NOISE) }
+
 											if (selected && item != HapticFeedbackLevel.NONE) {
 												Modifier
 													.onSizeChanged { size ->
@@ -317,6 +320,9 @@ fun SharedTransitionScope.CustomizationScreen(
 															)
 															.asComposeRenderEffect()
 													}
+											} else {
+												Modifier
+											}
 											} else {
 												Modifier
 											}

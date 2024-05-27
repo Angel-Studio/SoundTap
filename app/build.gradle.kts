@@ -19,8 +19,8 @@ android {
 		applicationId = "fr.angel.soundtap"
 		minSdk = 30
 		targetSdk = 34
-		versionCode = 15
-		versionName = "1.0.4"
+		versionCode = 22
+		versionName = "1.0.6"
 
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 		vectorDrawables {
@@ -34,10 +34,10 @@ android {
 			isMinifyEnabled = true
 			isShrinkResources = true
 
-			proguardFiles(
+			/*proguardFiles(
 				getDefaultProguardFile("proguard-android-optimize.txt"),
 				"proguard-rules.pro"
-			)
+			)*/
 
 			ndk {
 				debugSymbolLevel = "FULL"
@@ -90,7 +90,6 @@ dependencies {
 	implementation(libs.accompanist.permissions)
 	implementation(libs.androidx.lifecycle.viewmodel.compose)
 	implementation(libs.lottie.compose)
-	implementation(libs.androidx.constraintlayout.compose)
 	implementation(libs.androidx.navigation.compose)
 	implementation(libs.androidx.datastore.preferences)
 	implementation(libs.gson)

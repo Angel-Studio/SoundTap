@@ -1,5 +1,6 @@
 package fr.angel.soundtap.ui.components
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,9 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.imageLoader
+import fr.angel.soundtap.data.StorageHelper
 import fr.angel.soundtap.data.models.Song
 
 @Composable
@@ -26,7 +30,10 @@ fun SongRow(
 	modifier: Modifier = Modifier,
 	song: Song,
 ) {
-	val generatedBitmap = remember { Song.base64ToBitmap(song.cover) }
+	val context = LocalContext.current
+	val generatedBitmap: Bitmap = remember(song.coverFilePath) {
+		StorageHelper.loadBitmapFromFile(song.coverFilePath)
+	}
 
 	Card(
 		modifier = modifier,
@@ -42,6 +49,7 @@ fun SongRow(
 		) {
 			AsyncImage(
 				model = generatedBitmap,
+				imageLoader = context.imageLoader,
 				contentDescription = null,
 				contentScale = ContentScale.Crop,
 				modifier = Modifier

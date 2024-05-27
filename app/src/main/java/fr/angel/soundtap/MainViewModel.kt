@@ -15,6 +15,7 @@ import fr.angel.soundtap.data.settings.settings.AppSettings
 import fr.angel.soundtap.data.settings.stats.StatsSettings
 import fr.angel.soundtap.navigation.Screens
 import fr.angel.soundtap.service.SoundTapAccessibilityService
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -74,7 +75,10 @@ class MainViewModel @Inject constructor(
 			_uiState.value.copy(playersPackages = packageQueryHelper.getMediaPlayersInstalled())
 
 		// Remove the splash screen
-		_uiState.value = _uiState.value.copy(finishedInitializations = true)
+		viewModelScope.launch {
+			delay(500)
+			_uiState.value = _uiState.value.copy(finishedInitializations = true)
+		}
 	}
 
 	fun updatePermissionStates(context: Context) {

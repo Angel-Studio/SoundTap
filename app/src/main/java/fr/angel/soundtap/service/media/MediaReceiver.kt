@@ -5,20 +5,16 @@ import android.content.Context
 import android.media.session.MediaController
 import android.media.session.MediaSessionManager
 import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.snapshots.SnapshotStateMap
 import fr.angel.soundtap.data.settings.stats.statsDataStore
 import fr.angel.soundtap.service.NotificationService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 
 object MediaReceiver {
 
 	// Map of package name to callback
-	val callbackMap: SnapshotStateMap<String, MediaCallback> = mutableStateMapOf()
+	val callbackMap = mutableStateMapOf<String, MediaCallback>()
 	private val unsupportedCallbackMap = mutableStateMapOf<String, MediaCallback>()
 	private lateinit var mediaSessionManager: MediaSessionManager
 
-	private val scope by lazy { CoroutineScope(Dispatchers.IO) }
 	private var unsupportedPlayers = emptySet<String>()
 
 	val firstCallback: MediaCallback?
@@ -42,7 +38,8 @@ object MediaReceiver {
 									mediaController.packageName
 								)
 							},
-							statsDataStore = context.statsDataStore
+							statsDataStore = context.statsDataStore,
+							context = context
 						)
 					callbackMap[mediaController.packageName] = callback
 					mediaController.registerCallback(callback)
@@ -100,7 +97,8 @@ object MediaReceiver {
 						mediaController.packageName
 					)
 				},
-				statsDataStore = context.statsDataStore
+				statsDataStore = context.statsDataStore,
+				context = context
 			)
 			callbackMap[mediaController.packageName] = mediaCallback
 

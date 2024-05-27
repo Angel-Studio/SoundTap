@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AppSettings(
-	val onboardingPageCompleted: Boolean = true,
+	val onboardingPageCompleted: Boolean = false,
 	val unsupportedMediaPlayers: Set<String> = emptySet(),
 )

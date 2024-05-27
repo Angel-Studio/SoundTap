@@ -4,7 +4,6 @@ import android.accessibilityservice.AccessibilityService
 import android.content.Context
 import android.hardware.display.DisplayManager
 import android.media.AudioManager
-import android.os.PowerManager
 import android.util.Log
 import android.view.Display
 import android.view.KeyEvent
@@ -65,7 +64,6 @@ class SoundTapAccessibilityService : AccessibilityService() {
 	private val listenerScope by lazy { CoroutineScope(Dispatchers.IO) }
 
 	private lateinit var audioManager: AudioManager
-	private lateinit var wakeLock: PowerManager.WakeLock
 	private lateinit var displayManager: DisplayManager
 	private lateinit var vibratorHelper: VibratorHelper
 
@@ -223,22 +221,11 @@ class SoundTapAccessibilityService : AccessibilityService() {
 			Log.e(TAG, "Failed to register media receiver, is the permission granted?", e)
 			disableSelf()
 		}
-
-		// Acquire a wake lock to keep the service running
-		wakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager).run {
-			newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "SoundTap::ServiceWakeLock").apply {
-				acquire(10 * 60 * 1000L)
-				Log.i(TAG, "Wake lock acquired")
-			}
-		}
 	}
 
 	override fun onDestroy() {
 		setRunning(false)
 		MediaReceiver.unregister(this)
-
-		// Release the wake lock
-		wakeLock.release()
 
 		// Release scope
 		scope.cancel()

@@ -41,7 +41,7 @@ import fr.angel.soundtap.service.media.MediaReceiver
 import fr.angel.soundtap.ui.components.GridCard
 import fr.angel.soundtap.ui.components.InfoCard
 import fr.angel.soundtap.ui.components.InfoCardType
-import fr.angel.soundtap.ui.components.MediaCard
+import fr.angel.soundtap.ui.components.MediaCards
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -86,6 +86,9 @@ fun SharedTransitionScope.App(
 		when {
 			uiState.hasNotificationListenerPermission.not() -> {
 				InfoCard(
+					modifier = Modifier
+						.fillMaxWidth()
+						.padding(horizontal = 8.dp),
 					cardType = InfoCardType.Notification,
 					icon = Icons.Outlined.NotificationImportant,
 					title = "Notification Listener Permission",
@@ -112,31 +115,8 @@ fun SharedTransitionScope.App(
 					}
 				)
 			}
-
-			/*(mediaCallback ?: lastCallback)?.playingSong == null -> {
-				InfoCard(
-					icon = Icons.Outlined.Radio,
-					title = "No Media Playing",
-					body = "No media is currently playing. Start playing music or a video to see media information.",
-					bottomContent = {
-						Button(
-							modifier = Modifier
-								.align(Alignment.End),
-							onClick = {
-								GlobalHelper.startMediaPlayer(
-									context = context,
-									packageName = mainViewModel.uiState.value.preferredMediaPlayer
-								)
-							},
-						) {
-							Text("Start Preferred Media Player")
-						}
-					}
-				)
-			}*/
-
 			else -> {
-				MediaCard(
+				MediaCards(
 					modifier = Modifier
 						.fillMaxWidth()
 						.height(200.dp),

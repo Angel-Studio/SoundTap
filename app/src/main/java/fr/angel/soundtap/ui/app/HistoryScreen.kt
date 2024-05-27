@@ -2,6 +2,7 @@ package fr.angel.soundtap.ui.app
 
 import android.graphics.RenderEffect
 import android.graphics.RuntimeShader
+import android.os.Build
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -36,9 +37,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import fr.angel.soundtap.MainViewModel
 import fr.angel.soundtap.R
@@ -118,38 +117,49 @@ fun SharedTransitionScope.HistoryScreen(
 					}
 				}
 
-				val shader = remember { RuntimeShader(WOBBLE_SHADER) }
+				val shaderModifier = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+					val shader = remember { RuntimeShader(WOBBLE_SHADER) }
+
+					Modifier
+						.onSizeChanged { size ->
+							shader.setFloatUniform(
+								"resolution",
+								size.width.toFloat(),
+								size.height.toFloat()
+							)
+						}
+						.graphicsLayer {
+							shader.setFloatUniform("time", time)
+							renderEffect = RenderEffect
+								.createRuntimeShaderEffect(
+									shader,
+									"contents"
+								)
+								.asComposeRenderEffect()
+						}
+				} else {
+					Modifier
+				}
+
 
 				Column(
 					modifier = Modifier.fillMaxSize(),
 					verticalArrangement = Arrangement.Center,
 					horizontalAlignment = Alignment.CenterHorizontally,
 				) {
-					val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty))
+					val composition by rememberLottieComposition(
+						LottieCompositionSpec.RawRes(R.raw.empty)
+					)
 
-					LottieAnimation(
+					/*LottieAnimation(
 						composition = composition,
 						iterations = LottieConstants.IterateForever,
+						renderMode = RenderMode.HARDWARE,
 						modifier = Modifier
 							.fillMaxWidth(0.8f)
 							.align(Alignment.CenterHorizontally)
-							.onSizeChanged { size ->
-								shader.setFloatUniform(
-									"resolution",
-									size.width.toFloat(),
-									size.height.toFloat()
-								)
-							}
-							.graphicsLayer {
-								shader.setFloatUniform("time", time)
-								renderEffect = RenderEffect
-									.createRuntimeShaderEffect(
-										shader,
-										"contents"
-									)
-									.asComposeRenderEffect()
-							},
-					)
+							.then(shaderModifier)
+					)*/
 					Text(
 						text = "No history",
 						modifier = Modifier.align(Alignment.CenterHorizontally),

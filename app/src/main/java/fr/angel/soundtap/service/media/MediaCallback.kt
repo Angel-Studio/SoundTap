@@ -1,13 +1,16 @@
 package fr.angel.soundtap.service.media
 
+import android.content.Context
 import android.media.MediaMetadata
 import android.media.session.MediaController
 import android.media.session.PlaybackState
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.datastore.core.DataStore
+import fr.angel.soundtap.data.StorageHelper.saveBitmapToFile
 import fr.angel.soundtap.data.models.Song
 import fr.angel.soundtap.data.settings.stats.StatsSettings
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +23,7 @@ class MediaCallback @Inject constructor(
 	val onDestroyed: () -> Unit,
 	val onToggleSupportedPlayer: (Boolean) -> Unit,
 	private val statsDataStore: DataStore<StatsSettings>,
+	private val context: Context,
 ) : MediaController.Callback() {
 
 	private var playbackState: MutableState<PlaybackState?> = mutableStateOf(null)
@@ -83,38 +87,57 @@ class MediaCallback @Inject constructor(
 
 	private fun updatePlayingSong() {
 
-		Song(
-			title = mediaController.metadata!!.getString(MediaMetadata.METADATA_KEY_TITLE)
-				?: return,
-			artist = mediaController.metadata!!.getString(MediaMetadata.METADATA_KEY_ARTIST)
-				?: return,
-			album = mediaController.metadata!!.getString(MediaMetadata.METADATA_KEY_ALBUM)
-				?: return,
-			duration = mediaController.metadata!!.getLong(MediaMetadata.METADATA_KEY_DURATION),
-			cover = Song.bitmapToBase64(mediaController.metadata!!.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART))
-		).run {
-
-			val isSameAsPrevious = playingSong?.title != title
-					&& playingSong?.artist != artist
-					&& playingSong?.album != album
-					&& playingSong?.duration != duration
-					&& playingSong?.cover == cover
-
-			val isDataPartial = this.isPartial()
-
-			if (
-				this == playingSong || isSameAsPrevious && debounceCount < 1 || isDataPartial
-			) {
-				debounceCount++
+		mediaController.metadata?.let { metadata ->
+			val bitmap = metadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART) ?: run {
+				Log.d("MediaCallback", "No album art found")
 				return
 			}
+			val filename = metadata.getString(MediaMetadata.METADATA_KEY_TITLE) +
+					"_${metadata.getString(MediaMetadata.METADATA_KEY_ALBUM)}" +
+					"_${metadata.getString(MediaMetadata.METADATA_KEY_ARTIST)}" +
+					"_${bitmap.hashCode()}" +
+					"_cover.png"
+			val coverFilePath = saveBitmapToFile(context, bitmap, filename)
 
-			debounceCount = 0
+			Song(
+				id = bitmap.hashCode(),
+				title = metadata.getString(MediaMetadata.METADATA_KEY_TITLE) ?: return,
+				artist = metadata.getString(MediaMetadata.METADATA_KEY_ARTIST) ?: return,
+				album = metadata.getString(MediaMetadata.METADATA_KEY_ALBUM) ?: return,
+				duration = metadata.getLong(MediaMetadata.METADATA_KEY_DURATION),
+				coverFilePath = coverFilePath
+			).run {
+				Log.d("MediaCallback", "New song: $this")
+				Log.d(
+					"MediaCallback",
+					"addedTime: $addedTime playingSong?.addedTime: ${playingSong?.addedTime} delta: ${addedTime - (playingSong?.addedTime ?: 0)}"
+				)
+				val duplicate = playingSong != null &&
+						(addedTime - (playingSong?.addedTime ?: 0)) > 250
 
-			scope.launch { statsDataStore.updateData { it.addSongToHistory(this@run) } }
-			scope.launch { statsDataStore.updateData { it.incrementTotalSongsPlayed() } }
+				if (
+					this == playingSong
+					|| this.isPartial()
+					|| duplicate
+					&& debounceCount == 0
+				) {
+					debounceCount = 1
+					return
+				}
 
-			playingSong = this
+				debounceCount = 0
+
+				scope.launch {
+					statsDataStore.updateData { settings ->
+						settings.addSongToHistory(
+							this@run
+						)
+					}
+				}
+				scope.launch { statsDataStore.updateData { settings -> settings.incrementTotalSongsPlayed() } }
+
+				playingSong = this
+			}
 		}
 	}
 

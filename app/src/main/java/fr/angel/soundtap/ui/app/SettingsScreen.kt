@@ -62,6 +62,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import coil.imageLoader
 import fr.angel.soundtap.MainViewModel
 import fr.angel.soundtap.R
 import fr.angel.soundtap.supportedStartMediaPlayerPackages
@@ -320,6 +321,7 @@ private fun MediaPlayerSwitchRow(
 	) {
 		AsyncImage(
 			model = appIcon,
+			imageLoader = context.imageLoader,
 			contentDescription = null,
 			modifier = Modifier.size(48.dp)
 		)
@@ -390,6 +392,7 @@ private fun MediaPlayerRadioRow(
 	) {
 		AsyncImage(
 			model = appIcon,
+			imageLoader = context.imageLoader,
 			contentDescription = null,
 			modifier = Modifier.size(48.dp)
 		)
