@@ -61,139 +61,139 @@ import fr.angel.soundtap.ui.components.MediaCards
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.App(
-    modifier: Modifier = Modifier,
-    animatedVisibilityScope: AnimatedVisibilityScope,
-    navigateToCustomization: () -> Unit,
-    navigateToHistory: () -> Unit,
-    navigateToSettings: () -> Unit,
-    navigateToSupport: () -> Unit,
-    mainViewModel: MainViewModel,
+	modifier: Modifier = Modifier,
+	animatedVisibilityScope: AnimatedVisibilityScope,
+	navigateToCustomization: () -> Unit,
+	navigateToHistory: () -> Unit,
+	navigateToSettings: () -> Unit,
+	navigateToSupport: () -> Unit,
+	mainViewModel: MainViewModel,
 ) {
-    val context = LocalContext.current
-    val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
-    val accessibilityServiceState by SoundTapAccessibilityService.uiState.collectAsStateWithLifecycle()
-    val mediaCallback = MediaReceiver.firstCallback
-    var lastCallback by remember { mutableStateOf(mediaCallback) }
+	val context = LocalContext.current
+	val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
+	val accessibilityServiceState by SoundTapAccessibilityService.uiState.collectAsStateWithLifecycle()
+	val mediaCallback = MediaReceiver.firstCallback
+	var lastCallback by remember { mutableStateOf(mediaCallback) }
 
-    LaunchedEffect(mediaCallback) {
-        if (mediaCallback != null) {
-            lastCallback = mediaCallback
-        }
-    }
+	LaunchedEffect(mediaCallback) {
+		if (mediaCallback != null) {
+			lastCallback = mediaCallback
+		}
+	}
 
-    Column(
-        modifier =
-        modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        Text(
-            modifier =
-            Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(horizontal = 8.dp),
-            text = "Take Control of Your Music",
-            style = MaterialTheme.typography.labelLarge,
-            fontWeight = FontWeight.SemiBold,
-            textAlign = TextAlign.Center,
-        )
-        Spacer(modifier = Modifier.height(8.dp))
+	Column(
+		modifier =
+			modifier
+				.fillMaxWidth()
+				.verticalScroll(rememberScrollState()),
+		verticalArrangement = Arrangement.spacedBy(8.dp),
+	) {
+		Text(
+			modifier =
+				Modifier
+					.align(Alignment.CenterHorizontally)
+					.padding(horizontal = 8.dp),
+			text = "Take Control of Your Music",
+			style = MaterialTheme.typography.labelLarge,
+			fontWeight = FontWeight.SemiBold,
+			textAlign = TextAlign.Center,
+		)
+		Spacer(modifier = Modifier.height(8.dp))
 
-        when {
-            uiState.hasNotificationListenerPermission.not() -> {
-                InfoCard(
-                    modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
-                    cardType = InfoCardType.Notification,
-                    icon = Icons.Outlined.NotificationImportant,
-                    title = "Notification Listener Permission",
-                    body =
-                    "SoundTap needs the Notification Listener permission to receive media information and control your music." +
-                        " Please enable it by pressing the button at the bottom of the screen.",
-                    onCardClick = {
-                        GlobalHelper.openNotificationListenerSettings(context = context)
-                    },
-                )
-            }
+		when {
+			uiState.hasNotificationListenerPermission.not() -> {
+				InfoCard(
+					modifier =
+						Modifier
+							.fillMaxWidth()
+							.padding(horizontal = 8.dp),
+					cardType = InfoCardType.Notification,
+					icon = Icons.Outlined.NotificationImportant,
+					title = "Notification Listener Permission",
+					body =
+						"SoundTap needs the Notification Listener permission to receive media information and control your music." +
+							" Please enable it by pressing the button at the bottom of the screen.",
+					onCardClick = {
+						GlobalHelper.openNotificationListenerSettings(context = context)
+					},
+				)
+			}
 
-            accessibilityServiceState.isRunning.not() -> {
-                InfoCard(
-                    modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
-                    cardType = InfoCardType.Accessibility,
-                    icon = Icons.Outlined.SettingsAccessibility,
-                    title = "Accessibility Service",
-                    body =
-                    "SoundTap needs the Accessibility Service to receive volume key events." +
-                        " Please enable it by pressing the button at the bottom of the screen.",
-                    onCardClick = {
-                        GlobalHelper.openAccessibilitySettings(context = context)
-                    },
-                )
-            }
+			accessibilityServiceState.isRunning.not() -> {
+				InfoCard(
+					modifier =
+						Modifier
+							.fillMaxWidth()
+							.padding(horizontal = 8.dp),
+					cardType = InfoCardType.Accessibility,
+					icon = Icons.Outlined.SettingsAccessibility,
+					title = "Accessibility Service",
+					body =
+						"SoundTap needs the Accessibility Service to receive volume key events." +
+							" Please enable it by pressing the button at the bottom of the screen.",
+					onCardClick = {
+						GlobalHelper.openAccessibilitySettings(context = context)
+					},
+				)
+			}
 
-            else -> {
-                MediaCards(
-                    modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .height(200.dp),
-                    mainViewModel = mainViewModel,
-                )
-            }
-        }
+			else -> {
+				MediaCards(
+					modifier =
+						Modifier
+							.fillMaxWidth()
+							.height(200.dp),
+					mainViewModel = mainViewModel,
+				)
+			}
+		}
 
-        Row(
-            modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            GridCard(
-                modifier = Modifier.weight(1f),
-                icon = Icons.Default.Tune,
-                label = "Customize",
-                animatedVisibilityScope = animatedVisibilityScope,
-                onClick = navigateToCustomization,
-            )
-            GridCard(
-                modifier = Modifier.weight(1f),
-                icon = Icons.Default.Settings,
-                label = "Settings",
-                animatedVisibilityScope = animatedVisibilityScope,
-                onClick = navigateToSettings,
-            )
-        }
+		Row(
+			modifier =
+				Modifier
+					.fillMaxWidth()
+					.padding(horizontal = 8.dp),
+			horizontalArrangement = Arrangement.spacedBy(8.dp),
+		) {
+			GridCard(
+				modifier = Modifier.weight(1f),
+				icon = Icons.Default.Tune,
+				label = "Customize",
+				animatedVisibilityScope = animatedVisibilityScope,
+				onClick = navigateToCustomization,
+			)
+			GridCard(
+				modifier = Modifier.weight(1f),
+				icon = Icons.Default.Settings,
+				label = "Settings",
+				animatedVisibilityScope = animatedVisibilityScope,
+				onClick = navigateToSettings,
+			)
+		}
 
-        Row(
-            modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            GridCard(
-                modifier = Modifier.weight(1f),
-                icon = Icons.Default.History,
-                label = "History",
-                animatedVisibilityScope = animatedVisibilityScope,
-                onClick = navigateToHistory,
-            )
-            GridCard(
-                modifier = Modifier.weight(1f),
-                icon = Icons.Default.Support,
-                label = "Support",
-                animatedVisibilityScope = animatedVisibilityScope,
-                onClick = navigateToSupport,
-            )
-        }
+		Row(
+			modifier =
+				Modifier
+					.fillMaxWidth()
+					.padding(horizontal = 8.dp),
+			horizontalArrangement = Arrangement.spacedBy(8.dp),
+		) {
+			GridCard(
+				modifier = Modifier.weight(1f),
+				icon = Icons.Default.History,
+				label = "History",
+				animatedVisibilityScope = animatedVisibilityScope,
+				onClick = navigateToHistory,
+			)
+			GridCard(
+				modifier = Modifier.weight(1f),
+				icon = Icons.Default.Support,
+				label = "Support",
+				animatedVisibilityScope = animatedVisibilityScope,
+				onClick = navigateToSupport,
+			)
+		}
 
-        Spacer(modifier = Modifier.height(8.dp))
-    }
+		Spacer(modifier = Modifier.height(8.dp))
+	}
 }

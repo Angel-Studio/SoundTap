@@ -65,192 +65,193 @@ import fr.angel.soundtap.ui.components.SongRow
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.HistoryScreen(
-    modifier: Modifier = Modifier,
-    mainViewModel: MainViewModel,
-    animatedVisibilityScope: AnimatedVisibilityScope,
+	modifier: Modifier = Modifier,
+	mainViewModel: MainViewModel,
+	animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
-    val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
+	val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
 
-    val songsList =
-        remember(uiState.statsSettings.history) {
-            uiState.statsSettings.history.toList().reversed()
-        }
-    val isHistoryEmpty = songsList.isEmpty()
+	val songsList =
+		remember(uiState.statsSettings.history) {
+			uiState.statsSettings.history.toList().reversed()
+		}
+	val isHistoryEmpty = songsList.isEmpty()
 
-    val totalSongsPlayed = uiState.statsSettings.totalSongsPlayed
-    val totalSongsSkipped = uiState.statsSettings.totalSongsSkipped
+	val totalSongsPlayed = uiState.statsSettings.totalSongsPlayed
+	val totalSongsSkipped = uiState.statsSettings.totalSongsSkipped
 
-    Card(
-        modifier =
-        modifier
-            .padding(8.dp)
-            .fillMaxSize()
-            .sharedElement(
-                state =
-                rememberSharedContentState(
-                    key = "History-card",
-                ),
-                animatedVisibilityScope = animatedVisibilityScope,
-            ),
-    ) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            Row(
-                modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                Icon(
-                    modifier =
-                    Modifier
-                        .size(48.dp)
-                        .sharedElement(
-                            state =
-                            rememberSharedContentState(
-                                key = "History-icon",
-                            ),
-                            animatedVisibilityScope = animatedVisibilityScope,
-                        ),
-                    imageVector = Icons.Default.History,
-                    contentDescription = null,
-                )
+	Card(
+		modifier =
+			modifier
+				.padding(8.dp)
+				.fillMaxSize()
+				.sharedElement(
+					state =
+						rememberSharedContentState(
+							key = "History-card",
+						),
+					animatedVisibilityScope = animatedVisibilityScope,
+				),
+	) {
+		Column(modifier = Modifier.fillMaxSize()) {
+			Row(
+				modifier =
+					Modifier
+						.fillMaxWidth()
+						.background(MaterialTheme.colorScheme.surfaceContainerHighest)
+						.padding(16.dp),
+				verticalAlignment = Alignment.CenterVertically,
+				horizontalArrangement = Arrangement.spacedBy(16.dp),
+			) {
+				Icon(
+					modifier =
+						Modifier
+							.size(48.dp)
+							.sharedElement(
+								state =
+									rememberSharedContentState(
+										key = "History-icon",
+									),
+								animatedVisibilityScope = animatedVisibilityScope,
+							),
+					imageVector = Icons.Default.History,
+					contentDescription = null,
+				)
 
-                Text(
-                    text = "History",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    modifier =
-                    Modifier
-                        .sharedBounds(
-                            rememberSharedContentState(
-                                key = "History",
-                            ),
-                            animatedVisibilityScope = animatedVisibilityScope,
-                        ),
-                )
-            }
-            HorizontalDivider()
-            if (isHistoryEmpty) {
-                val time by produceState(0f) {
-                    while (true) {
-                        withInfiniteAnimationFrameMillis {
-                            value = it / 1000f
-                        }
-                    }
-                }
+				Text(
+					text = "History",
+					style = MaterialTheme.typography.titleLarge,
+					fontWeight = FontWeight.Bold,
+					modifier =
+						Modifier
+							.sharedBounds(
+								rememberSharedContentState(
+									key = "History",
+								),
+								animatedVisibilityScope = animatedVisibilityScope,
+							),
+				)
+			}
+			HorizontalDivider()
+			if (isHistoryEmpty) {
+				val time by produceState(0f) {
+					while (true) {
+						withInfiniteAnimationFrameMillis {
+							value = it / 1000f
+						}
+					}
+				}
 
-                val shaderModifier =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        val shader = remember { RuntimeShader(WOBBLE_SHADER) }
+				val shaderModifier =
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+						val shader = remember { RuntimeShader(WOBBLE_SHADER) }
 
-                        Modifier
-                            .onSizeChanged { size ->
-                                shader.setFloatUniform(
-                                    "resolution",
-                                    size.width.toFloat(),
-                                    size.height.toFloat(),
-                                )
-                            }
-                            .graphicsLayer {
-                                shader.setFloatUniform("time", time)
-                                renderEffect =
-                                    RenderEffect
-                                        .createRuntimeShaderEffect(
-                                            shader,
-                                            "contents",
-                                        )
-                                        .asComposeRenderEffect()
-                            }
-                    } else {
-                        Modifier
-                    }
+						Modifier
+							.onSizeChanged { size ->
+								shader.setFloatUniform(
+									"resolution",
+									size.width.toFloat(),
+									size.height.toFloat(),
+								)
+							}
+							.graphicsLayer {
+								shader.setFloatUniform("time", time)
+								renderEffect =
+									RenderEffect
+										.createRuntimeShaderEffect(
+											shader,
+											"contents",
+										)
+										.asComposeRenderEffect()
+							}
+					} else {
+						Modifier
+					}
 
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    val composition by rememberLottieComposition(
-                        LottieCompositionSpec.RawRes(R.raw.empty),
-                    )
+				Column(
+					modifier = Modifier.fillMaxSize(),
+					verticalArrangement = Arrangement.Center,
+					horizontalAlignment = Alignment.CenterHorizontally,
+				) {
+					val composition by rememberLottieComposition(
+						LottieCompositionSpec.RawRes(R.raw.empty),
+					)
 
-                    LottieAnimation(
-                        composition = composition,
-                        iterations = LottieConstants.IterateForever,
-                        renderMode = RenderMode.HARDWARE,
-                        modifier = Modifier
-                            .fillMaxWidth(0.8f)
-                            .align(Alignment.CenterHorizontally)
-                            .then(shaderModifier)
-                    )
-                    Text(
-                        text = "No history",
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.SemiBold,
-                    )
-                    Text(
-                        text = "Your history and stats will be displayed here",
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                }
-            } else {
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                    contentPadding = PaddingValues(4.dp),
-                ) {
-                    item {
-                        Row(
-                            modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        ) {
-                            Column(
-                                modifier = Modifier.weight(1f),
-                                verticalArrangement = Arrangement.spacedBy(8.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                            ) {
-                                Text(
-                                    text = "Total songs played",
-                                    style = MaterialTheme.typography.labelSmall,
-                                )
-                                Text(
-                                    text = totalSongsPlayed.toString(),
-                                    style = MaterialTheme.typography.labelLarge,
-                                    fontWeight = FontWeight.Black,
-                                )
-                            }
-                            Column(
-                                modifier = Modifier.weight(1f),
-                                verticalArrangement = Arrangement.spacedBy(8.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                            ) {
-                                Text(
-                                    text = "Total songs skipped",
-                                    style = MaterialTheme.typography.labelSmall,
-                                )
-                                Text(
-                                    text = totalSongsSkipped.toString(),
-                                    style = MaterialTheme.typography.labelLarge,
-                                    fontWeight = FontWeight.Black,
-                                )
-                            }
-                        }
-                    }
-                    items(songsList, key = { it.addedTime }) { item ->
-                        SongRow(
-                            modifier = Modifier.fillMaxWidth(),
-                            song = item,
-                        )
-                    }
-                }
-            }
-        }
-    }
+					LottieAnimation(
+						composition = composition,
+						iterations = LottieConstants.IterateForever,
+						renderMode = RenderMode.HARDWARE,
+						modifier =
+							Modifier
+								.fillMaxWidth(0.8f)
+								.align(Alignment.CenterHorizontally)
+								.then(shaderModifier),
+					)
+					Text(
+						text = "No history",
+						modifier = Modifier.align(Alignment.CenterHorizontally),
+						style = MaterialTheme.typography.titleLarge,
+						fontWeight = FontWeight.SemiBold,
+					)
+					Text(
+						text = "Your history and stats will be displayed here",
+						modifier = Modifier.align(Alignment.CenterHorizontally),
+						style = MaterialTheme.typography.bodyMedium,
+					)
+				}
+			} else {
+				LazyColumn(
+					verticalArrangement = Arrangement.spacedBy(4.dp),
+					contentPadding = PaddingValues(4.dp),
+				) {
+					item {
+						Row(
+							modifier =
+								Modifier
+									.fillMaxWidth()
+									.padding(vertical = 16.dp),
+							horizontalArrangement = Arrangement.spacedBy(16.dp),
+						) {
+							Column(
+								modifier = Modifier.weight(1f),
+								verticalArrangement = Arrangement.spacedBy(8.dp),
+								horizontalAlignment = Alignment.CenterHorizontally,
+							) {
+								Text(
+									text = "Total songs played",
+									style = MaterialTheme.typography.labelSmall,
+								)
+								Text(
+									text = totalSongsPlayed.toString(),
+									style = MaterialTheme.typography.labelLarge,
+									fontWeight = FontWeight.Black,
+								)
+							}
+							Column(
+								modifier = Modifier.weight(1f),
+								verticalArrangement = Arrangement.spacedBy(8.dp),
+								horizontalAlignment = Alignment.CenterHorizontally,
+							) {
+								Text(
+									text = "Total songs skipped",
+									style = MaterialTheme.typography.labelSmall,
+								)
+								Text(
+									text = totalSongsSkipped.toString(),
+									style = MaterialTheme.typography.labelLarge,
+									fontWeight = FontWeight.Black,
+								)
+							}
+						}
+					}
+					items(songsList, key = { it.addedTime }) { item ->
+						SongRow(
+							modifier = Modifier.fillMaxWidth(),
+							song = item,
+						)
+					}
+				}
+			}
+		}
+	}
 }

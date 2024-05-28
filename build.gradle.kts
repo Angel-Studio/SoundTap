@@ -12,7 +12,6 @@ plugins {
 
 	// CI plugins
 	alias(libs.plugins.ci.ktlint)
-	alias(libs.plugins.ci.spotless)
 }
 
 val ktlintVersion: String = "1.2.1"
@@ -20,7 +19,6 @@ val ktlintVersion: String = "1.2.1"
 subprojects {
 	apply {
 		plugin("org.jlleitschuh.gradle.ktlint")
-		plugin("com.diffplug.spotless")
 	}
 
 	// https://github.com/firebase/firebase-android-sdk/issues/5962#:~:text=project.afterEvaluate%20%7B%0A%20%20%20%20tasks.withType%3CGoogleServicesTask%3E%20%7B%0A%20%20%20%20%20%20%20%20gmpAppId.set(project.layout.buildDirectory.file(%22%24name%2DgmpAppId.txt%22))%0A%20%20%20%20%7D%0A%7D
@@ -41,26 +39,6 @@ subprojects {
 		filter {
 			exclude("**/generated/**")
 			include("**/kotlin/**")
-		}
-	}
-
-	spotless {
-		kotlin {
-			target(
-				fileTree(
-					mapOf(
-						"dir" to ".",
-						"include" to listOf("**/*.kt"),
-						"exclude" to listOf("**/build/**", "**/spotless/*.kt"),
-					),
-				),
-			)
-			trimTrailingWhitespace()
-			indentWithSpaces()
-			endWithNewline()
-			val delimiter = "^(package|object|import|interface|internal|@file|//startfile)"
-			val licenseHeaderFile = rootProject.file("spotless/copyright.kt")
-			licenseHeaderFile(licenseHeaderFile, delimiter)
 		}
 	}
 

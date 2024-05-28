@@ -38,143 +38,144 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 data class MainUiState(
-    val finishedInitializations: Boolean = false,
-    val hasNotificationListenerPermission: Boolean = false,
-    val isBackgroundOptimizationDisabled: Boolean = false,
-    val isOverlayPermissionGranted: Boolean = false,
-    val playersPackages: Set<ResolveInfo> = emptySet(),
-    val customizationSettings: CustomizationSettings = CustomizationSettings(),
-    val appSettings: AppSettings = AppSettings(),
-    val statsSettings: StatsSettings = StatsSettings(),
+	val finishedInitializations: Boolean = false,
+	val hasNotificationListenerPermission: Boolean = false,
+	val isBackgroundOptimizationDisabled: Boolean = false,
+	val isOverlayPermissionGranted: Boolean = false,
+	val playersPackages: Set<ResolveInfo> = emptySet(),
+	val customizationSettings: CustomizationSettings = CustomizationSettings(),
+	val appSettings: AppSettings = AppSettings(),
+	val statsSettings: StatsSettings = StatsSettings(),
 ) {
-    val defaultScreen: Screens
-        get() = if (appSettings.onboardingPageCompleted) Screens.App else Screens.Onboarding
+	val defaultScreen: Screens
+		get() = if (appSettings.onboardingPageCompleted) Screens.App else Screens.Onboarding
 }
 
 @HiltViewModel
 class MainViewModel
-@Inject
-constructor(
-    private val customizationSettingsDataStore: DataStore<CustomizationSettings>,
-    private val appSettingsDataStore: DataStore<AppSettings>,
-    private val statsSettingsDataStore: DataStore<StatsSettings>,
-    packageQueryHelper: PackageQueryHelper,
-) : ViewModel() {
-    private val _uiState = MutableStateFlow(MainUiState())
-    val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
+	@Inject
+	constructor(
+		private val customizationSettingsDataStore: DataStore<CustomizationSettings>,
+		private val appSettingsDataStore: DataStore<AppSettings>,
+		private val statsSettingsDataStore: DataStore<StatsSettings>,
+		packageQueryHelper: PackageQueryHelper,
+	) : ViewModel() {
+		private val _uiState = MutableStateFlow(MainUiState())
+		val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 
-    init {
-        // Load the customization settings
-        viewModelScope.launch {
-            customizationSettingsDataStore.data.collect { settings ->
-                _uiState.value = _uiState.value.copy(customizationSettings = settings)
-            }
-        }
+		init {
+			// Load the customization settings
+			viewModelScope.launch {
+				customizationSettingsDataStore.data.collect { settings ->
+					_uiState.value = _uiState.value.copy(customizationSettings = settings)
+				}
+			}
 
-        // Load the app settings
-        viewModelScope.launch {
-            appSettingsDataStore.data.collect { settings ->
-                _uiState.value = _uiState.value.copy(appSettings = settings)
-            }
-        }
+			// Load the app settings
+			viewModelScope.launch {
+				appSettingsDataStore.data.collect { settings ->
+					_uiState.value = _uiState.value.copy(appSettings = settings)
+				}
+			}
 
-        // Load the stats settings
-        viewModelScope.launch {
-            statsSettingsDataStore.data.collect { settings ->
-                _uiState.value = _uiState.value.copy(statsSettings = settings)
-            }
-        }
+			// Load the stats settings
+			viewModelScope.launch {
+				statsSettingsDataStore.data.collect { settings ->
+					_uiState.value = _uiState.value.copy(statsSettings = settings)
+				}
+			}
 
-        // Load the supported players
-        _uiState.value =
-            _uiState.value.copy(playersPackages = packageQueryHelper.getMediaPlayersInstalled())
+			// Load the supported players
+			_uiState.value =
+				_uiState.value.copy(playersPackages = packageQueryHelper.getMediaPlayersInstalled())
 
-        // Remove the splash screen
-        viewModelScope.launch {
-            delay(500)
-            _uiState.value = _uiState.value.copy(finishedInitializations = true)
-        }
-    }
+			// Remove the splash screen
+			viewModelScope.launch {
+				delay(500)
+				_uiState.value = _uiState.value.copy(finishedInitializations = true)
+			}
+		}
 
-    fun updatePermissionStates(context: Context) {
-        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-        _uiState.value =
-            _uiState.value.copy(
-                hasNotificationListenerPermission =
-                GlobalHelper.hasNotificationListenerPermission(
-                    context,
-                ),
-                isBackgroundOptimizationDisabled = powerManager.isIgnoringBatteryOptimizations(
-                    context.packageName
-                ),
-            )
-    }
+		fun updatePermissionStates(context: Context) {
+			val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+			_uiState.value =
+				_uiState.value.copy(
+					hasNotificationListenerPermission =
+						GlobalHelper.hasNotificationListenerPermission(
+							context,
+						),
+					isBackgroundOptimizationDisabled =
+						powerManager.isIgnoringBatteryOptimizations(
+							context.packageName,
+						),
+				)
+		}
 
-    fun onToggleService() {
-        SoundTapAccessibilityService.toggleService()
-    }
+		fun onToggleService() {
+			SoundTapAccessibilityService.toggleService()
+		}
 
-    fun setHapticFeedback(item: HapticFeedbackLevel) {
-        viewModelScope.launch {
-            customizationSettingsDataStore.updateData { settings ->
-                settings.copy(
-                    hapticFeedbackLevel = item,
-                )
-            }
-        }
-    }
+		fun setHapticFeedback(item: HapticFeedbackLevel) {
+			viewModelScope.launch {
+				customizationSettingsDataStore.updateData { settings ->
+					settings.copy(
+						hapticFeedbackLevel = item,
+					)
+				}
+			}
+		}
 
-    fun setLongPressDuration(duration: Long) {
-        viewModelScope.launch {
-            customizationSettingsDataStore.updateData { settings -> settings.copy(longPressThreshold = duration) }
-        }
-    }
+		fun setLongPressDuration(duration: Long) {
+			viewModelScope.launch {
+				customizationSettingsDataStore.updateData { settings -> settings.copy(longPressThreshold = duration) }
+			}
+		}
 
-    fun setWorkingMode(mode: WorkingMode) {
-        viewModelScope.launch {
-            customizationSettingsDataStore.updateData { settings -> settings.copy(workingMode = mode) }
-        }
-    }
+		fun setWorkingMode(mode: WorkingMode) {
+			viewModelScope.launch {
+				customizationSettingsDataStore.updateData { settings -> settings.copy(workingMode = mode) }
+			}
+		}
 
-    fun toggleUnsupportedMediaPlayer(packageName: String) {
-        viewModelScope.launch {
-            appSettingsDataStore.updateData { settings ->
-                val newSet = settings.unsupportedMediaPlayers.toMutableSet()
-                if (newSet.contains(packageName)) {
-                    newSet.remove(packageName)
-                } else {
-                    newSet.add(packageName)
-                }
-                settings.copy(unsupportedMediaPlayers = newSet)
-            }
-        }
-    }
+		fun toggleUnsupportedMediaPlayer(packageName: String) {
+			viewModelScope.launch {
+				appSettingsDataStore.updateData { settings ->
+					val newSet = settings.unsupportedMediaPlayers.toMutableSet()
+					if (newSet.contains(packageName)) {
+						newSet.remove(packageName)
+					} else {
+						newSet.add(packageName)
+					}
+					settings.copy(unsupportedMediaPlayers = newSet)
+				}
+			}
+		}
 
-    fun onboardingCompleted() {
-        viewModelScope.launch {
-            appSettingsDataStore.updateData { settings -> settings.copy(onboardingPageCompleted = true) }
-        }
-    }
+		fun onboardingCompleted() {
+			viewModelScope.launch {
+				appSettingsDataStore.updateData { settings -> settings.copy(onboardingPageCompleted = true) }
+			}
+		}
 
-    fun setPreferredMediaPlayer(packageName: String?) {
-        viewModelScope.launch {
-            customizationSettingsDataStore.updateData { settings ->
-                settings.copy(
-                    preferredMediaPlayer = packageName,
-                )
-            }
-        }
-    }
+		fun setPreferredMediaPlayer(packageName: String?) {
+			viewModelScope.launch {
+				customizationSettingsDataStore.updateData { settings ->
+					settings.copy(
+						preferredMediaPlayer = packageName,
+					)
+				}
+			}
+		}
 
-    fun setAutoPlay(autoPlay: Boolean) {
-        viewModelScope.launch {
-            customizationSettingsDataStore.updateData { settings -> settings.copy(autoPlay = autoPlay) }
-        }
-    }
+		fun setAutoPlay(autoPlay: Boolean) {
+			viewModelScope.launch {
+				customizationSettingsDataStore.updateData { settings -> settings.copy(autoPlay = autoPlay) }
+			}
+		}
 
-    fun setAutoPlayMode(autoPlayMode: AutoPlayMode) {
-        viewModelScope.launch {
-            customizationSettingsDataStore.updateData { settings -> settings.copy(autoPlayMode = autoPlayMode) }
-        }
-    }
-}
+		fun setAutoPlayMode(autoPlayMode: AutoPlayMode) {
+			viewModelScope.launch {
+				customizationSettingsDataStore.updateData { settings -> settings.copy(autoPlayMode = autoPlayMode) }
+			}
+		}
+	}

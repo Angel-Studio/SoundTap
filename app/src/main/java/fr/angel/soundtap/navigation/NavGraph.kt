@@ -39,74 +39,74 @@ import fr.angel.soundtap.ui.app.SupportScreen
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SoundTapNavGraph(
-    modifier: Modifier = Modifier,
-    mainViewModel: MainViewModel = hiltViewModel<MainViewModel>(),
-    navController: NavHostController,
+	modifier: Modifier = Modifier,
+	mainViewModel: MainViewModel = hiltViewModel<MainViewModel>(),
+	navController: NavHostController,
 ) {
-    val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
+	val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
 
-    SharedTransitionLayout(
-        modifier = Modifier,
-    ) {
-        NavHost(
-            navController = navController,
-            startDestination = uiState.defaultScreen.route,
-            modifier = Modifier,
-        ) {
-            navigation(
-                route = Screens.App.route,
-                startDestination = Screens.App.Home.route,
-            ) {
-                composable(Screens.App.Home.route) {
-                    App(
-                        modifier = modifier,
-                        mainViewModel = mainViewModel,
-                        animatedVisibilityScope = this,
-                        navigateToCustomization = { navController.navigate(Screens.App.Customization.route) },
-                        navigateToHistory = { navController.navigate(Screens.App.History.route) },
-                        navigateToSettings = { navController.navigate(Screens.App.Settings.route) },
-                        navigateToSupport = { navController.navigate(Screens.App.Support.route) },
-                    )
-                }
-                composable(Screens.App.Customization.route) {
-                    CustomizationScreen(
-                        modifier = modifier,
-                        mainViewModel = mainViewModel,
-                        animatedVisibilityScope = this,
-                        navigateToSettings = { navController.navigate(Screens.App.Settings.route) },
-                    )
-                }
-                composable(Screens.App.History.route) {
-                    HistoryScreen(
-                        modifier = modifier,
-                        mainViewModel = mainViewModel,
-                        animatedVisibilityScope = this,
-                    )
-                }
-                composable(Screens.App.Settings.route) {
-                    SettingsScreen(
-                        modifier = modifier,
-                        mainViewModel = mainViewModel,
-                        animatedVisibilityScope = this,
-                    )
-                }
-                composable(Screens.App.Support.route) {
-                    SupportScreen(
-                        modifier = modifier,
-                        animatedVisibilityScope = this,
-                    )
-                }
-            }
+	SharedTransitionLayout(
+		modifier = Modifier,
+	) {
+		NavHost(
+			navController = navController,
+			startDestination = uiState.defaultScreen.route,
+			modifier = Modifier,
+		) {
+			navigation(
+				route = Screens.App.route,
+				startDestination = Screens.App.Home.route,
+			) {
+				composable(Screens.App.Home.route) {
+					App(
+						modifier = modifier,
+						mainViewModel = mainViewModel,
+						animatedVisibilityScope = this,
+						navigateToCustomization = { navController.navigate(Screens.App.Customization.route) },
+						navigateToHistory = { navController.navigate(Screens.App.History.route) },
+						navigateToSettings = { navController.navigate(Screens.App.Settings.route) },
+						navigateToSupport = { navController.navigate(Screens.App.Support.route) },
+					)
+				}
+				composable(Screens.App.Customization.route) {
+					CustomizationScreen(
+						modifier = modifier,
+						mainViewModel = mainViewModel,
+						animatedVisibilityScope = this,
+						navigateToSettings = { navController.navigate(Screens.App.Settings.route) },
+					)
+				}
+				composable(Screens.App.History.route) {
+					HistoryScreen(
+						modifier = modifier,
+						mainViewModel = mainViewModel,
+						animatedVisibilityScope = this,
+					)
+				}
+				composable(Screens.App.Settings.route) {
+					SettingsScreen(
+						modifier = modifier,
+						mainViewModel = mainViewModel,
+						animatedVisibilityScope = this,
+					)
+				}
+				composable(Screens.App.Support.route) {
+					SupportScreen(
+						modifier = modifier,
+						animatedVisibilityScope = this,
+					)
+				}
+			}
 
-            composable(Screens.Onboarding.route) {
-                OnboardingScreen(
-                    modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .systemBarsPadding(),
-                    mainViewModel = mainViewModel,
-                )
-            }
-        }
-    }
+			composable(Screens.Onboarding.route) {
+				OnboardingScreen(
+					modifier =
+						Modifier
+							.fillMaxSize()
+							.systemBarsPadding(),
+					mainViewModel = mainViewModel,
+				)
+			}
+		}
+	}
 }

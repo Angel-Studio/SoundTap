@@ -24,49 +24,49 @@ import fr.angel.soundtap.data.settings.stats.statsDataStore
 import fr.angel.soundtap.service.NotificationService
 
 object MediaReceiver {
-    // Map of package name to callback
-    val callbackMap = mutableStateMapOf<String, MediaCallback>()
-    private val unsupportedCallbackMap = mutableStateMapOf<String, MediaCallback>()
-    private lateinit var mediaSessionManager: MediaSessionManager
+	// Map of package name to callback
+	val callbackMap = mutableStateMapOf<String, MediaCallback>()
+	private val unsupportedCallbackMap = mutableStateMapOf<String, MediaCallback>()
+	private lateinit var mediaSessionManager: MediaSessionManager
 
-    private var unsupportedPlayers = emptySet<String>()
+	private var unsupportedPlayers = emptySet<String>()
 
-    val firstCallback: MediaCallback?
-        get() = callbackMap.values.firstOrNull()
+	val firstCallback: MediaCallback?
+		get() = callbackMap.values.firstOrNull()
 
-    private fun provideListener(context: Context) =
-        MediaSessionManager.OnActiveSessionsChangedListener { mediaControllers ->
-            if (mediaControllers != null) {
-                for (mediaController in mediaControllers) {
-                    // Cancel if already exists
-                    if (callbackMap[mediaController.packageName] != null) continue
+	private fun provideListener(context: Context) =
+		MediaSessionManager.OnActiveSessionsChangedListener { mediaControllers ->
+			if (mediaControllers != null) {
+				for (mediaController in mediaControllers) {
+					// Cancel if already exists
+					if (callbackMap[mediaController.packageName] != null) continue
 
-                    // Create callback for this media controller and add it to the map of callbacks
-                    val callback =
-                        MediaCallback(
-                            mediaController = mediaController,
-                            onDestroyed = { removeMedia(mediaController) },
-                            onToggleSupportedPlayer = { supported ->
-                                toggleSupportedPlayer(
-                                    supported,
-                                    mediaController.packageName,
-                                )
-                            },
-                            statsDataStore = context.statsDataStore,
-                            context = context,
-                        )
-                    callbackMap[mediaController.packageName] = callback
-                    mediaController.registerCallback(callback)
-                }
-            }
-        }
+					// Create callback for this media controller and add it to the map of callbacks
+					val callback =
+						MediaCallback(
+							mediaController = mediaController,
+							onDestroyed = { removeMedia(mediaController) },
+							onToggleSupportedPlayer = { supported ->
+								toggleSupportedPlayer(
+									supported,
+									mediaController.packageName,
+								)
+							},
+							statsDataStore = context.statsDataStore,
+							context = context,
+						)
+					callbackMap[mediaController.packageName] = callback
+					mediaController.registerCallback(callback)
+				}
+			}
+		}
 
-    private fun removeMedia(mediaController: MediaController) {
-        callbackMap.remove(mediaController.packageName)
-    }
+	private fun removeMedia(mediaController: MediaController) {
+		callbackMap.remove(mediaController.packageName)
+	}
 
-    fun register(context: Context) {
-        // val dataStore = DataStore(context)
+	fun register(context: Context) {
+		// val dataStore = DataStore(context)
 
         /*scope.launch {
             dataStore.unsupportedMediaPlayers.collect { unsupportedPlayers ->
@@ -77,71 +77,71 @@ object MediaReceiver {
             }
         }*/
 
-        // Get the media session manager
-        if (!MediaReceiver::mediaSessionManager.isInitialized) {
-            mediaSessionManager =
-                context.getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
-        }
+		// Get the media session manager
+		if (!MediaReceiver::mediaSessionManager.isInitialized) {
+			mediaSessionManager =
+				context.getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
+		}
 
-        // Register the listener for active sessions (new sessions)
-        mediaSessionManager.addOnActiveSessionsChangedListener(
-            provideListener(context),
-            ComponentName(context, NotificationService::class.java),
-        )
+		// Register the listener for active sessions (new sessions)
+		mediaSessionManager.addOnActiveSessionsChangedListener(
+			provideListener(context),
+			ComponentName(context, NotificationService::class.java),
+		)
 
-        // Register callbacks for already active sessions (if any)
-        mediaSessionManager.getActiveSessions(
-            ComponentName(
-                context,
-                NotificationService::class.java,
-            ),
-        ).forEach { mediaController ->
+		// Register callbacks for already active sessions (if any)
+		mediaSessionManager.getActiveSessions(
+			ComponentName(
+				context,
+				NotificationService::class.java,
+			),
+		).forEach { mediaController ->
 
-            // Skip unsupported players
-            if (unsupportedPlayers.contains(mediaController.packageName)) return@forEach
+			// Skip unsupported players
+			if (unsupportedPlayers.contains(mediaController.packageName)) return@forEach
 
-            // Cancel if already exists
-            if (callbackMap[mediaController.packageName] != null) return@forEach
+			// Cancel if already exists
+			if (callbackMap[mediaController.packageName] != null) return@forEach
 
-            // Create callback for this media controller and add it to the map of callbacks
-            val mediaCallback =
-                MediaCallback(
-                    mediaController = mediaController,
-                    onDestroyed = { removeMedia(mediaController) },
-                    onToggleSupportedPlayer = { supported ->
-                        toggleSupportedPlayer(
-                            supported,
-                            mediaController.packageName,
-                        )
-                    },
-                    statsDataStore = context.statsDataStore,
-                    context = context,
-                )
-            callbackMap[mediaController.packageName] = mediaCallback
+			// Create callback for this media controller and add it to the map of callbacks
+			val mediaCallback =
+				MediaCallback(
+					mediaController = mediaController,
+					onDestroyed = { removeMedia(mediaController) },
+					onToggleSupportedPlayer = { supported ->
+						toggleSupportedPlayer(
+							supported,
+							mediaController.packageName,
+						)
+					},
+					statsDataStore = context.statsDataStore,
+					context = context,
+				)
+			callbackMap[mediaController.packageName] = mediaCallback
 
-            // Register callback
-            mediaController.registerCallback(mediaCallback)
-        }
-    }
+			// Register callback
+			mediaController.registerCallback(mediaCallback)
+		}
+	}
 
-    fun unregister(context: Context) {
-        mediaSessionManager.removeOnActiveSessionsChangedListener(provideListener(context))
-        callbackMap.values.forEach { it.onDestroyed() }
-        callbackMap.clear()
-    }
+	fun unregister(context: Context) {
+		mediaSessionManager.removeOnActiveSessionsChangedListener(provideListener(context))
+		callbackMap.values.forEach { it.onDestroyed() }
+		callbackMap.clear()
+	}
 
-    private fun toggleSupportedPlayer(
-        supported: Boolean,
-        packageName: String,
-    ) {
-        if (supported) {
-            unsupportedCallbackMap.remove(packageName)?.let { callback ->
-                callbackMap[packageName] = callback
-            }
-        } else {
-            callbackMap.remove(packageName)?.let { callback ->
-                unsupportedCallbackMap[packageName] = callback
-            }
-        }
-    }
+	private fun toggleSupportedPlayer(
+		supported: Boolean,
+		packageName: String,
+	) {
+		if (supported) {
+			unsupportedCallbackMap.remove(packageName)?.let { callback ->
+				callbackMap[packageName] = callback
+			}
+		} else {
+			callbackMap.remove(packageName)?.let { callback ->
+				unsupportedCallbackMap[packageName] = callback
+			}
+		}
+	}
 }
