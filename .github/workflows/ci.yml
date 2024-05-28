@@ -34,9 +34,6 @@ jobs:
       - name: Spotless
         run: ./gradlew spotlessCheck --stacktrace
 
-      - name: ktlint
-        run: ./gradlew ktlintCheck --stacktrace
-
       - name: Lint
         run: ./gradlew lint --build-cache --stacktrace
 
