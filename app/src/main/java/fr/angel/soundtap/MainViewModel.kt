@@ -26,6 +26,7 @@ data class MainUiState(
 	val finishedInitializations: Boolean = false,
 	val hasNotificationListenerPermission: Boolean = false,
 	val isBackgroundOptimizationDisabled: Boolean = false,
+	val isOverlayPermissionGranted: Boolean = false,
 
 	val playersPackages: Set<ResolveInfo> = emptySet(),
 
@@ -87,7 +88,7 @@ class MainViewModel @Inject constructor(
 			hasNotificationListenerPermission = GlobalHelper.hasNotificationListenerPermission(
 				context
 			),
-			isBackgroundOptimizationDisabled = powerManager.isIgnoringBatteryOptimizations(context.packageName)
+			isBackgroundOptimizationDisabled = powerManager.isIgnoringBatteryOptimizations(context.packageName),
 		)
 	}
 

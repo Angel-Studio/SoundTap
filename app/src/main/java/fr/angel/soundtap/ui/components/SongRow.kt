@@ -31,7 +31,7 @@ fun SongRow(
 	song: Song,
 ) {
 	val context = LocalContext.current
-	val generatedBitmap: Bitmap = remember(song.coverFilePath) {
+	val generatedBitmap: Bitmap? = remember(song.coverFilePath) {
 		StorageHelper.loadBitmapFromFile(song.coverFilePath)
 	}
 
