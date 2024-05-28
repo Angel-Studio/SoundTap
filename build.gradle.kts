@@ -28,6 +28,12 @@ subprojects {
 		}
 	}
 
+	tasks.whenTaskAdded {
+		if (name == "assembleRelease") {
+			finalizedBy("uploadCrashlyticsSymbolFileRelease")
+		}
+	}
+
 	ktlint {
 		debug.set(false)
 		version.set(ktlintVersion)
