@@ -44,6 +44,14 @@ android {
 			}
 		}
 	}
+	lint {
+		warningsAsErrors = true
+		abortOnError = true
+		baseline = file("lint-baseline.xml")
+		checkReleaseBuilds = false
+		ignoreTestSources = true
+		checkDependencies = true
+	}
 	compileOptions {
 		sourceCompatibility = JavaVersion.VERSION_17
 		targetCompatibility = JavaVersion.VERSION_17
