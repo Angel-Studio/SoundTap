@@ -45,63 +45,63 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun StatusBadgedBox(
-	modifier: Modifier = Modifier,
-	validIcon: ImageVector,
-	invalidIcon: ImageVector = validIcon,
-	valid: Boolean,
-	onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    validIcon: ImageVector,
+    invalidIcon: ImageVector = validIcon,
+    valid: Boolean,
+    onClick: () -> Unit,
 ) {
-	val infiniteTransition = rememberInfiniteTransition(label = "scaleAnimation")
-	val scaleAnimation by infiniteTransition.animateFloat(
-		initialValue = 1f,
-		targetValue = if (valid) 1f else 1.1f,
-		animationSpec = infiniteRepeatable(
-			animation = tween(
-				delayMillis = 500,
-				durationMillis = 1200,
-				easing = EaseInElastic
-			),
-			repeatMode = RepeatMode.Reverse
-		), label = "scaleAnimation"
-	)
-	BadgedBox(
-		modifier = modifier
-			.size(48.dp)
-			.graphicsLayer(
-				scaleX = scaleAnimation,
-				scaleY = scaleAnimation
-			)
-			.background(
-				if (valid) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.error,
-				MaterialTheme.shapes.medium
-			),
-		badge = {
-			Icon(
-				imageVector = if (valid) Icons.Default.CheckCircle else Icons.Default.Error,
-				contentDescription = null,
-				modifier = Modifier
-					.size(16.dp)
-					.offset(x = (-4).dp)
-					.background(
-						color = if (valid) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.error,
-						shape = CircleShape
-					),
-				tint = if (valid) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onError
-			)
-		}
-	) {
-		Box(
-			modifier = Modifier
-				.fillMaxSize()
-				.clip(MaterialTheme.shapes.medium)
-				.clickable(onClick = onClick)
-		) {
-			Icon(
-				imageVector = if (valid) validIcon else invalidIcon,
-				contentDescription = null,
-				modifier = Modifier.align(Alignment.Center),
-				tint = if (valid) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.onError
-			)
-		}
-	}
+    val infiniteTransition = rememberInfiniteTransition(label = "scaleAnimation")
+    val scaleAnimation by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = if (valid) 1f else 1.1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(
+                delayMillis = 500,
+                durationMillis = 1200,
+                easing = EaseInElastic
+            ),
+            repeatMode = RepeatMode.Reverse
+        ), label = "scaleAnimation"
+    )
+    BadgedBox(
+        modifier = modifier
+            .size(48.dp)
+            .graphicsLayer(
+                scaleX = scaleAnimation,
+                scaleY = scaleAnimation
+            )
+            .background(
+                if (valid) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.error,
+                MaterialTheme.shapes.medium
+            ),
+        badge = {
+            Icon(
+                imageVector = if (valid) Icons.Default.CheckCircle else Icons.Default.Error,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(16.dp)
+                    .offset(x = (-4).dp)
+                    .background(
+                        color = if (valid) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.error,
+                        shape = CircleShape
+                    ),
+                tint = if (valid) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onError
+            )
+        }
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(MaterialTheme.shapes.medium)
+                .clickable(onClick = onClick)
+        ) {
+            Icon(
+                imageVector = if (valid) validIcon else invalidIcon,
+                contentDescription = null,
+                modifier = Modifier.align(Alignment.Center),
+                tint = if (valid) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.onError
+            )
+        }
+    }
 }

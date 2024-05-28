@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun SettingsReferenceButton(
-	modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier,
 ) {
 
 }

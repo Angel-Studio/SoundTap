@@ -66,113 +66,113 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun BottomControlBar(
-	modifier: Modifier = Modifier,
-	mainViewModel: MainViewModel = viewModel(),
-	serviceUiState: AccessibilityServiceState,
+    modifier: Modifier = Modifier,
+    mainViewModel: MainViewModel = viewModel(),
+    serviceUiState: AccessibilityServiceState,
 ) {
-	val context = LocalContext.current
-	val scope = rememberCoroutineScope()
-	val mainUiState by mainViewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val mainUiState by mainViewModel.uiState.collectAsStateWithLifecycle()
 
-	val isSelectedServiceMethodRunning = serviceUiState.isRunning
+    val isSelectedServiceMethodRunning = serviceUiState.isRunning
 
-	val permissionsGranted =
-		mainUiState.hasNotificationListenerPermission && isSelectedServiceMethodRunning
+    val permissionsGranted =
+        mainUiState.hasNotificationListenerPermission && isSelectedServiceMethodRunning
 
-	val isSelectedServiceMethodRunningAndActivated =
-		isSelectedServiceMethodRunning && serviceUiState.isActivated
+    val isSelectedServiceMethodRunningAndActivated =
+        isSelectedServiceMethodRunning && serviceUiState.isActivated
 
-	Box(
-		modifier = modifier
-			.fillMaxWidth()
-			.height(108.dp)
-			.clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
-			.background(MaterialTheme.colorScheme.surfaceContainerHigh),
-		contentAlignment = Alignment.Center
-	) {
-		Row(
-			modifier = Modifier
-				.fillMaxSize()
-				.padding(horizontal = 24.dp, vertical = 8.dp),
-			horizontalArrangement = Arrangement.spacedBy(16.dp),
-			verticalAlignment = Alignment.CenterVertically
-		) {
-			StatusBadgedBox(
-				validIcon = Icons.Outlined.Battery0Bar,
-				invalidIcon = Icons.Default.BatteryAlert,
-				valid = mainUiState.isBackgroundOptimizationDisabled,
-				onClick = { GlobalHelper.requestBatteryOptimization(context = context) }
-			)
-			StatusBadgedBox(
-				validIcon = Icons.Default.NotificationsNone,
-				invalidIcon = Icons.Default.NotificationsOff,
-				valid = mainUiState.hasNotificationListenerPermission,
-				onClick = {
-					GlobalHelper.openNotificationListenerSettings(
-						context = context
-					)
-				}
-			)
-			if (mainUiState.hasNotificationListenerPermission) {
-				StatusBadgedBox(
-					validIcon = Icons.Default.SettingsAccessibility,
-					valid = serviceUiState.isRunning,
-					onClick = { GlobalHelper.openAccessibilitySettings(context = context) }
-				)
-			}
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(108.dp)
+            .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh),
+        contentAlignment = Alignment.Center
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 24.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            StatusBadgedBox(
+                validIcon = Icons.Outlined.Battery0Bar,
+                invalidIcon = Icons.Default.BatteryAlert,
+                valid = mainUiState.isBackgroundOptimizationDisabled,
+                onClick = { GlobalHelper.requestBatteryOptimization(context = context) }
+            )
+            StatusBadgedBox(
+                validIcon = Icons.Default.NotificationsNone,
+                invalidIcon = Icons.Default.NotificationsOff,
+                valid = mainUiState.hasNotificationListenerPermission,
+                onClick = {
+                    GlobalHelper.openNotificationListenerSettings(
+                        context = context
+                    )
+                }
+            )
+            if (mainUiState.hasNotificationListenerPermission) {
+                StatusBadgedBox(
+                    validIcon = Icons.Default.SettingsAccessibility,
+                    valid = serviceUiState.isRunning,
+                    onClick = { GlobalHelper.openAccessibilitySettings(context = context) }
+                )
+            }
 
-			Spacer(modifier = Modifier.weight(1f))
-			Spacer(modifier = Modifier.width(24.dp))
+            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.width(24.dp))
 
-			val buttonBackgroundColor by animateColorAsState(
-				targetValue = if (isSelectedServiceMethodRunningAndActivated) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceTint,
-				label = "Button Background Color"
-			)
+            val buttonBackgroundColor by animateColorAsState(
+                targetValue = if (isSelectedServiceMethodRunningAndActivated) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceTint,
+                label = "Button Background Color"
+            )
 
-			var scale by remember { mutableFloatStateOf(1f) }
-			val animatedScale by animateFloatAsState(
-				targetValue = scale,
-				label = "Button Scale",
-				animationSpec = spring(
-					dampingRatio = Spring.DampingRatioMediumBouncy,
-					stiffness = Spring.StiffnessMedium
-				)
-			)
+            var scale by remember { mutableFloatStateOf(1f) }
+            val animatedScale by animateFloatAsState(
+                targetValue = scale,
+                label = "Button Scale",
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessMedium
+                )
+            )
 
-			Button(
-				modifier = Modifier
-					.graphicsLayer(
-						scaleX = 2f * animatedScale,
-						scaleY = 2f * animatedScale,
+            Button(
+                modifier = Modifier
+                    .graphicsLayer(
+                        scaleX = 2f * animatedScale,
+                        scaleY = 2f * animatedScale,
 
-						translationX = with(LocalDensity.current) { 16.dp.toPx() },
-					)
-					.aspectRatio(1f),
-				onClick = {
-					scale = 0.9f
+                        translationX = with(LocalDensity.current) { 16.dp.toPx() },
+                    )
+                    .aspectRatio(1f),
+                onClick = {
+                    scale = 0.9f
 
-					scope.launch {
-						delay(150)
-						scale = 1f
-					}
+                    scope.launch {
+                        delay(150)
+                        scale = 1f
+                    }
 
-					VibratorHelper(context = context).doubleClick()
-					mainViewModel.onToggleService()
-				},
-				colors = ButtonDefaults.buttonColors(
-					containerColor = buttonBackgroundColor
-				),
-				enabled = permissionsGranted
-			) {
-				AnimatedContent(
-					targetState = isSelectedServiceMethodRunningAndActivated,
-					label = "Toggle Service Button"
-				) { running ->
-					Text(
-						text = if (running) "Pause" else "Start"
-					)
-				}
-			}
-		}
-	}
+                    VibratorHelper(context = context).doubleClick()
+                    mainViewModel.onToggleService()
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = buttonBackgroundColor
+                ),
+                enabled = permissionsGranted
+            ) {
+                AnimatedContent(
+                    targetState = isSelectedServiceMethodRunningAndActivated,
+                    label = "Toggle Service Button"
+                ) { running ->
+                    Text(
+                        text = if (running) "Pause" else "Start"
+                    )
+                }
+            }
+        }
+    }
 }

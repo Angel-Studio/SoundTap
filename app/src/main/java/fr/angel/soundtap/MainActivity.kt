@@ -67,102 +67,102 @@ import fr.angel.soundtap.ui.theme.SoundTapTheme
 class MainActivity : ComponentActivity() {
 
 
-	private lateinit var mainViewModel: MainViewModel
-	private var shouldKeepSplashScreenOn = mutableStateOf(true)
+    private lateinit var mainViewModel: MainViewModel
+    private var shouldKeepSplashScreenOn = mutableStateOf(true)
 
-	@OptIn(ExperimentalMaterial3Api::class)
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		enableEdgeToEdge()
-		installSplashScreen()
-			.setKeepOnScreenCondition { shouldKeepSplashScreenOn.value }
+    @OptIn(ExperimentalMaterial3Api::class)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        installSplashScreen()
+            .setKeepOnScreenCondition { shouldKeepSplashScreenOn.value }
 
-		setContent {
-			mainViewModel = hiltViewModel<MainViewModel>()
-			val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
+        setContent {
+            mainViewModel = hiltViewModel<MainViewModel>()
+            val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
 
-			LaunchedEffect(key1 = Unit) {
-				mainViewModel.updatePermissionStates(this@MainActivity)
-			}
+            LaunchedEffect(key1 = Unit) {
+                mainViewModel.updatePermissionStates(this@MainActivity)
+            }
 
-			val navController = rememberNavController()
-			val currentBackStack by navController.currentBackStackEntryAsState()
-			val currentDestination = currentBackStack?.destination
-			val currentScreen: Screens =
-				Screens.fromRoute(currentDestination?.route ?: uiState.defaultScreen.route)
+            val navController = rememberNavController()
+            val currentBackStack by navController.currentBackStackEntryAsState()
+            val currentDestination = currentBackStack?.destination
+            val currentScreen: Screens =
+                Screens.fromRoute(currentDestination?.route ?: uiState.defaultScreen.route)
 
-			val serviceUiState by SoundTapAccessibilityService.uiState.collectAsState()
+            val serviceUiState by SoundTapAccessibilityService.uiState.collectAsState()
 
-			LaunchedEffect(key1 = uiState.finishedInitializations) {
-				shouldKeepSplashScreenOn.value = !uiState.finishedInitializations
-			}
+            LaunchedEffect(key1 = uiState.finishedInitializations) {
+                shouldKeepSplashScreenOn.value = !uiState.finishedInitializations
+            }
 
-			LaunchedEffect(key1 = Unit) {
-				mainViewModel.updatePermissionStates(this@MainActivity)
-			}
+            LaunchedEffect(key1 = Unit) {
+                mainViewModel.updatePermissionStates(this@MainActivity)
+            }
 
-			val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+            val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
-			SoundTapTheme {
-				Scaffold(
-					modifier = Modifier
-						.fillMaxSize()
-						.nestedScroll(scrollBehavior.nestedScrollConnection),
-					topBar = {
-						CenterAlignedTopAppBar(
-							navigationIcon = {
-								AnimatedVisibility(
-									visible = currentScreen.showBackArrow,
-									enter = scaleIn(),
-									exit = scaleOut()
-								) {
-									IconButton(onClick = { navController.popBackStack() }) {
-										Icon(
-											imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-											contentDescription = "Back"
-										)
-									}
-								}
-							},
-							title = {
-								Text(
-									modifier = Modifier.padding(
-										horizontal = 16.dp,
-										vertical = 8.dp
-									),
-									text = "SoundTap",
-									style = MaterialTheme.typography.displayMedium,
-									fontFamily = FontPilowlava,
-									fontWeight = FontWeight.ExtraBold
-								)
-							}
-						)
-					},
-					bottomBar = {
-						AnimatedVisibility(
-							visible = currentScreen == Screens.App.Home,
-							enter = slideInVertically { it } + expandVertically() + fadeIn(),
-							exit = slideOutVertically { it } + shrinkVertically() + fadeOut()
-						) {
-							BottomControlBar(
-								serviceUiState = serviceUiState
-							)
-						}
-					}
-				) { innerPadding ->
-					SoundTapNavGraph(
-						modifier = Modifier.padding(innerPadding),
-						navController = navController,
-					)
-				}
-			}
-		}
-	}
+            SoundTapTheme {
+                Scaffold(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .nestedScroll(scrollBehavior.nestedScrollConnection),
+                    topBar = {
+                        CenterAlignedTopAppBar(
+                            navigationIcon = {
+                                AnimatedVisibility(
+                                    visible = currentScreen.showBackArrow,
+                                    enter = scaleIn(),
+                                    exit = scaleOut()
+                                ) {
+                                    IconButton(onClick = { navController.popBackStack() }) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                            contentDescription = "Back"
+                                        )
+                                    }
+                                }
+                            },
+                            title = {
+                                Text(
+                                    modifier = Modifier.padding(
+                                        horizontal = 16.dp,
+                                        vertical = 8.dp
+                                    ),
+                                    text = "SoundTap",
+                                    style = MaterialTheme.typography.displayMedium,
+                                    fontFamily = FontPilowlava,
+                                    fontWeight = FontWeight.ExtraBold
+                                )
+                            }
+                        )
+                    },
+                    bottomBar = {
+                        AnimatedVisibility(
+                            visible = currentScreen == Screens.App.Home,
+                            enter = slideInVertically { it } + expandVertically() + fadeIn(),
+                            exit = slideOutVertically { it } + shrinkVertically() + fadeOut()
+                        ) {
+                            BottomControlBar(
+                                serviceUiState = serviceUiState
+                            )
+                        }
+                    }
+                ) { innerPadding ->
+                    SoundTapNavGraph(
+                        modifier = Modifier.padding(innerPadding),
+                        navController = navController,
+                    )
+                }
+            }
+        }
+    }
 
-	override fun onResume() {
-		if (::mainViewModel.isInitialized) {
-			mainViewModel.updatePermissionStates(this)
-		}
-		super.onResume()
-	}
+    override fun onResume() {
+        if (::mainViewModel.isInitialized) {
+            mainViewModel.updatePermissionStates(this)
+        }
+        super.onResume()
+    }
 }

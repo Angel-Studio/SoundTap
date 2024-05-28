@@ -34,61 +34,61 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 enum class WorkingMode(
-	val title: String,
-	val selectedComposable: @Composable BoxScope.(selected: Boolean) -> Unit,
+    val title: String,
+    val selectedComposable: @Composable BoxScope.(selected: Boolean) -> Unit,
 ) {
-	SCREEN_ON_OFF(
-		title = "Screen ON and OFF",
-		selectedComposable = { selected ->
-			val alpha by animateFloatAsState(
-				if (selected) 1f else 0.2f,
-				label = "alpha"
-			)
+    SCREEN_ON_OFF(
+        title = "Screen ON and OFF",
+        selectedComposable = { selected ->
+            val alpha by animateFloatAsState(
+                if (selected) 1f else 0.2f,
+                label = "alpha"
+            )
 
-			Icon(
-				modifier = Modifier
-					.padding(4.dp)
-					.fillMaxWidth(0.5f)
-					.aspectRatio(1f)
-					.align(Alignment.TopCenter)
-					.alpha(alpha),
-				imageVector = Icons.Default.AllInclusive,
-				contentDescription = null,
-				tint = MaterialTheme.colorScheme.primary
-			)
-		}
-	),
-	SCREEN_ON(title = "Screen ON", selectedComposable = { selected ->
-		val alpha by animateFloatAsState(
-			if (selected) 1f else 0.2f,
-			label = "alpha"
-		)
+            Icon(
+                modifier = Modifier
+                    .padding(4.dp)
+                    .fillMaxWidth(0.5f)
+                    .aspectRatio(1f)
+                    .align(Alignment.TopCenter)
+                    .alpha(alpha),
+                imageVector = Icons.Default.AllInclusive,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+    ),
+    SCREEN_ON(title = "Screen ON", selectedComposable = { selected ->
+        val alpha by animateFloatAsState(
+            if (selected) 1f else 0.2f,
+            label = "alpha"
+        )
 
-		Text(
-			modifier = Modifier
-				.padding(4.dp)
-				.alpha(alpha),
-			text = "ON",
-			style = MaterialTheme.typography.labelLarge,
-			color = MaterialTheme.colorScheme.primary,
-			fontWeight = FontWeight.Black
-		)
+        Text(
+            modifier = Modifier
+                .padding(4.dp)
+                .alpha(alpha),
+            text = "ON",
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Black
+        )
 
-	}),
-	SCREEN_OFF(title = "Screen OFF", selectedComposable = { selected ->
-		val alpha by animateFloatAsState(
-			if (selected) 1f else 0.2f,
-			label = "alpha"
-		)
+    }),
+    SCREEN_OFF(title = "Screen OFF", selectedComposable = { selected ->
+        val alpha by animateFloatAsState(
+            if (selected) 1f else 0.2f,
+            label = "alpha"
+        )
 
-		Text(
-			modifier = Modifier
-				.padding(4.dp)
-				.alpha(alpha),
-			text = "SLEEP",
-			style = MaterialTheme.typography.labelLarge,
-			color = MaterialTheme.colorScheme.primary,
-			fontWeight = FontWeight.Black
-		)
-	}),
+        Text(
+            modifier = Modifier
+                .padding(4.dp)
+                .alpha(alpha),
+            text = "SLEEP",
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Black
+        )
+    }),
 }

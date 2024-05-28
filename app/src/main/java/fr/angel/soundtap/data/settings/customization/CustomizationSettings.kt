@@ -26,11 +26,11 @@ const val DEFAULT_DELAY_BETWEEN_EVENTS = 1000L
 
 @Serializable
 data class CustomizationSettings(
-	val longPressThreshold: Long = DEFAULT_LONG_PRESS_THRESHOLD,
-	val hapticFeedbackLevel: HapticFeedbackLevel = HapticFeedbackLevel.MEDIUM,
-	val doublePressThreshold: Long = DEFAULT_DOUBLE_PRESS_THRESHOLD,
-	val workingMode: WorkingMode = WorkingMode.SCREEN_ON_OFF,
-	val autoPlayMode: AutoPlayMode = AutoPlayMode.ON_HEADSET_CONNECTED,
-	val preferredMediaPlayer: String? = null,
-	val autoPlay: Boolean = false,
+    val longPressThreshold: Long = DEFAULT_LONG_PRESS_THRESHOLD,
+    val hapticFeedbackLevel: HapticFeedbackLevel = HapticFeedbackLevel.MEDIUM,
+    val doublePressThreshold: Long = DEFAULT_DOUBLE_PRESS_THRESHOLD,
+    val workingMode: WorkingMode = WorkingMode.SCREEN_ON_OFF,
+    val autoPlayMode: AutoPlayMode = AutoPlayMode.ON_HEADSET_CONNECTED,
+    val preferredMediaPlayer: String? = null,
+    val autoPlay: Boolean = false,
 )

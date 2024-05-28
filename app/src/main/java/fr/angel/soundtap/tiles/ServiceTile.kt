@@ -29,89 +29,89 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 data class StateModel(
-	val state: Int,
-	val label: String,
-	val icon: Icon,
+    val state: Int,
+    val label: String,
+    val icon: Icon,
 )
 
 class ServiceTile : TileService() {
 
-	private val scope by lazy { CoroutineScope(Dispatchers.IO) }
+    private val scope by lazy { CoroutineScope(Dispatchers.IO) }
 
-	private lateinit var state: StateModel
+    private lateinit var state: StateModel
 
-	companion object {
-		const val TAG = "ServiceTile"
+    companion object {
+        const val TAG = "ServiceTile"
 
-		var isAdded by mutableStateOf(false)
-	}
+        var isAdded by mutableStateOf(false)
+    }
 
-	override fun onTileAdded() {
-		super.onTileAdded()
-		isAdded = true
+    override fun onTileAdded() {
+        super.onTileAdded()
+        isAdded = true
 
-		updateTile()
-	}
+        updateTile()
+    }
 
-	override fun onTileRemoved() {
-		super.onTileRemoved()
-		isAdded = false
+    override fun onTileRemoved() {
+        super.onTileRemoved()
+        isAdded = false
 
-		updateTile()
-	}
+        updateTile()
+    }
 
-	override fun onClick() {
-		super.onClick()
+    override fun onClick() {
+        super.onClick()
 
-		SoundTapAccessibilityService.toggleService()
-	}
+        SoundTapAccessibilityService.toggleService()
+    }
 
-	override fun onCreate() {
-		super.onCreate()
-		isAdded = true
+    override fun onCreate() {
+        super.onCreate()
+        isAdded = true
 
-		scope.launch {
-			SoundTapAccessibilityService.uiState.collect {
-				state = StateModel(
-					state = if (it.isRunning) {
-						if (it.isActivated) {
-							Tile.STATE_ACTIVE
-						} else {
-							Tile.STATE_INACTIVE
-						}
-					} else {
-						Tile.STATE_UNAVAILABLE
-					},
-					label = getString(R.string.app_name),
-					icon = if (it.isRunning) Icon.createWithResource(
-						this@ServiceTile,
-						R.drawable.round_power_settings_new_24
-					) else Icon.createWithResource(
-						this@ServiceTile,
-						R.drawable.round_power_settings_new_24
-					)
-				)
+        scope.launch {
+            SoundTapAccessibilityService.uiState.collect {
+                state = StateModel(
+                    state = if (it.isRunning) {
+                        if (it.isActivated) {
+                            Tile.STATE_ACTIVE
+                        } else {
+                            Tile.STATE_INACTIVE
+                        }
+                    } else {
+                        Tile.STATE_UNAVAILABLE
+                    },
+                    label = getString(R.string.app_name),
+                    icon = if (it.isRunning) Icon.createWithResource(
+                        this@ServiceTile,
+                        R.drawable.round_power_settings_new_24
+                    ) else Icon.createWithResource(
+                        this@ServiceTile,
+                        R.drawable.round_power_settings_new_24
+                    )
+                )
 
-				updateTile()
-			}
-		}
-	}
+                updateTile()
+            }
+        }
+    }
 
-	override fun onStartListening() {
-		super.onStartListening()
-		isAdded = true
-	}
+    override fun onStartListening() {
+        super.onStartListening()
+        isAdded = true
+    }
 
-	private fun updateTile() {
-		try {
-			if (qsTile == null) return
-			qsTile.label = state.label
-			qsTile.contentDescription = state.label
-			qsTile.state = state.state
-			qsTile.icon = state.icon
-			qsTile.updateTile()
-		} catch (e: Exception) {
-			Log.w(TAG, "Failed to update tile", e)
-		}
-	}
+    private fun updateTile() {
+        try {
+            if (qsTile == null) return
+            qsTile.label = state.label
+            qsTile.contentDescription = state.label
+            qsTile.state = state.state
+            qsTile.icon = state.icon
+            qsTile.updateTile()
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to update tile", e)
+        }
+    }
 }
