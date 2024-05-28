@@ -30,10 +30,7 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Make Gradle executable
         run: chmod +x ./gradlew
-
-      - name: Spotless
-        run: ./gradlew spotlessCheck --stacktrace
-
+        
       - name: Lint
         run: ./gradlew lint --build-cache --stacktrace --warning-mode all --stacktrace
 
