@@ -13,7 +13,7 @@ plugins {
 	alias(libs.plugins.ci.spotless)
 }
 
-val ktlintVersion: String = libs.versions.ktlint.get()
+val ktlintVersion: String = libs.versions.pinterest.ktlint.get()
 
 subprojects {
 	apply {

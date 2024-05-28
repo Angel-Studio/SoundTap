@@ -35,6 +35,7 @@ lifecycleCommon = "2.8.0"
 lifecycleService = "2.8.0"
 detekt = "1.23.6"
 ktlint = "12.1.1"
+pinterest-ktlint = "1.2.1"
 spotless = "6.3.0"
 
 [libraries]
