@@ -130,20 +130,6 @@ class SoundTapAccessibilityService : AccessibilityService() {
 		val action = event.action
 		val keyCode = event.keyCode
 
-		val eventName = when (action) {
-			KeyEvent.ACTION_DOWN -> "ACTION_DOWN"
-			KeyEvent.ACTION_UP -> "ACTION_UP"
-			else -> "UNKNOWN"
-		}
-
-		val keyName = when (keyCode) {
-			KeyEvent.KEYCODE_VOLUME_UP -> "KEYCODE_VOLUME_UP"
-			KeyEvent.KEYCODE_VOLUME_DOWN -> "KEYCODE_VOLUME_DOWN"
-			else -> "UNKNOWN"
-		}
-
-		Log.i(TAG, "onKeyEvent: $eventName:$keyName")
-
 		when (action) {
 			KeyEvent.ACTION_DOWN -> {
 				when (keyCode) {
@@ -244,8 +230,6 @@ class SoundTapAccessibilityService : AccessibilityService() {
 	 * **/
 	private suspend fun listenForEvents() {
 		while (_uiState.value.isVolumeUpPressed || _uiState.value.isVolumeDownPressed) {
-
-			Log.i(TAG, "Listening for events...")
 
 			// Delay between events
 			delay(50)

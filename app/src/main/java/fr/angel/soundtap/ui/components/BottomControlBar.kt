@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BatteryAlert
@@ -58,6 +59,14 @@ fun BottomControlBar(
 	val scope = rememberCoroutineScope()
 	val mainUiState by mainViewModel.uiState.collectAsStateWithLifecycle()
 
+	val isSelectedServiceMethodRunning = serviceUiState.isRunning
+
+	val permissionsGranted =
+		mainUiState.hasNotificationListenerPermission && isSelectedServiceMethodRunning
+
+	val isSelectedServiceMethodRunningAndActivated =
+		isSelectedServiceMethodRunning && serviceUiState.isActivated
+
 	Box(
 		modifier = modifier
 			.fillMaxWidth()
@@ -70,7 +79,7 @@ fun BottomControlBar(
 			modifier = Modifier
 				.fillMaxSize()
 				.padding(horizontal = 24.dp, vertical = 8.dp),
-			horizontalArrangement = Arrangement.spacedBy(24.dp),
+			horizontalArrangement = Arrangement.spacedBy(16.dp),
 			verticalAlignment = Alignment.CenterVertically
 		) {
 			StatusBadgedBox(
@@ -98,14 +107,14 @@ fun BottomControlBar(
 			}
 
 			Spacer(modifier = Modifier.weight(1f))
+			Spacer(modifier = Modifier.width(24.dp))
 
 			val buttonBackgroundColor by animateColorAsState(
-				targetValue = if (serviceUiState.isActivated) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceTint,
+				targetValue = if (isSelectedServiceMethodRunningAndActivated) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceTint,
 				label = "Button Background Color"
 			)
 
 			var scale by remember { mutableFloatStateOf(1f) }
-
 			val animatedScale by animateFloatAsState(
 				targetValue = scale,
 				label = "Button Scale",
@@ -138,10 +147,10 @@ fun BottomControlBar(
 				colors = ButtonDefaults.buttonColors(
 					containerColor = buttonBackgroundColor
 				),
-				enabled = mainUiState.hasNotificationListenerPermission && serviceUiState.isRunning
+				enabled = permissionsGranted
 			) {
 				AnimatedContent(
-					targetState = serviceUiState.isActivated && serviceUiState.isRunning,
+					targetState = isSelectedServiceMethodRunningAndActivated,
 					label = "Toggle Service Button"
 				) { running ->
 					Text(

@@ -23,7 +23,6 @@ class HeadsetConnectionBroadcastReceiver : BroadcastReceiver() {
 	private val scope by lazy { CoroutineScope(Dispatchers.Main) }
 
 	override fun onReceive(context: Context, intent: Intent) {
-		Log.i(TAG, "Received broadcast: ${intent.action}")
 		if (intent.action != BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED) return
 
 		val state = intent.getIntExtra(BluetoothProfile.EXTRA_STATE, -1)
@@ -33,8 +32,6 @@ class HeadsetConnectionBroadcastReceiver : BroadcastReceiver() {
 			val autoPlay = data.autoPlay
 			val autoPlayMode = data.autoPlayMode
 			val preferredMediaPlayer = data.preferredMediaPlayer
-
-			Log.d(TAG, "Auto play: $autoPlay, preferred media player: $preferredMediaPlayer")
 
 			// If auto play is disabled or the auto play mode is not on headset connected, return
 			if (autoPlayMode.isOnHeadsetConnectedActive.not()) return@launch

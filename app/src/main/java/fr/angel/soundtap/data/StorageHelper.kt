@@ -11,17 +11,31 @@ object StorageHelper {
 
 	private const val TAG = "StorageHelper"
 
-	fun saveBitmapToFile(context: Context, bitmap: Bitmap, filename: String): String {
-		val file = File(context.filesDir, filename)
-		val outputStream = FileOutputStream(file)
-		bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-		outputStream.close()
-		Log.i(TAG, "Saved bitmap to file: $file")
-		return file.absolutePath
+	fun saveBitmapToFile(context: Context, bitmap: Bitmap, filename: String): String? {
+		try {
+			val formattedFileName = filename
+				.replace(" ", "_")
+				.replace(":", "_")
+				.replace("/", "_")
+				.replace("\\", "_")
+
+			val file = File(context.filesDir, formattedFileName)
+			val outputStream = FileOutputStream(file)
+			bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+			outputStream.close()
+			return file.absolutePath
+		} catch (e: Exception) {
+			Log.e(TAG, "Error saving bitmap to file", e)
+			return null
+		}
 	}
 
-	fun loadBitmapFromFile(filePath: String): Bitmap {
-		Log.i(TAG, "Loading bitmap from file: $filePath")
-		return BitmapFactory.decodeFile(filePath)
+	fun loadBitmapFromFile(filePath: String): Bitmap? {
+		return try {
+			BitmapFactory.decodeFile(filePath)
+		} catch (e: Exception) {
+			Log.e(TAG, "Error loading bitmap from file", e)
+			null
+		}
 	}
 }
