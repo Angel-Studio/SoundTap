@@ -84,18 +84,18 @@ fun BottomControlBar(
 
     Box(
         modifier =
-            modifier
-                .fillMaxWidth()
-                .height(108.dp)
-                .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
-                .background(MaterialTheme.colorScheme.surfaceContainerHigh),
+        modifier
+            .fillMaxWidth()
+            .height(108.dp)
+            .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh),
         contentAlignment = Alignment.Center,
     ) {
         Row(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 24.dp, vertical = 8.dp),
+            Modifier
+                .fillMaxSize()
+                .padding(horizontal = 24.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -136,21 +136,21 @@ fun BottomControlBar(
                 targetValue = scale,
                 label = "Button Scale",
                 animationSpec =
-                    spring(
-                        dampingRatio = Spring.DampingRatioMediumBouncy,
-                        stiffness = Spring.StiffnessMedium,
-                    ),
+                spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessMedium,
+                ),
             )
 
             Button(
                 modifier =
-                    Modifier
-                        .graphicsLayer(
-                            scaleX = 2f * animatedScale,
-                            scaleY = 2f * animatedScale,
-                            translationX = with(LocalDensity.current) { 16.dp.toPx() },
-                        )
-                        .aspectRatio(1f),
+                Modifier
+                    .graphicsLayer(
+                        scaleX = 2f * animatedScale,
+                        scaleY = 2f * animatedScale,
+                        translationX = with(LocalDensity.current) { 16.dp.toPx() },
+                    )
+                    .aspectRatio(1f),
                 onClick = {
                     scale = 0.9f
 
@@ -163,9 +163,9 @@ fun BottomControlBar(
                     mainViewModel.onToggleService()
                 },
                 colors =
-                    ButtonDefaults.buttonColors(
-                        containerColor = buttonBackgroundColor,
-                    ),
+                ButtonDefaults.buttonColors(
+                    containerColor = buttonBackgroundColor,
+                ),
                 enabled = permissionsGranted,
             ) {
                 AnimatedContent(

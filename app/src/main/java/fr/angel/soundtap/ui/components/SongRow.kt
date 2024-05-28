@@ -54,9 +54,9 @@ fun SongRow(
     Card(
         modifier = modifier,
         colors =
-            CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainer,
-            ),
+        CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        ),
         onClick = { },
     ) {
         Row(
@@ -70,9 +70,9 @@ fun SongRow(
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier =
-                    Modifier
-                        .size(64.dp)
-                        .clip(MaterialTheme.shapes.medium),
+                Modifier
+                    .size(64.dp)
+                    .clip(MaterialTheme.shapes.medium),
             )
 
             Column(

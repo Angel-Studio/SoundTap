@@ -101,40 +101,40 @@ fun SharedTransitionScope.SettingsScreen(
 
     Card(
         modifier =
-            modifier
-                .padding(8.dp)
-                .fillMaxSize()
-                .sharedElement(
-                    state =
-                        rememberSharedContentState(
-                            key = "Settings-card",
-                        ),
-                    animatedVisibilityScope = animatedVisibilityScope,
+        modifier
+            .padding(8.dp)
+            .fillMaxSize()
+            .sharedElement(
+                state =
+                rememberSharedContentState(
+                    key = "Settings-card",
                 ),
+                animatedVisibilityScope = animatedVisibilityScope,
+            ),
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
         ) {
             Row(
                 modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                        .padding(16.dp),
+                Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                    .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Icon(
                     modifier =
-                        Modifier
-                            .size(48.dp)
-                            .sharedElement(
-                                state =
-                                    rememberSharedContentState(
-                                        key = "Settings-icon",
-                                    ),
-                                animatedVisibilityScope = animatedVisibilityScope,
+                    Modifier
+                        .size(48.dp)
+                        .sharedElement(
+                            state =
+                            rememberSharedContentState(
+                                key = "Settings-icon",
                             ),
+                            animatedVisibilityScope = animatedVisibilityScope,
+                        ),
                     imageVector = Icons.Default.Settings,
                     contentDescription = null,
                 )
@@ -144,13 +144,13 @@ fun SharedTransitionScope.SettingsScreen(
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     modifier =
-                        Modifier
-                            .sharedBounds(
-                                rememberSharedContentState(
-                                    key = "Settings",
-                                ),
-                                animatedVisibilityScope = animatedVisibilityScope,
+                    Modifier
+                        .sharedBounds(
+                            rememberSharedContentState(
+                                key = "Settings",
                             ),
+                            animatedVisibilityScope = animatedVisibilityScope,
+                        ),
                 )
             }
             HorizontalDivider()
@@ -214,12 +214,12 @@ fun SharedTransitionScope.SettingsScreen(
                             }) {
                                 Icon(
                                     modifier =
-                                        Modifier.rotate(
-                                            animateFloatAsState(
-                                                targetValue = if (supportedMediaPlayersExpanded) 180f else 0f,
-                                                label = "SupportedMediaPlayerIconRotation",
-                                            ).value,
-                                        ),
+                                    Modifier.rotate(
+                                        animateFloatAsState(
+                                            targetValue = if (supportedMediaPlayersExpanded) 180f else 0f,
+                                            label = "SupportedMediaPlayerIconRotation",
+                                        ).value,
+                                    ),
                                     imageVector = Icons.Default.KeyboardArrowDown,
                                     contentDescription = null,
                                 )
@@ -242,9 +242,9 @@ fun SharedTransitionScope.SettingsScreen(
                                             }
                                         },
                                         selected =
-                                            uiState.appSettings.unsupportedMediaPlayers.contains(
-                                                mediaPackage.activityInfo.packageName,
-                                            ).not(),
+                                        uiState.appSettings.unsupportedMediaPlayers.contains(
+                                            mediaPackage.activityInfo.packageName,
+                                        ).not(),
                                     )
                                 }
                             }
@@ -272,12 +272,12 @@ fun SharedTransitionScope.SettingsScreen(
                             }) {
                                 Icon(
                                     modifier =
-                                        Modifier.rotate(
-                                            animateFloatAsState(
-                                                targetValue = if (preferredMediaPlayerExpanded) 180f else 0f,
-                                                label = "SupportedMediaPlayerIconRotation",
-                                            ).value,
-                                        ),
+                                    Modifier.rotate(
+                                        animateFloatAsState(
+                                            targetValue = if (preferredMediaPlayerExpanded) 180f else 0f,
+                                            label = "SupportedMediaPlayerIconRotation",
+                                        ).value,
+                                    ),
                                     imageVector = Icons.Default.KeyboardArrowDown,
                                     contentDescription = null,
                                 )
@@ -339,12 +339,12 @@ private fun MediaPlayerSwitchRow(
 
     Row(
         modifier =
-            modifier
-                .clip(MaterialTheme.shapes.medium)
-                .background(backgroundColor)
-                .clickable(onClick = onClick)
-                .padding(8.dp)
-                .height(IntrinsicSize.Min),
+        modifier
+            .clip(MaterialTheme.shapes.medium)
+            .background(backgroundColor)
+            .clickable(onClick = onClick)
+            .padding(8.dp)
+            .height(IntrinsicSize.Min),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         AsyncImage(
@@ -356,10 +356,10 @@ private fun MediaPlayerSwitchRow(
         Spacer(Modifier.width(8.dp))
         Column(
             modifier =
-                Modifier
-                    .fillMaxHeight()
-                    .weight(1f)
-                    .padding(4.dp),
+            Modifier
+                .fillMaxHeight()
+                .weight(1f)
+                .padding(4.dp),
             verticalArrangement = Arrangement.SpaceEvenly,
         ) {
             Text(
@@ -414,12 +414,12 @@ private fun MediaPlayerRadioRow(
 
     Row(
         modifier =
-            modifier
-                .clip(MaterialTheme.shapes.medium)
-                .background(backgroundColor)
-                .clickable(onClick = onClick)
-                .padding(8.dp)
-                .height(IntrinsicSize.Min),
+        modifier
+            .clip(MaterialTheme.shapes.medium)
+            .background(backgroundColor)
+            .clickable(onClick = onClick)
+            .padding(8.dp)
+            .height(IntrinsicSize.Min),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         AsyncImage(
@@ -431,10 +431,10 @@ private fun MediaPlayerRadioRow(
         Spacer(Modifier.width(8.dp))
         Column(
             modifier =
-                Modifier
-                    .fillMaxHeight()
-                    .weight(1f)
-                    .padding(4.dp),
+            Modifier
+                .fillMaxHeight()
+                .weight(1f)
+                .padding(4.dp),
             verticalArrangement = Arrangement.SpaceEvenly,
         ) {
             Text(

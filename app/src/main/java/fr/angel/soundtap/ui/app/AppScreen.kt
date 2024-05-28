@@ -83,16 +83,16 @@ fun SharedTransitionScope.App(
 
     Column(
         modifier =
-            modifier
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState()),
+        modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
             modifier =
-                Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(horizontal = 8.dp),
+            Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(horizontal = 8.dp),
             text = "Take Control of Your Music",
             style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.SemiBold,
@@ -104,15 +104,15 @@ fun SharedTransitionScope.App(
             uiState.hasNotificationListenerPermission.not() -> {
                 InfoCard(
                     modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp),
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
                     cardType = InfoCardType.Notification,
                     icon = Icons.Outlined.NotificationImportant,
                     title = "Notification Listener Permission",
                     body =
-                        "SoundTap needs the Notification Listener permission to receive media information and control your music." +
-                            " Please enable it by pressing the button at the bottom of the screen.",
+                    "SoundTap needs the Notification Listener permission to receive media information and control your music." +
+                        " Please enable it by pressing the button at the bottom of the screen.",
                     onCardClick = {
                         GlobalHelper.openNotificationListenerSettings(context = context)
                     },
@@ -122,15 +122,15 @@ fun SharedTransitionScope.App(
             accessibilityServiceState.isRunning.not() -> {
                 InfoCard(
                     modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp),
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
                     cardType = InfoCardType.Accessibility,
                     icon = Icons.Outlined.SettingsAccessibility,
                     title = "Accessibility Service",
                     body =
-                        "SoundTap needs the Accessibility Service to receive volume key events." +
-                            " Please enable it by pressing the button at the bottom of the screen.",
+                    "SoundTap needs the Accessibility Service to receive volume key events." +
+                        " Please enable it by pressing the button at the bottom of the screen.",
                     onCardClick = {
                         GlobalHelper.openAccessibilitySettings(context = context)
                     },
@@ -140,9 +140,9 @@ fun SharedTransitionScope.App(
             else -> {
                 MediaCards(
                     modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .height(200.dp),
+                    Modifier
+                        .fillMaxWidth()
+                        .height(200.dp),
                     mainViewModel = mainViewModel,
                 )
             }
@@ -150,9 +150,9 @@ fun SharedTransitionScope.App(
 
         Row(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             GridCard(
@@ -173,9 +173,9 @@ fun SharedTransitionScope.App(
 
         Row(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             GridCard(

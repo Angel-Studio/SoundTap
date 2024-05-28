@@ -47,12 +47,12 @@ enum class AutoPlayMode(
 
             Icon(
                 modifier =
-                    Modifier
-                        .padding(4.dp)
-                        .fillMaxWidth(0.25f)
-                        .aspectRatio(1f)
-                        .align(Alignment.TopCenter)
-                        .alpha(alpha),
+                Modifier
+                    .padding(4.dp)
+                    .fillMaxWidth(0.25f)
+                    .aspectRatio(1f)
+                    .align(Alignment.TopCenter)
+                    .alpha(alpha),
                 imageVector = Icons.Default.Headset,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
@@ -69,12 +69,12 @@ enum class AutoPlayMode(
 
             Icon(
                 modifier =
-                    Modifier
-                        .padding(4.dp)
-                        .fillMaxWidth(0.25f)
-                        .aspectRatio(1f)
-                        .align(Alignment.TopCenter)
-                        .alpha(alpha),
+                Modifier
+                    .padding(4.dp)
+                    .fillMaxWidth(0.25f)
+                    .aspectRatio(1f)
+                    .align(Alignment.TopCenter)
+                    .alpha(alpha),
                 imageVector = Icons.AutoMirrored.Filled.VolumeUp,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
@@ -91,11 +91,11 @@ enum class AutoPlayMode(
 
             Row(
                 modifier =
-                    Modifier
-                        .padding(4.dp)
-                        .fillMaxWidth(0.5f)
-                        .align(Alignment.TopCenter)
-                        .alpha(alpha),
+                Modifier
+                    .padding(4.dp)
+                    .fillMaxWidth(0.5f)
+                    .align(Alignment.TopCenter)
+                    .alpha(alpha),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp),
             ) {

@@ -103,9 +103,9 @@ class MainActivity : ComponentActivity() {
             SoundTapTheme {
                 Scaffold(
                     modifier =
-                        Modifier
-                            .fillMaxSize()
-                            .nestedScroll(scrollBehavior.nestedScrollConnection),
+                    Modifier
+                        .fillMaxSize()
+                        .nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         CenterAlignedTopAppBar(
                             navigationIcon = {
@@ -125,10 +125,10 @@ class MainActivity : ComponentActivity() {
                             title = {
                                 Text(
                                     modifier =
-                                        Modifier.padding(
-                                            horizontal = 16.dp,
-                                            vertical = 8.dp,
-                                        ),
+                                    Modifier.padding(
+                                        horizontal = 16.dp,
+                                        vertical = 8.dp,
+                                    ),
                                     text = "SoundTap",
                                     style = MaterialTheme.typography.displayMedium,
                                     fontFamily = FontPilowlava,

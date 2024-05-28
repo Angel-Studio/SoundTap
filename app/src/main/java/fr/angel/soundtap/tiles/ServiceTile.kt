@@ -74,28 +74,28 @@ class ServiceTile : TileService() {
                 state =
                     StateModel(
                         state =
-                            if (it.isRunning) {
-                                if (it.isActivated) {
-                                    Tile.STATE_ACTIVE
-                                } else {
-                                    Tile.STATE_INACTIVE
-                                }
+                        if (it.isRunning) {
+                            if (it.isActivated) {
+                                Tile.STATE_ACTIVE
                             } else {
-                                Tile.STATE_UNAVAILABLE
-                            },
+                                Tile.STATE_INACTIVE
+                            }
+                        } else {
+                            Tile.STATE_UNAVAILABLE
+                        },
                         label = getString(R.string.app_name),
                         icon =
-                            if (it.isRunning) {
-                                Icon.createWithResource(
-                                    this@ServiceTile,
-                                    R.drawable.round_power_settings_new_24,
-                                )
-                            } else {
-                                Icon.createWithResource(
-                                    this@ServiceTile,
-                                    R.drawable.round_power_settings_new_24,
-                                )
-                            },
+                        if (it.isRunning) {
+                            Icon.createWithResource(
+                                this@ServiceTile,
+                                R.drawable.round_power_settings_new_24,
+                            )
+                        } else {
+                            Icon.createWithResource(
+                                this@ServiceTile,
+                                R.drawable.round_power_settings_new_24,
+                            )
+                        },
                     )
 
                 updateTile()

@@ -60,65 +60,65 @@ fun SettingsItem(
     val background by animateColorAsState(
         label = "color",
         targetValue =
-            if (!enabled) {
-                MaterialTheme.colorScheme.onSurface.copy(0.1f)
-            } else if (trailing != null) {
-                MaterialTheme.colorScheme.onSurface.copy(0.05f)
-            } else {
-                backgroundColor
-            },
+        if (!enabled) {
+            MaterialTheme.colorScheme.onSurface.copy(0.1f)
+        } else if (trailing != null) {
+            MaterialTheme.colorScheme.onSurface.copy(0.05f)
+        } else {
+            backgroundColor
+        },
     )
 
     val iconBackgroundColor by animateColorAsState(
         label = "iconBackgroundColor",
         targetValue =
-            if (enabled) {
-                MaterialTheme.colorScheme.primary
-            } else {
-                MaterialTheme.colorScheme.onSurface.copy(0.2f)
-            },
+        if (enabled) {
+            MaterialTheme.colorScheme.primary
+        } else {
+            MaterialTheme.colorScheme.onSurface.copy(0.2f)
+        },
     )
     val iconColor by animateColorAsState(
         label = "iconColor",
         targetValue =
-            if (enabled) {
-                MaterialTheme.colorScheme.onPrimary
-            } else {
-                MaterialTheme.colorScheme.onSurface.copy(0.5f)
-            },
+        if (enabled) {
+            MaterialTheme.colorScheme.onPrimary
+        } else {
+            MaterialTheme.colorScheme.onSurface.copy(0.5f)
+        },
     )
 
     Surface(
         modifier =
-            modifier
-                .fillMaxWidth()
-                .clip(MaterialTheme.shapes.medium)
-                .combinedClickable(
-                    onClick = { if (enabled) onClick() },
-                    onLongClick = { if (enabled) onLongClick() },
-                ),
+        modifier
+            .fillMaxWidth()
+            .clip(MaterialTheme.shapes.medium)
+            .combinedClickable(
+                onClick = { if (enabled) onClick() },
+                onLongClick = { if (enabled) onLongClick() },
+            ),
         shape = MaterialTheme.shapes.medium,
         color = background,
     ) {
         Column(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Row(
                 modifier =
-                    Modifier
-                        .fillMaxWidth(),
+                Modifier
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 if (icon != null) {
                     Box(
                         modifier =
-                            Modifier
-                                .clip(CircleShape)
-                                .background(iconBackgroundColor),
+                        Modifier
+                            .clip(CircleShape)
+                            .background(iconBackgroundColor),
                     ) {
                         Icon(
                             imageVector = icon,
@@ -131,9 +131,9 @@ fun SettingsItem(
                 }
                 Column(
                     modifier =
-                        Modifier
-                            .weight(1f)
-                            .alpha(if (enabled) 1f else 0.6f),
+                    Modifier
+                        .weight(1f)
+                        .alpha(if (enabled) 1f else 0.6f),
                 ) {
                     Text(
                         text = title,

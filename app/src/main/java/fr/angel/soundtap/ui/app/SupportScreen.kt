@@ -61,38 +61,38 @@ fun SharedTransitionScope.SupportScreen(
 
     Card(
         modifier =
-            modifier
-                .padding(8.dp)
-                .fillMaxSize()
-                .sharedElement(
-                    state =
-                        rememberSharedContentState(
-                            key = "Support-card",
-                        ),
-                    animatedVisibilityScope = animatedVisibilityScope,
+        modifier
+            .padding(8.dp)
+            .fillMaxSize()
+            .sharedElement(
+                state =
+                rememberSharedContentState(
+                    key = "Support-card",
                 ),
+                animatedVisibilityScope = animatedVisibilityScope,
+            ),
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             Row(
                 modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                        .padding(16.dp),
+                Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                    .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Icon(
                     modifier =
-                        Modifier
-                            .size(48.dp)
-                            .sharedElement(
-                                state =
-                                    rememberSharedContentState(
-                                        key = "Support-icon",
-                                    ),
-                                animatedVisibilityScope = animatedVisibilityScope,
+                    Modifier
+                        .size(48.dp)
+                        .sharedElement(
+                            state =
+                            rememberSharedContentState(
+                                key = "Support-icon",
                             ),
+                            animatedVisibilityScope = animatedVisibilityScope,
+                        ),
                     imageVector = Icons.Default.Support,
                     contentDescription = null,
                 )
@@ -102,22 +102,22 @@ fun SharedTransitionScope.SupportScreen(
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     modifier =
-                        Modifier
-                            .sharedBounds(
-                                rememberSharedContentState(
-                                    key = "Support",
-                                ),
-                                animatedVisibilityScope = animatedVisibilityScope,
+                    Modifier
+                        .sharedBounds(
+                            rememberSharedContentState(
+                                key = "Support",
                             ),
+                            animatedVisibilityScope = animatedVisibilityScope,
+                        ),
                 )
             }
             HorizontalDivider()
             Column(
                 modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp)
-                        .verticalScroll(rememberScrollState()),
+                Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+                    .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Spacer(modifier = Modifier.height(8.dp))

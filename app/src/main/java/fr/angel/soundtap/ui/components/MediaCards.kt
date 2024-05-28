@@ -128,17 +128,17 @@ fun MediaCards(
             callback?.let {
                 PlaybackCard(
                     modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .height(400.dp),
+                    Modifier
+                        .fillMaxWidth()
+                        .height(400.dp),
                     media = callback,
                     packageInfo = packageInfo,
                 )
             } ?: EmptyPlayerCard(
                 modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .height(400.dp),
+                Modifier
+                    .fillMaxWidth()
+                    .height(400.dp),
                 packageInfo = packageInfo,
             )
         }
@@ -162,24 +162,24 @@ fun EmptyPlayerCard(
     ) {
         Box(
             modifier =
-                Modifier
-                    .fillMaxSize(),
+            Modifier
+                .fillMaxSize(),
         ) {
             AsyncImage(
                 model = appIcon,
                 imageLoader = context.imageLoader,
                 contentDescription = null,
                 modifier =
-                    Modifier
-                        .padding(16.dp)
-                        .align(Alignment.TopStart)
-                        .size(32.dp),
+                Modifier
+                    .padding(16.dp)
+                    .align(Alignment.TopStart)
+                    .size(32.dp),
             )
             Column(
                 modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(24.dp),
+                Modifier
+                    .fillMaxSize()
+                    .padding(24.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -261,27 +261,27 @@ fun PlaybackCard(
 
     Card(
         modifier =
-            modifier
-                .height(IntrinsicSize.Min)
-                .fillMaxWidth()
-                .clip(MaterialTheme.shapes.extraLarge),
+        modifier
+            .height(IntrinsicSize.Min)
+            .fillMaxWidth()
+            .clip(MaterialTheme.shapes.extraLarge),
         shape = MaterialTheme.shapes.extraLarge,
     ) {
         Box(
             modifier =
-                Modifier
-                    .fillMaxSize(),
+            Modifier
+                .fillMaxSize(),
         ) {
             AsyncImage(
                 model = appIcon,
                 contentDescription = null,
                 imageLoader = context.imageLoader,
                 modifier =
-                    Modifier
-                        .padding(16.dp)
-                        .align(Alignment.TopStart)
-                        .size(32.dp)
-                        .zIndex(1f),
+                Modifier
+                    .padding(16.dp)
+                    .align(Alignment.TopStart)
+                    .size(32.dp)
+                    .zIndex(1f),
             )
             Crossfade(
                 modifier = Modifier.fillMaxSize(),
@@ -294,29 +294,29 @@ fun PlaybackCard(
                     imageLoader = context.imageLoader,
                     contentScale = ContentScale.Crop,
                     colorFilter =
-                        ColorFilter.tint(
-                            color = dominantColor.copy(alpha = 0.5f),
-                            blendMode = BlendMode.Color,
-                        ),
+                    ColorFilter.tint(
+                        color = dominantColor.copy(alpha = 0.5f),
+                        blendMode = BlendMode.Color,
+                    ),
                     modifier =
-                        Modifier
-                            .fillMaxSize()
-                            .drawWithContent {
-                                drawContent()
-                                drawRect(
-                                    brush =
-                                        Brush.radialGradient(
-                                            listOf(
-                                                Color.Transparent,
-                                                Color.Black.copy(alpha = 0.35f),
-                                            ),
-                                            center = size.center,
-                                            radius = size.width / 2f,
-                                        ),
-                                    size = size,
-                                    blendMode = BlendMode.Darken,
-                                )
-                            },
+                    Modifier
+                        .fillMaxSize()
+                        .drawWithContent {
+                            drawContent()
+                            drawRect(
+                                brush =
+                                Brush.radialGradient(
+                                    listOf(
+                                        Color.Transparent,
+                                        Color.Black.copy(alpha = 0.35f),
+                                    ),
+                                    center = size.center,
+                                    radius = size.width / 2f,
+                                ),
+                                size = size,
+                                blendMode = BlendMode.Darken,
+                            )
+                        },
                 )
             }
 
@@ -331,13 +331,13 @@ fun PlaybackCard(
                 ) {
                     Column(
                         modifier =
-                            Modifier
-                                .weight(1f)
-                                .padding(
-                                    start = 24.dp,
-                                    end = 24.dp,
-                                    bottom = 24.dp,
-                                ),
+                        Modifier
+                            .weight(1f)
+                            .padding(
+                                start = 24.dp,
+                                end = 24.dp,
+                                bottom = 24.dp,
+                            ),
                         verticalArrangement = Arrangement.spacedBy(2.dp),
                     ) {
                         AnimatedContent(
@@ -378,26 +378,26 @@ fun PlaybackCard(
 
                     Row(
                         modifier =
-                            Modifier
-                                .padding(end = 24.dp, bottom = 24.dp),
+                        Modifier
+                            .padding(end = 24.dp, bottom = 24.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
                             modifier =
-                                Modifier
-                                    .padding(4.dp)
-                                    .size(24.dp)
-                                    .clickable(
-                                        interactionSource = remember { MutableInteractionSource() },
-                                        indication =
-                                            rememberRipple(
-                                                bounded = false,
-                                                color = Color.White,
-                                                radius = 400.dp,
-                                            ),
-                                        onClick = { media.skipToPrevious() },
+                            Modifier
+                                .padding(4.dp)
+                                .size(24.dp)
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication =
+                                    rememberRipple(
+                                        bounded = false,
+                                        color = Color.White,
+                                        radius = 400.dp,
                                     ),
+                                    onClick = { media.skipToPrevious() },
+                                ),
                             imageVector = Icons.Outlined.SkipPrevious,
                             contentDescription = "Previous track",
                             tint = Color.White,
@@ -407,10 +407,10 @@ fun PlaybackCard(
                             shape = RoundedCornerShape(playbackCornerRadius),
                             onClick = { media.togglePlayPause() },
                             colors =
-                                IconButtonDefaults.filledTonalIconButtonColors(
-                                    containerColor = containerColor,
-                                    contentColor = Color.Black,
-                                ),
+                            IconButtonDefaults.filledTonalIconButtonColors(
+                                containerColor = containerColor,
+                                contentColor = Color.Black,
+                            ),
                         ) {
                             Icon(
                                 imageVector = if (media.isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
@@ -420,19 +420,19 @@ fun PlaybackCard(
 
                         Icon(
                             modifier =
-                                Modifier
-                                    .padding(4.dp)
-                                    .size(24.dp)
-                                    .clickable(
-                                        interactionSource = remember { MutableInteractionSource() },
-                                        indication =
-                                            rememberRipple(
-                                                bounded = false,
-                                                color = Color.White,
-                                                radius = 400.dp,
-                                            ),
-                                        onClick = { media.skipToNext() },
+                            Modifier
+                                .padding(4.dp)
+                                .size(24.dp)
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication =
+                                    rememberRipple(
+                                        bounded = false,
+                                        color = Color.White,
+                                        radius = 400.dp,
                                     ),
+                                    onClick = { media.skipToNext() },
+                                ),
                             imageVector = Icons.Outlined.SkipNext,
                             contentDescription = "Next track",
                             tint = Color.White,

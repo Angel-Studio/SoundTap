@@ -63,23 +63,23 @@ fun InfoCard(
 
     Card(
         modifier =
-            modifier
-                .height(IntrinsicSize.Min)
-                .fillMaxWidth()
-                .clip(MaterialTheme.shapes.extraLarge)
-                .clickable(onClick = onCardClick),
+        modifier
+            .height(IntrinsicSize.Min)
+            .fillMaxWidth()
+            .clip(MaterialTheme.shapes.extraLarge)
+            .clickable(onClick = onCardClick),
         shape = MaterialTheme.shapes.extraLarge,
         colors =
-            CardDefaults.cardColors(
-                containerColor = if (cardType == InfoCardType.Default) MaterialTheme.colorScheme.surfaceContainer else cardType.backgroundColor,
-                contentColor = if (isBackgroundColorLight || cardType == InfoCardType.Default) Color.Black else Color.White,
-            ),
+        CardDefaults.cardColors(
+            containerColor = if (cardType == InfoCardType.Default) MaterialTheme.colorScheme.surfaceContainer else cardType.backgroundColor,
+            contentColor = if (isBackgroundColorLight || cardType == InfoCardType.Default) Color.Black else Color.White,
+        ),
     ) {
         Column(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Row(

@@ -71,7 +71,7 @@ data class AccessibilityServiceState(
             (
                 System.currentTimeMillis() - volumeUpLastPressedTime >= doublePressThreshold ||
                     System.currentTimeMillis() - volumeDownLastPressedTime >= doublePressThreshold
-            )
+                )
 }
 
 class SoundTapAccessibilityService : AccessibilityService() {

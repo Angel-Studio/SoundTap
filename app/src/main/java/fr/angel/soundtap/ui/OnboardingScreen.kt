@@ -115,11 +115,11 @@ fun OnboardingScreen(
             OnboardingPage(
                 title = "Welcome to SoundTap",
                 description =
-                    AnnotatedString(
-                        "SoundTap is your ultimate companion for controlling your music playback effortlessly." +
-                            "\n\nWith intuitive volume button controls, customizable settings, and seamless integration with your favorite media players, SoundTap makes managing your music a breeze." +
-                            "\n\nJoin us on this journey to enhance your music listening experience!",
-                    ),
+                AnnotatedString(
+                    "SoundTap is your ultimate companion for controlling your music playback effortlessly." +
+                        "\n\nWith intuitive volume button controls, customizable settings, and seamless integration with your favorite media players, SoundTap makes managing your music a breeze." +
+                        "\n\nJoin us on this journey to enhance your music listening experience!",
+                ),
                 nextButtonEnabled = hasAcceptedPrivacyPolicy,
                 animationImage = R.raw.welcome_music,
                 bottomContent = {
@@ -133,37 +133,37 @@ fun OnboardingScreen(
                         )
                         Text(
                             text =
-                                buildAnnotatedString {
-                                    append("I have read and agree to the ")
+                            buildAnnotatedString {
+                                append("I have read and agree to the ")
 
-                                    withLink(link = LinkAnnotation.Url(GlobalHelper.PRIVACY_POLICY_URL)) {
-                                        withStyle(
-                                            style =
-                                                SpanStyle(
-                                                    color = MaterialTheme.colorScheme.primary,
-                                                    fontWeight = FontWeight.Bold,
-                                                ),
-                                        ) {
-                                            append("privacy policy")
-                                        }
+                                withLink(link = LinkAnnotation.Url(GlobalHelper.PRIVACY_POLICY_URL)) {
+                                    withStyle(
+                                        style =
+                                        SpanStyle(
+                                            color = MaterialTheme.colorScheme.primary,
+                                            fontWeight = FontWeight.Bold,
+                                        ),
+                                    ) {
+                                        append("privacy policy")
                                     }
+                                }
 
-                                    append(" and the ")
+                                append(" and the ")
 
-                                    withLink(link = LinkAnnotation.Url(GlobalHelper.TERMS_OF_SERVICE_URL)) {
-                                        withStyle(
-                                            style =
-                                                SpanStyle(
-                                                    color = MaterialTheme.colorScheme.primary,
-                                                    fontWeight = FontWeight.Bold,
-                                                ),
-                                        ) {
-                                            append("terms of service")
-                                        }
+                                withLink(link = LinkAnnotation.Url(GlobalHelper.TERMS_OF_SERVICE_URL)) {
+                                    withStyle(
+                                        style =
+                                        SpanStyle(
+                                            color = MaterialTheme.colorScheme.primary,
+                                            fontWeight = FontWeight.Bold,
+                                        ),
+                                    ) {
+                                        append("terms of service")
                                     }
+                                }
 
-                                    append(".")
-                                },
+                                append(".")
+                            },
                             style = MaterialTheme.typography.bodyMedium,
                         )
                     }
@@ -173,12 +173,12 @@ fun OnboardingScreen(
             OnboardingPage(
                 title = "Access Media Controls",
                 description =
-                    AnnotatedString(
-                        "SoundTap requires access to your notifications to detect media playback and control your music." +
-                            "The app does not collect any personal data or information." +
-                            "\n\nThis permission is necessary for SoundTap to function properly. Please enable the Notifications access permission to continue." +
-                            "\n\nTo enable the permission, tap the button below and enable SoundTap from the list.",
-                    ),
+                AnnotatedString(
+                    "SoundTap requires access to your notifications to detect media playback and control your music." +
+                        "The app does not collect any personal data or information." +
+                        "\n\nThis permission is necessary for SoundTap to function properly. Please enable the Notifications access permission to continue." +
+                        "\n\nTo enable the permission, tap the button below and enable SoundTap from the list.",
+                ),
                 nextButtonEnabled = uiState.hasNotificationListenerPermission,
                 animationImage = R.raw.music_player,
                 actionButtonLabel = "Open Notification Access Settings",
@@ -187,11 +187,11 @@ fun OnboardingScreen(
             OnboardingPage(
                 title = "Battery Optimization",
                 description =
-                    AnnotatedString(
-                        "SoundTap runs in the background to provide you with seamless music playback controls. To ensure that SoundTap works reliably, please disable battery optimization for the app." +
-                            "\n\nThis will prevent the system from killing SoundTap in the background and ensure that you can control your music playback at all times." +
-                            "\n\nTo disable battery optimization, tap the button below and select 'Don't optimize' for SoundTap.",
-                    ),
+                AnnotatedString(
+                    "SoundTap runs in the background to provide you with seamless music playback controls. To ensure that SoundTap works reliably, please disable battery optimization for the app." +
+                        "\n\nThis will prevent the system from killing SoundTap in the background and ensure that you can control your music playback at all times." +
+                        "\n\nTo disable battery optimization, tap the button below and select 'Don't optimize' for SoundTap.",
+                ),
                 nextButtonEnabled = uiState.isBackgroundOptimizationDisabled,
                 animationImage = R.raw.battery,
                 tintedAnimation = true,
@@ -201,11 +201,11 @@ fun OnboardingScreen(
             OnboardingPage(
                 title = "Accessibility Service",
                 description =
-                    AnnotatedString(
-                        "SoundTap requires the Accessibility Service permission to detect volume button presses and control your music playback." +
-                            "\n\nThe Accessibility Service only allows SoundTap to detect volume button presses and does not collect any other personal data or information. It does NOT read the screen." +
-                            "\n\nTo enable the Accessibility Service, tap the button below and enable SoundTap from the list.",
-                    ),
+                AnnotatedString(
+                    "SoundTap requires the Accessibility Service permission to detect volume button presses and control your music playback." +
+                        "\n\nThe Accessibility Service only allows SoundTap to detect volume button presses and does not collect any other personal data or information. It does NOT read the screen." +
+                        "\n\nTo enable the Accessibility Service, tap the button below and enable SoundTap from the list.",
+                ),
                 nextButtonEnabled = accessibilityServiceUiState.isRunning && hasAcceptedAccessibilityServiceConditions,
                 animationImage = R.raw.empty,
                 actionButtonLabel = "Open Accessibility Settings",
@@ -220,11 +220,11 @@ fun OnboardingScreen(
             OnboardingPage(
                 title = "All Set!",
                 description =
-                    AnnotatedString(
-                        "Congratulations! You're all set to start using SoundTap." +
-                            "\n\nTo get started, press the volume up and down buttons simultaneously to toggle the music playback." +
-                            "\n\nIf you have any questions or need help, feel free to reach out to us.",
-                    ),
+                AnnotatedString(
+                    "Congratulations! You're all set to start using SoundTap." +
+                        "\n\nTo get started, press the volume up and down buttons simultaneously to toggle the music playback." +
+                        "\n\nIf you have any questions or need help, feel free to reach out to us.",
+                ),
                 animationImage = R.raw.confetti,
                 bottomContent = {
                     Spacer(modifier = Modifier.weight(1f))
@@ -274,9 +274,9 @@ fun OnboardingScreen(
 
             Row(
                 modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp, horizontal = 32.dp),
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp, horizontal = 32.dp),
                 horizontalArrangement = Arrangement.End,
             ) {
                 AnimatedVisibility(visible = currentPage > 0) {
@@ -302,11 +302,11 @@ fun OnboardingScreen(
                     Text(
                         modifier = Modifier.animateContentSize(),
                         text =
-                            when (currentPage) {
-                                0 -> "Start"
-                                onboardingPages.size - 1 -> "Finish"
-                                else -> "Next"
-                            },
+                        when (currentPage) {
+                            0 -> "Start"
+                            onboardingPages.size - 1 -> "Finish"
+                            else -> "Next"
+                        },
                     )
                 }
             }
@@ -317,9 +317,9 @@ fun OnboardingScreen(
                 onDismissRequest = { showBottomSheet = false },
                 sheetState = sheetState,
                 windowInsets =
-                    WindowInsets(
-                        bottom = BottomSheetDefaults.windowInsets.getBottom(density),
-                    ),
+                WindowInsets(
+                    bottom = BottomSheetDefaults.windowInsets.getBottom(density),
+                ),
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp),
@@ -424,14 +424,14 @@ private fun TemplatePage(
                         rememberLottieDynamicProperty(
                             property = LottieProperty.COLOR_FILTER,
                             value =
-                                BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
-                                    MaterialTheme.colorScheme.primary.toArgb(),
-                                    BlendModeCompat.SRC_ATOP,
-                                ),
+                            BlendModeColorFilterCompat.createBlendModeColorFilterCompat(
+                                MaterialTheme.colorScheme.primary.toArgb(),
+                                BlendModeCompat.SRC_ATOP,
+                            ),
                             keyPath =
-                                arrayOf(
-                                    "**",
-                                ),
+                            arrayOf(
+                                "**",
+                            ),
                         ),
                     )
                 } else {

@@ -47,12 +47,12 @@ enum class WorkingMode(
 
             Icon(
                 modifier =
-                    Modifier
-                        .padding(4.dp)
-                        .fillMaxWidth(0.5f)
-                        .aspectRatio(1f)
-                        .align(Alignment.TopCenter)
-                        .alpha(alpha),
+                Modifier
+                    .padding(4.dp)
+                    .fillMaxWidth(0.5f)
+                    .aspectRatio(1f)
+                    .align(Alignment.TopCenter)
+                    .alpha(alpha),
                 imageVector = Icons.Default.AllInclusive,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
@@ -67,9 +67,9 @@ enum class WorkingMode(
 
         Text(
             modifier =
-                Modifier
-                    .padding(4.dp)
-                    .alpha(alpha),
+            Modifier
+                .padding(4.dp)
+                .alpha(alpha),
             text = "ON",
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
@@ -84,9 +84,9 @@ enum class WorkingMode(
 
         Text(
             modifier =
-                Modifier
-                    .padding(4.dp)
-                    .alpha(alpha),
+            Modifier
+                .padding(4.dp)
+                .alpha(alpha),
             text = "SLEEP",
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
