@@ -35,7 +35,7 @@ jobs:
         run: ./gradlew spotlessCheck --stacktrace
 
       - name: Lint
-        run: ./gradlew lint --build-cache --stacktrace
+        run: ./gradlew lint --build-cache --stacktrace --warning-mode all
 
       - name: Unit Tests
         run: ./gradlew test --build-cache --stacktrace
