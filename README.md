@@ -1,4 +1,4 @@
-![Cover Image](/RESOURCES/Cover-1024x200.png)
+![Cover Image](/RESOURCES/Cover-1024x200.png) 
 
 # SoundTap - Android Volume Media Controller App
 
