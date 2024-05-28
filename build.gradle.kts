@@ -12,7 +12,7 @@ plugins {
 	alias(libs.plugins.ci.spotless)
 }
 
-val ktlintVersion: String = libs.versions.pinterest.ktlint.get()
+val ktlintVersion: String = "1.2.1"
 
 subprojects {
 	apply {
@@ -60,7 +60,7 @@ subprojects {
 				// Treat all Kotlin warnings as errors (disabled by default)
 				// allWarningsAsErrors = project.hasProperty("warningsAsErrors") ? project.warningsAsErrors : false
 				// Opt-in to experimental compose APIs
-				freeCompilerArgs = freeCompilerArgs + listOf("-Xopt-in=kotlin.RequiresOptIn")
+				freeCompilerArgs = freeCompilerArgs + listOf("-opt-in=kotlin.RequiresOptIn")
 
 				jvmTarget = "17"
 			}
