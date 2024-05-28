@@ -1,3 +1,5 @@
+import com.google.gms.googleservices.GoogleServicesTask
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
 	alias(libs.plugins.kotlin.ksp) apply false
@@ -19,6 +21,13 @@ subprojects {
 	apply {
 		plugin("org.jlleitschuh.gradle.ktlint")
 		plugin("com.diffplug.spotless")
+	}
+
+	// https://github.com/firebase/firebase-android-sdk/issues/5962#:~:text=project.afterEvaluate%20%7B%0A%20%20%20%20tasks.withType%3CGoogleServicesTask%3E%20%7B%0A%20%20%20%20%20%20%20%20gmpAppId.set(project.layout.buildDirectory.file(%22%24name%2DgmpAppId.txt%22))%0A%20%20%20%20%7D%0A%7D
+	project.afterEvaluate {
+		tasks.withType<GoogleServicesTask> {
+			gmpAppId.set(project.layout.buildDirectory.file("$name-gmpAppId.txt"))
+		}
 	}
 
 	ktlint {
