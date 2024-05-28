@@ -47,12 +47,10 @@ import fr.angel.soundtap.ui.components.BottomControlBar
 import fr.angel.soundtap.ui.theme.FontPilowlava
 import fr.angel.soundtap.ui.theme.SoundTapTheme
 
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-	companion object {
-		private const val AOD_MODE = "aod_mode"
-	}
 
 	private lateinit var mainViewModel: MainViewModel
 	private var shouldKeepSplashScreenOn = mutableStateOf(true)

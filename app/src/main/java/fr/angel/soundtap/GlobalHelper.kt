@@ -48,13 +48,13 @@ object GlobalHelper {
 	}
 
 	fun startMediaPlayer(context: Context, packageName: String) {
-		val playSpotify = Intent(Intent.ACTION_MEDIA_BUTTON).apply {
+		val startMediaPlayer = Intent(Intent.ACTION_MEDIA_BUTTON).apply {
 			putExtra(
 				Intent.EXTRA_KEY_EVENT,
 				KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY)
 			)
 			`package` = packageName
 		}
-		context.sendOrderedBroadcast(playSpotify, null)
+		context.sendOrderedBroadcast(startMediaPlayer, null)
 	}
 }

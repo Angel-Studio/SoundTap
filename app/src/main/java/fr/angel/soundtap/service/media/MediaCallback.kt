@@ -89,7 +89,7 @@ class MediaCallback @Inject constructor(
 
 		mediaController.metadata?.let { metadata ->
 			val bitmap = metadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART) ?: run {
-				Log.d("MediaCallback", "No album art found")
+				Log.w("MediaCallback", "No album art found")
 				return
 			}
 			val filename = metadata.getString(MediaMetadata.METADATA_KEY_TITLE) +
@@ -105,13 +105,8 @@ class MediaCallback @Inject constructor(
 				artist = metadata.getString(MediaMetadata.METADATA_KEY_ARTIST) ?: return,
 				album = metadata.getString(MediaMetadata.METADATA_KEY_ALBUM) ?: return,
 				duration = metadata.getLong(MediaMetadata.METADATA_KEY_DURATION),
-				coverFilePath = coverFilePath
+				coverFilePath = coverFilePath ?: return,
 			).run {
-				Log.d("MediaCallback", "New song: $this")
-				Log.d(
-					"MediaCallback",
-					"addedTime: $addedTime playingSong?.addedTime: ${playingSong?.addedTime} delta: ${addedTime - (playingSong?.addedTime ?: 0)}"
-				)
 				val duplicate = playingSong != null &&
 						(addedTime - (playingSong?.addedTime ?: 0)) > 250
 

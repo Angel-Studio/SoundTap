@@ -209,12 +209,13 @@ fun PlaybackCard(
 		return
 	}
 
-	val generatedBitmap: Bitmap = remember(song.coverFilePath) {
+	val generatedBitmap: Bitmap? = remember(song.coverFilePath) {
 		StorageHelper.loadBitmapFromFile(song.coverFilePath)
 	}
 
-	val coverPalette = Palette.from(generatedBitmap).generate()
-	val dominantColor = Color(coverPalette.getVibrantColor(Color.White.toArgb()))
+	val coverPalette = generatedBitmap?.let { Palette.from(it).generate() }
+	val dominantColor =
+		Color(coverPalette?.getVibrantColor(Color.White.toArgb()) ?: Color.Black.toArgb())
 
 	val playbackCornerRadius by animateDpAsState(
 		targetValue = if (media.isPlaying) 16.dp else 96.dp,

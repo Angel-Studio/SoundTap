@@ -31,6 +31,8 @@ ksp = "1.9.23-1.0.20"
 google-services = "4.4.1"
 firebase-crashlytics = "3.0.1"
 firebase-perfs = "1.4.2"
+lifecycleCommon = "2.8.0"
+lifecycleService = "2.8.0"
 
 [libraries]
 accompanist-drawablepainter = { module = "com.google.accompanist:accompanist-drawablepainter", version.ref = "accompanistDrawablepainter" }
@@ -72,6 +74,8 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 androidx-palette-ktx = { group = "androidx.palette", name = "palette-ktx", version.ref = "paletteKtx" }
+lifecycle-common = { group = "androidx.lifecycle", name = "lifecycle-common", version.ref = "lifecycleCommon" }
+lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycleService" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
