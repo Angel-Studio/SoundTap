@@ -100,9 +100,10 @@ fun SoundTapNavGraph(
 
             composable(Screens.Onboarding.route) {
                 OnboardingScreen(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .systemBarsPadding(),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .systemBarsPadding(),
                     mainViewModel = mainViewModel,
                 )
             }

@@ -21,9 +21,13 @@ sealed class Screens(
 ) {
     data object App : Screens(route = "app") {
         data object Home : Screens(route = "home")
+
         data object Customization : Screens(route = "customization", showBackArrow = true)
+
         data object History : Screens(route = "history", showBackArrow = true)
+
         data object Settings : Screens(route = "settings", showBackArrow = true)
+
         data object Support : Screens(route = "support", showBackArrow = true)
     }
 
@@ -32,7 +36,6 @@ sealed class Screens(
     companion object {
         fun fromRoute(s: String): Screens {
             return when (s) {
-
                 // App
                 App.route -> App
                 App.Home.route -> App.Home

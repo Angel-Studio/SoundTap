@@ -30,14 +30,16 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class HeadsetConnectionBroadcastReceiver : BroadcastReceiver() {
-
     companion object {
         const val TAG = "HeadsetConnectionBroadcastReceiver"
     }
 
     private val scope by lazy { CoroutineScope(Dispatchers.Main) }
 
-    override fun onReceive(context: Context, intent: Intent) {
+    override fun onReceive(
+        context: Context,
+        intent: Intent,
+    ) {
         if (intent.action != BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED) return
 
         val state = intent.getIntExtra(BluetoothProfile.EXTRA_STATE, -1)

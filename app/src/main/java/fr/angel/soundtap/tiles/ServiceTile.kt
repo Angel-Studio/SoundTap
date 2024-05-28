@@ -35,7 +35,6 @@ data class StateModel(
 )
 
 class ServiceTile : TileService() {
-
     private val scope by lazy { CoroutineScope(Dispatchers.IO) }
 
     private lateinit var state: StateModel
@@ -72,25 +71,32 @@ class ServiceTile : TileService() {
 
         scope.launch {
             SoundTapAccessibilityService.uiState.collect {
-                state = StateModel(
-                    state = if (it.isRunning) {
-                        if (it.isActivated) {
-                            Tile.STATE_ACTIVE
-                        } else {
-                            Tile.STATE_INACTIVE
-                        }
-                    } else {
-                        Tile.STATE_UNAVAILABLE
-                    },
-                    label = getString(R.string.app_name),
-                    icon = if (it.isRunning) Icon.createWithResource(
-                        this@ServiceTile,
-                        R.drawable.round_power_settings_new_24
-                    ) else Icon.createWithResource(
-                        this@ServiceTile,
-                        R.drawable.round_power_settings_new_24
+                state =
+                    StateModel(
+                        state =
+                            if (it.isRunning) {
+                                if (it.isActivated) {
+                                    Tile.STATE_ACTIVE
+                                } else {
+                                    Tile.STATE_INACTIVE
+                                }
+                            } else {
+                                Tile.STATE_UNAVAILABLE
+                            },
+                        label = getString(R.string.app_name),
+                        icon =
+                            if (it.isRunning) {
+                                Icon.createWithResource(
+                                    this@ServiceTile,
+                                    R.drawable.round_power_settings_new_24,
+                                )
+                            } else {
+                                Icon.createWithResource(
+                                    this@ServiceTile,
+                                    R.drawable.round_power_settings_new_24,
+                                )
+                            },
                     )
-                )
 
                 updateTile()
             }

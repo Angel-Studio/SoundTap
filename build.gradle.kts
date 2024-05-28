@@ -8,7 +8,6 @@ plugins {
 	alias(libs.plugins.serialization) apply false
 
 	// CI plugins
-	alias(libs.plugins.ci.detekt)
 	alias(libs.plugins.ci.ktlint)
 	alias(libs.plugins.ci.spotless)
 }
@@ -17,7 +16,6 @@ val ktlintVersion: String = libs.versions.pinterest.ktlint.get()
 
 subprojects {
 	apply {
-		plugin("io.gitlab.arturbosch.detekt")
 		plugin("org.jlleitschuh.gradle.ktlint")
 		plugin("com.diffplug.spotless")
 	}
@@ -43,9 +41,9 @@ subprojects {
 					mapOf(
 						"dir" to ".",
 						"include" to listOf("**/*.kt"),
-						"exclude" to listOf("**/build/**", "**/spotless/*.kt")
-					)
-				)
+						"exclude" to listOf("**/build/**", "**/spotless/*.kt"),
+					),
+				),
 			)
 			trimTrailingWhitespace()
 			indentWithSpaces()
@@ -69,9 +67,10 @@ subprojects {
 		}
 
 		withType<Test>().configureEach {
-			jvmArgs = listOf(
-				"-Dkotlintest.tags.exclude=Integration,EndToEnd,Performance",
-			)
+			jvmArgs =
+				listOf(
+					"-Dkotlintest.tags.exclude=Integration,EndToEnd,Performance",
+				)
 			testLogging {
 				events("passed", "skipped", "failed")
 			}
@@ -84,37 +83,15 @@ subprojects {
 tasks {
 
 	withType<Test>().configureEach {
-		jvmArgs = listOf(
-			"-Dkotlintest.tags.exclude=Integration,EndToEnd,Performance",
-		)
+		jvmArgs =
+			listOf(
+				"-Dkotlintest.tags.exclude=Integration,EndToEnd,Performance",
+			)
 		testLogging {
 			events("passed", "skipped", "failed")
 		}
 		testLogging.showStandardStreams = true
 		useJUnitPlatform()
-	}
-
-	register<io.gitlab.arturbosch.detekt.Detekt>("templateDetekt") {
-		description = "Runs a custom detekt build."
-		setSource(files("src/main/kotlin", "src/test/kotlin"))
-		config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
-		debug = true
-		reports {
-			xml.required.set(true)
-			xml.outputLocation.set(file("build/reports/detekt/detekt.xml"))
-			html.required.set(true)
-			txt.required.set(true)
-		}
-		include("**/*.kt")
-		include("**/*.kts")
-		exclude("resources/")
-		exclude("build/")
-		include("**/*.kt")
-		include("**/*.kts")
-		exclude(".*/resources/.*")
-		exclude(".*/build/.*")
-		exclude("/versions.gradle.kts")
-		exclude("buildSrc/settings.gradle.kts")
 	}
 }
 

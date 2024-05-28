@@ -18,15 +18,15 @@ package fr.angel.soundtap.data.settings.customization
 import android.content.Context
 import androidx.datastore.core.Serializer
 import androidx.datastore.dataStore
+import java.io.InputStream
+import java.io.OutputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
-import java.io.InputStream
-import java.io.OutputStream
 
 val Context.customizationSettingsDataStore by dataStore(
     fileName = "customization_settings.json",
-    serializer = CustomizationSettingsSerializer
+    serializer = CustomizationSettingsSerializer,
 )
 
 private object CustomizationSettingsSerializer : Serializer<CustomizationSettings> {
@@ -37,7 +37,7 @@ private object CustomizationSettingsSerializer : Serializer<CustomizationSetting
         return try {
             Json.decodeFromString(
                 deserializer = CustomizationSettings.serializer(),
-                string = input.readBytes().decodeToString()
+                string = input.readBytes().decodeToString(),
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -45,13 +45,16 @@ private object CustomizationSettingsSerializer : Serializer<CustomizationSetting
         }
     }
 
-    override suspend fun writeTo(t: CustomizationSettings, output: OutputStream) {
+    override suspend fun writeTo(
+        t: CustomizationSettings,
+        output: OutputStream,
+    ) {
         withContext(Dispatchers.IO) {
             output.write(
                 Json.encodeToString(
                     serializer = CustomizationSettings.serializer(),
-                    value = t
-                ).encodeToByteArray()
+                    value = t,
+                ).encodeToByteArray(),
             )
         }
     }

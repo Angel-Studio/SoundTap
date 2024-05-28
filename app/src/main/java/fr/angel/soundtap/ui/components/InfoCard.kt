@@ -62,21 +62,24 @@ fun InfoCard(
     val isBackgroundColorLight = cardType.backgroundColor.luminance() > 0.5f
 
     Card(
-        modifier = modifier
-            .height(IntrinsicSize.Min)
-            .fillMaxWidth()
-            .clip(MaterialTheme.shapes.extraLarge)
-            .clickable(onClick = onCardClick),
+        modifier =
+            modifier
+                .height(IntrinsicSize.Min)
+                .fillMaxWidth()
+                .clip(MaterialTheme.shapes.extraLarge)
+                .clickable(onClick = onCardClick),
         shape = MaterialTheme.shapes.extraLarge,
-        colors = CardDefaults.cardColors(
-            containerColor = if (cardType == InfoCardType.Default) MaterialTheme.colorScheme.surfaceContainer else cardType.backgroundColor,
-            contentColor = if (isBackgroundColorLight || cardType == InfoCardType.Default) Color.Black else Color.White,
-        )
+        colors =
+            CardDefaults.cardColors(
+                containerColor = if (cardType == InfoCardType.Default) MaterialTheme.colorScheme.surfaceContainer else cardType.backgroundColor,
+                contentColor = if (isBackgroundColorLight || cardType == InfoCardType.Default) Color.Black else Color.White,
+            ),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Row(
@@ -93,7 +96,7 @@ fun InfoCard(
                     text = title,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.weight(1f),
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
             Text(

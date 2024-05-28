@@ -43,13 +43,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-
 data class AccessibilityServiceState(
     val isRunning: Boolean = false,
     val isActivated: Boolean = false,
     val volumeUpLastPressedTime: Long = 0,
     val volumeDownLastPressedTime: Long = 0,
-
     val lastEventTime: Long = 0,
 ) {
     val isVolumeUpPressed: Boolean
@@ -68,13 +66,15 @@ data class AccessibilityServiceState(
         get() = isVolumeUpPressed && isVolumeDownPressed
 
     // Long press both volume buttons
-    fun isBothVolumeLongPressed(doublePressThreshold: Long): Boolean = isBothVolumePressed
-            && (System.currentTimeMillis() - volumeUpLastPressedTime >= doublePressThreshold
-            || System.currentTimeMillis() - volumeDownLastPressedTime >= doublePressThreshold)
+    fun isBothVolumeLongPressed(doublePressThreshold: Long): Boolean =
+        isBothVolumePressed &&
+            (
+                System.currentTimeMillis() - volumeUpLastPressedTime >= doublePressThreshold ||
+                    System.currentTimeMillis() - volumeDownLastPressedTime >= doublePressThreshold
+            )
 }
 
 class SoundTapAccessibilityService : AccessibilityService() {
-
     private val scope by lazy { CoroutineScope(Dispatchers.IO) }
     private val listenerScope by lazy { CoroutineScope(Dispatchers.IO) }
 
@@ -113,12 +113,13 @@ class SoundTapAccessibilityService : AccessibilityService() {
     }
 
     override fun onKeyEvent(event: KeyEvent?): Boolean {
-
         // Skip the event if the service is not activated or that no media receiver is registered
-        if (event == null
-            || _uiState.value.isActivated.not()
-            || (MediaReceiver.firstCallback == null && autoPlayMode.isOnHeadsetConnectedActive.not())
-        ) return super.onKeyEvent(null)
+        if (event == null ||
+            _uiState.value.isActivated.not() ||
+            (MediaReceiver.firstCallback == null && autoPlayMode.isOnHeadsetConnectedActive.not())
+        ) {
+            return super.onKeyEvent(null)
+        }
 
         // Filter events based on the working mode
         when (workingMode) {
@@ -126,7 +127,8 @@ class SoundTapAccessibilityService : AccessibilityService() {
             WorkingMode.SCREEN_ON -> {
                 if (displayManager.displays.any {
                         it.state != Display.STATE_ON
-                    }) {
+                    }
+                ) {
                     return super.onKeyEvent(event)
                 }
             }
@@ -134,9 +136,10 @@ class SoundTapAccessibilityService : AccessibilityService() {
             WorkingMode.SCREEN_OFF -> {
                 if (displayManager.displays.any {
                         it.state != Display.STATE_DOZE ||
-                                it.state != Display.STATE_OFF ||
-                                it.state != Display.STATE_DOZE_SUSPEND
-                    }) {
+                            it.state != Display.STATE_OFF ||
+                            it.state != Display.STATE_DOZE_SUSPEND
+                    }
+                ) {
                     return super.onKeyEvent(event)
                 }
             }
@@ -171,7 +174,7 @@ class SoundTapAccessibilityService : AccessibilityService() {
                             audioManager.adjustStreamVolume(
                                 AudioManager.STREAM_MUSIC,
                                 AudioManager.ADJUST_RAISE,
-                                AudioManager.FLAG_SHOW_UI
+                                AudioManager.FLAG_SHOW_UI,
                             )
                         }
                         _uiState.value = _uiState.value.copy(volumeUpLastPressedTime = 0)
@@ -182,7 +185,7 @@ class SoundTapAccessibilityService : AccessibilityService() {
                             audioManager.adjustStreamVolume(
                                 AudioManager.STREAM_MUSIC,
                                 AudioManager.ADJUST_LOWER,
-                                AudioManager.FLAG_SHOW_UI
+                                AudioManager.FLAG_SHOW_UI,
                             )
                         }
                         _uiState.value = _uiState.value.copy(volumeDownLastPressedTime = 0)
@@ -245,7 +248,6 @@ class SoundTapAccessibilityService : AccessibilityService() {
      * **/
     private suspend fun listenForEvents() {
         while (_uiState.value.isVolumeUpPressed || _uiState.value.isVolumeDownPressed) {
-
             // Delay between events
             delay(50)
 
@@ -258,7 +260,8 @@ class SoundTapAccessibilityService : AccessibilityService() {
                 WorkingMode.SCREEN_ON -> {
                     if (displayManager.displays.any {
                             it.state == Display.STATE_ON
-                        }) {
+                        }
+                    ) {
                         executeEvent()
                     }
                 }
@@ -266,9 +269,10 @@ class SoundTapAccessibilityService : AccessibilityService() {
                 WorkingMode.SCREEN_OFF -> {
                     if (displayManager.displays.any {
                             it.state == Display.STATE_DOZE ||
-                                    it.state == Display.STATE_OFF ||
-                                    it.state == Display.STATE_DOZE_SUSPEND
-                        }) {
+                                it.state == Display.STATE_OFF ||
+                                it.state == Display.STATE_DOZE_SUSPEND
+                        }
+                    ) {
                         executeEvent()
                     }
                 }
@@ -322,6 +326,5 @@ class SoundTapAccessibilityService : AccessibilityService() {
             vibratorHelper.createHapticFeedback(hapticFeedbackLevel)
             MediaReceiver.firstCallback?.togglePlayPause()
         }
-
     }
 }

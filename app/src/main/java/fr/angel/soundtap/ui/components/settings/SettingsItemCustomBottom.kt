@@ -63,74 +63,81 @@ fun SettingsItemCustomBottom(
 ) {
     val iconBackgroundColor by animateColorAsState(
         label = "iconBackgroundColor",
-        targetValue = if (enabled) {
-            MaterialTheme.colorScheme.primary
-        } else {
-            MaterialTheme.colorScheme.onSurface.copy(0.2f)
-        }
+        targetValue =
+            if (enabled) {
+                MaterialTheme.colorScheme.primary
+            } else {
+                MaterialTheme.colorScheme.onSurface.copy(0.2f)
+            },
     )
     val iconColor by animateColorAsState(
         label = "iconColor",
-        targetValue = if (enabled) {
-            MaterialTheme.colorScheme.onPrimary
-        } else {
-            MaterialTheme.colorScheme.onSurface.copy(0.5f)
-        }
+        targetValue =
+            if (enabled) {
+                MaterialTheme.colorScheme.onPrimary
+            } else {
+                MaterialTheme.colorScheme.onSurface.copy(0.5f)
+            },
     )
 
     Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(MaterialTheme.shapes.medium)
-            .combinedClickable(
-                onClick = { if (enabled) onClick() },
-                onLongClick = { if (enabled) onLongClick() }
-            ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clip(MaterialTheme.shapes.medium)
+                .combinedClickable(
+                    onClick = { if (enabled) onClick() },
+                    onLongClick = { if (enabled) onLongClick() },
+                ),
         shape = MaterialTheme.shapes.medium,
-        tonalElevation = if (!enabled) {
-            4.dp
-        } else if (content != null) {
-            64.dp
-        } else {
-            4.dp
-        }
+        tonalElevation =
+            if (!enabled) {
+                4.dp
+            } else if (content != null) {
+                64.dp
+            } else {
+                4.dp
+            },
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 if (icon != null) {
                     Box(
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .background(iconBackgroundColor)
+                        modifier =
+                            Modifier
+                                .clip(CircleShape)
+                                .background(iconBackgroundColor),
                     ) {
                         Icon(
                             imageVector = icon,
                             contentDescription = null,
                             tint = iconColor,
-                            modifier = Modifier.padding(8.dp)
+                            modifier = Modifier.padding(8.dp),
                         )
                     }
                     Spacer(modifier = Modifier.width(16.dp))
                 }
                 Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .alpha(if (enabled) 1f else 0.6f)
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .alpha(if (enabled) 1f else 0.6f),
                 ) {
                     Text(
-
                         text = title,
                         style = MaterialTheme.typography.titleMedium,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
                     )
                     if (subtitle != null) {
                         Spacer(modifier = Modifier.height(4.dp))
@@ -139,7 +146,7 @@ fun SettingsItemCustomBottom(
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
+                            overflow = TextOverflow.Ellipsis,
                         )
                     }
                 }
@@ -152,7 +159,7 @@ fun SettingsItemCustomBottom(
                 AnimatedVisibility(
                     visible = expanded,
                     enter = fadeIn() + expandVertically(),
-                    exit = fadeOut() + shrinkVertically()
+                    exit = fadeOut() + shrinkVertically(),
                 ) {
                     Column {
                         Spacer(modifier = Modifier.height(16.dp))

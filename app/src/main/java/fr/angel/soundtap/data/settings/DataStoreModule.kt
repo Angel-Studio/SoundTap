@@ -33,22 +33,27 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DataStoreModule {
-
     @Provides
     @Singleton
-    fun provideAppSettingsDataStore(@ApplicationContext context: Context): DataStore<AppSettings> {
+    fun provideAppSettingsDataStore(
+        @ApplicationContext context: Context,
+    ): DataStore<AppSettings> {
         return context.settingsDataStore
     }
 
     @Provides
     @Singleton
-    fun provideCustomizationSettingsDataStore(@ApplicationContext context: Context): DataStore<CustomizationSettings> {
+    fun provideCustomizationSettingsDataStore(
+        @ApplicationContext context: Context,
+    ): DataStore<CustomizationSettings> {
         return context.customizationSettingsDataStore
     }
 
     @Provides
     @Singleton
-    fun provideStatsSettingsDataStore(@ApplicationContext context: Context): DataStore<StatsSettings> {
+    fun provideStatsSettingsDataStore(
+        @ApplicationContext context: Context,
+    ): DataStore<StatsSettings> {
         return context.statsDataStore
     }
 }

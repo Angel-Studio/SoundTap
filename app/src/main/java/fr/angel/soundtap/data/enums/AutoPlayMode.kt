@@ -42,75 +42,78 @@ enum class AutoPlayMode(
         selectedComposable = { selected ->
             val alpha by animateFloatAsState(
                 if (selected) 1f else 0.2f,
-                label = "alpha"
+                label = "alpha",
             )
 
             Icon(
-                modifier = Modifier
-                    .padding(4.dp)
-                    .fillMaxWidth(0.25f)
-                    .aspectRatio(1f)
-                    .align(Alignment.TopCenter)
-                    .alpha(alpha),
+                modifier =
+                    Modifier
+                        .padding(4.dp)
+                        .fillMaxWidth(0.25f)
+                        .aspectRatio(1f)
+                        .align(Alignment.TopCenter)
+                        .alpha(alpha),
                 imageVector = Icons.Default.Headset,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.primary,
             )
-        }
+        },
     ),
     ON_DOUBLE_VOLUME_LONG_PRESS(
         title = "On double volume long press",
         selectedComposable = { selected ->
             val alpha by animateFloatAsState(
                 if (selected) 1f else 0.2f,
-                label = "alpha"
+                label = "alpha",
             )
 
             Icon(
-                modifier = Modifier
-                    .padding(4.dp)
-                    .fillMaxWidth(0.25f)
-                    .aspectRatio(1f)
-                    .align(Alignment.TopCenter)
-                    .alpha(alpha),
+                modifier =
+                    Modifier
+                        .padding(4.dp)
+                        .fillMaxWidth(0.25f)
+                        .aspectRatio(1f)
+                        .align(Alignment.TopCenter)
+                        .alpha(alpha),
                 imageVector = Icons.AutoMirrored.Filled.VolumeUp,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.primary,
             )
-        }
+        },
     ),
     BOTH(
         title = "Both",
         selectedComposable = { selected ->
             val alpha by animateFloatAsState(
                 if (selected) 1f else 0.2f,
-                label = "alpha"
+                label = "alpha",
             )
 
             Row(
-                modifier = Modifier
-                    .padding(4.dp)
-                    .fillMaxWidth(0.5f)
-                    .align(Alignment.TopCenter)
-                    .alpha(alpha),
+                modifier =
+                    Modifier
+                        .padding(4.dp)
+                        .fillMaxWidth(0.5f)
+                        .align(Alignment.TopCenter)
+                        .alpha(alpha),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp)
+                horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp),
             ) {
                 Icon(
                     modifier = Modifier.weight(1f),
                     imageVector = Icons.Default.Headset,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.primary,
                 )
                 Icon(
                     modifier = Modifier.weight(1f),
                     imageVector = Icons.AutoMirrored.Filled.VolumeUp,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.primary,
                 )
             }
-        }
-    )
+        },
+    ),
 }
 
 val AutoPlayMode.isOnHeadsetConnectedActive: Boolean

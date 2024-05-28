@@ -68,43 +68,49 @@ fun SharedTransitionScope.HistoryScreen(
 ) {
     val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
 
-    val songsList = remember(uiState.statsSettings.history) {
-        uiState.statsSettings.history.toList().reversed()
-    }
+    val songsList =
+        remember(uiState.statsSettings.history) {
+            uiState.statsSettings.history.toList().reversed()
+        }
     val isHistoryEmpty = songsList.isEmpty()
 
     val totalSongsPlayed = uiState.statsSettings.totalSongsPlayed
     val totalSongsSkipped = uiState.statsSettings.totalSongsSkipped
 
     Card(
-        modifier = modifier
-            .padding(8.dp)
-            .fillMaxSize()
-            .sharedElement(
-                state = rememberSharedContentState(
-                    key = "History-card"
+        modifier =
+            modifier
+                .padding(8.dp)
+                .fillMaxSize()
+                .sharedElement(
+                    state =
+                        rememberSharedContentState(
+                            key = "History-card",
+                        ),
+                    animatedVisibilityScope = animatedVisibilityScope,
                 ),
-                animatedVisibilityScope = animatedVisibilityScope
-            )
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                    .padding(16.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                        .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Icon(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .sharedElement(
-                            state = rememberSharedContentState(
-                                key = "History-icon",
+                    modifier =
+                        Modifier
+                            .size(48.dp)
+                            .sharedElement(
+                                state =
+                                    rememberSharedContentState(
+                                        key = "History-icon",
+                                    ),
+                                animatedVisibilityScope = animatedVisibilityScope,
                             ),
-                            animatedVisibilityScope = animatedVisibilityScope
-                        ),
                     imageVector = Icons.Default.History,
                     contentDescription = null,
                 )
@@ -113,13 +119,14 @@ fun SharedTransitionScope.HistoryScreen(
                     text = "History",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .sharedBounds(
-                            rememberSharedContentState(
-                                key = "History"
+                    modifier =
+                        Modifier
+                            .sharedBounds(
+                                rememberSharedContentState(
+                                    key = "History",
+                                ),
+                                animatedVisibilityScope = animatedVisibilityScope,
                             ),
-                            animatedVisibilityScope = animatedVisibilityScope
-                        )
                 )
             }
             HorizontalDivider()
@@ -132,30 +139,31 @@ fun SharedTransitionScope.HistoryScreen(
                     }
                 }
 
-                val shaderModifier = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    val shader = remember { RuntimeShader(WOBBLE_SHADER) }
+                val shaderModifier =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        val shader = remember { RuntimeShader(WOBBLE_SHADER) }
 
-                    Modifier
-                        .onSizeChanged { size ->
-                            shader.setFloatUniform(
-                                "resolution",
-                                size.width.toFloat(),
-                                size.height.toFloat()
-                            )
-                        }
-                        .graphicsLayer {
-                            shader.setFloatUniform("time", time)
-                            renderEffect = RenderEffect
-                                .createRuntimeShaderEffect(
-                                    shader,
-                                    "contents"
+                        Modifier
+                            .onSizeChanged { size ->
+                                shader.setFloatUniform(
+                                    "resolution",
+                                    size.width.toFloat(),
+                                    size.height.toFloat(),
                                 )
-                                .asComposeRenderEffect()
-                        }
-                } else {
-                    Modifier
-                }
-
+                            }
+                            .graphicsLayer {
+                                shader.setFloatUniform("time", time)
+                                renderEffect =
+                                    RenderEffect
+                                        .createRuntimeShaderEffect(
+                                            shader,
+                                            "contents",
+                                        )
+                                        .asComposeRenderEffect()
+                            }
+                    } else {
+                        Modifier
+                    }
 
                 Column(
                     modifier = Modifier.fillMaxSize(),
@@ -163,7 +171,7 @@ fun SharedTransitionScope.HistoryScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     val composition by rememberLottieComposition(
-                        LottieCompositionSpec.RawRes(R.raw.empty)
+                        LottieCompositionSpec.RawRes(R.raw.empty),
                     )
 
                     /*LottieAnimation(
@@ -194,9 +202,10 @@ fun SharedTransitionScope.HistoryScreen(
                 ) {
                     item {
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 16.dp),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 16.dp),
                             horizontalArrangement = Arrangement.spacedBy(16.dp),
                         ) {
                             Column(
@@ -211,7 +220,7 @@ fun SharedTransitionScope.HistoryScreen(
                                 Text(
                                     text = totalSongsPlayed.toString(),
                                     style = MaterialTheme.typography.labelLarge,
-                                    fontWeight = FontWeight.Black
+                                    fontWeight = FontWeight.Black,
                                 )
                             }
                             Column(
@@ -226,7 +235,7 @@ fun SharedTransitionScope.HistoryScreen(
                                 Text(
                                     text = totalSongsSkipped.toString(),
                                     style = MaterialTheme.typography.labelLarge,
-                                    fontWeight = FontWeight.Black
+                                    fontWeight = FontWeight.Black,
                                 )
                             }
                         }

@@ -62,11 +62,8 @@ import fr.angel.soundtap.ui.components.BottomControlBar
 import fr.angel.soundtap.ui.theme.FontPilowlava
 import fr.angel.soundtap.ui.theme.SoundTapTheme
 
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-
     private lateinit var mainViewModel: MainViewModel
     private var shouldKeepSplashScreenOn = mutableStateOf(true)
 
@@ -105,50 +102,52 @@ class MainActivity : ComponentActivity() {
 
             SoundTapTheme {
                 Scaffold(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .nestedScroll(scrollBehavior.nestedScrollConnection),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         CenterAlignedTopAppBar(
                             navigationIcon = {
                                 AnimatedVisibility(
                                     visible = currentScreen.showBackArrow,
                                     enter = scaleIn(),
-                                    exit = scaleOut()
+                                    exit = scaleOut(),
                                 ) {
                                     IconButton(onClick = { navController.popBackStack() }) {
                                         Icon(
                                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                            contentDescription = "Back"
+                                            contentDescription = "Back",
                                         )
                                     }
                                 }
                             },
                             title = {
                                 Text(
-                                    modifier = Modifier.padding(
-                                        horizontal = 16.dp,
-                                        vertical = 8.dp
-                                    ),
+                                    modifier =
+                                        Modifier.padding(
+                                            horizontal = 16.dp,
+                                            vertical = 8.dp,
+                                        ),
                                     text = "SoundTap",
                                     style = MaterialTheme.typography.displayMedium,
                                     fontFamily = FontPilowlava,
-                                    fontWeight = FontWeight.ExtraBold
+                                    fontWeight = FontWeight.ExtraBold,
                                 )
-                            }
+                            },
                         )
                     },
                     bottomBar = {
                         AnimatedVisibility(
                             visible = currentScreen == Screens.App.Home,
                             enter = slideInVertically { it } + expandVertically() + fadeIn(),
-                            exit = slideOutVertically { it } + shrinkVertically() + fadeOut()
+                            exit = slideOutVertically { it } + shrinkVertically() + fadeOut(),
                         ) {
                             BottomControlBar(
-                                serviceUiState = serviceUiState
+                                serviceUiState = serviceUiState,
                             )
                         }
-                    }
+                    },
                 ) { innerPadding ->
                     SoundTapNavGraph(
                         modifier = Modifier.padding(innerPadding),

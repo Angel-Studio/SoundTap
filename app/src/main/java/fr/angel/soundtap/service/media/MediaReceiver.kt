@@ -24,7 +24,6 @@ import fr.angel.soundtap.data.settings.stats.statsDataStore
 import fr.angel.soundtap.service.NotificationService
 
 object MediaReceiver {
-
     // Map of package name to callback
     val callbackMap = mutableStateMapOf<String, MediaCallback>()
     private val unsupportedCallbackMap = mutableStateMapOf<String, MediaCallback>()
@@ -50,11 +49,11 @@ object MediaReceiver {
                             onToggleSupportedPlayer = { supported ->
                                 toggleSupportedPlayer(
                                     supported,
-                                    mediaController.packageName
+                                    mediaController.packageName,
                                 )
                             },
                             statsDataStore = context.statsDataStore,
-                            context = context
+                            context = context,
                         )
                     callbackMap[mediaController.packageName] = callback
                     mediaController.registerCallback(callback)
@@ -67,7 +66,7 @@ object MediaReceiver {
     }
 
     fun register(context: Context) {
-        //val dataStore = DataStore(context)
+        // val dataStore = DataStore(context)
 
         /*scope.launch {
             dataStore.unsupportedMediaPlayers.collect { unsupportedPlayers ->
@@ -79,21 +78,23 @@ object MediaReceiver {
         }*/
 
         // Get the media session manager
-        if (!MediaReceiver::mediaSessionManager.isInitialized) mediaSessionManager =
-            context.getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
+        if (!MediaReceiver::mediaSessionManager.isInitialized) {
+            mediaSessionManager =
+                context.getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
+        }
 
         // Register the listener for active sessions (new sessions)
         mediaSessionManager.addOnActiveSessionsChangedListener(
             provideListener(context),
-            ComponentName(context, NotificationService::class.java)
+            ComponentName(context, NotificationService::class.java),
         )
 
         // Register callbacks for already active sessions (if any)
         mediaSessionManager.getActiveSessions(
             ComponentName(
                 context,
-                NotificationService::class.java
-            )
+                NotificationService::class.java,
+            ),
         ).forEach { mediaController ->
 
             // Skip unsupported players
@@ -103,18 +104,19 @@ object MediaReceiver {
             if (callbackMap[mediaController.packageName] != null) return@forEach
 
             // Create callback for this media controller and add it to the map of callbacks
-            val mediaCallback = MediaCallback(
-                mediaController = mediaController,
-                onDestroyed = { removeMedia(mediaController) },
-                onToggleSupportedPlayer = { supported ->
-                    toggleSupportedPlayer(
-                        supported,
-                        mediaController.packageName
-                    )
-                },
-                statsDataStore = context.statsDataStore,
-                context = context
-            )
+            val mediaCallback =
+                MediaCallback(
+                    mediaController = mediaController,
+                    onDestroyed = { removeMedia(mediaController) },
+                    onToggleSupportedPlayer = { supported ->
+                        toggleSupportedPlayer(
+                            supported,
+                            mediaController.packageName,
+                        )
+                    },
+                    statsDataStore = context.statsDataStore,
+                    context = context,
+                )
             callbackMap[mediaController.packageName] = mediaCallback
 
             // Register callback
@@ -128,7 +130,10 @@ object MediaReceiver {
         callbackMap.clear()
     }
 
-    private fun toggleSupportedPlayer(supported: Boolean, packageName: String) {
+    private fun toggleSupportedPlayer(
+        supported: Boolean,
+        packageName: String,
+    ) {
         if (supported) {
             unsupportedCallbackMap.remove(packageName)?.let { callback ->
                 callbackMap[packageName] = callback

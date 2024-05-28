@@ -21,12 +21,12 @@ import android.net.Uri
 import android.provider.Settings
 import android.view.KeyEvent
 
-val supportedStartMediaPlayerPackages = listOf(
-    "com.spotify.music"
-)
+val supportedStartMediaPlayerPackages =
+    listOf(
+        "com.spotify.music",
+    )
 
 object GlobalHelper {
-
     const val PRIVACY_POLICY_URL =
         "https://github.com/Angel-Studio/SoundTap/blob/master/PRIVACY-POLICY.MD"
     const val TERMS_OF_SERVICE_URL =
@@ -48,28 +48,34 @@ object GlobalHelper {
         val enabledNotificationListeners =
             Settings.Secure.getString(contentResolver, "enabled_notification_listeners")
         val packageName = context.packageName
-        return enabledNotificationListeners != null && enabledNotificationListeners.contains(
-            packageName
-        )
+        return enabledNotificationListeners != null &&
+            enabledNotificationListeners.contains(
+                packageName,
+            )
     }
 
     fun requestBatteryOptimization(context: Context) {
-        val batteryOptimizationIntent = Intent().apply {
-            action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-            data = Uri.parse("package:${context.packageName}")
-        }
+        val batteryOptimizationIntent =
+            Intent().apply {
+                action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                data = Uri.parse("package:${context.packageName}")
+            }
 
         context.startActivity(batteryOptimizationIntent)
     }
 
-    fun startMediaPlayer(context: Context, packageName: String) {
-        val startMediaPlayer = Intent(Intent.ACTION_MEDIA_BUTTON).apply {
-            putExtra(
-                Intent.EXTRA_KEY_EVENT,
-                KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY)
-            )
-            `package` = packageName
-        }
+    fun startMediaPlayer(
+        context: Context,
+        packageName: String,
+    ) {
+        val startMediaPlayer =
+            Intent(Intent.ACTION_MEDIA_BUTTON).apply {
+                putExtra(
+                    Intent.EXTRA_KEY_EVENT,
+                    KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY),
+                )
+                `package` = packageName
+            }
         context.sendOrderedBroadcast(startMediaPlayer, null)
     }
 }

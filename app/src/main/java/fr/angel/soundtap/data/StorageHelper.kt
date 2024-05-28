@@ -23,16 +23,20 @@ import java.io.File
 import java.io.FileOutputStream
 
 object StorageHelper {
-
     private const val TAG = "StorageHelper"
 
-    fun saveBitmapToFile(context: Context, bitmap: Bitmap, filename: String): String? {
+    fun saveBitmapToFile(
+        context: Context,
+        bitmap: Bitmap,
+        filename: String,
+    ): String? {
         try {
-            val formattedFileName = filename
-                .replace(" ", "_")
-                .replace(":", "_")
-                .replace("/", "_")
-                .replace("\\", "_")
+            val formattedFileName =
+                filename
+                    .replace(" ", "_")
+                    .replace(":", "_")
+                    .replace("/", "_")
+                    .replace("\\", "_")
 
             val file = File(context.filesDir, formattedFileName)
             val outputStream = FileOutputStream(file)

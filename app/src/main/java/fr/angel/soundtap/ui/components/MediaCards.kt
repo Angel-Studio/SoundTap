@@ -94,20 +94,23 @@ fun MediaCards(
 ) {
     val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
 
-    val availablePlayers = uiState.playersPackages.filter {
-        uiState.appSettings.unsupportedMediaPlayers.contains(it.activityInfo.packageName).not()
-    }
+    val availablePlayers =
+        uiState.playersPackages.filter {
+            uiState.appSettings.unsupportedMediaPlayers.contains(it.activityInfo.packageName).not()
+        }
 
-    val initialPage = remember {
-        availablePlayers.indexOfFirst {
-            MediaReceiver.callbackMap[it.activityInfo.packageName]?.playingSong != null
-        }.coerceAtLeast(0)
-    }
+    val initialPage =
+        remember {
+            availablePlayers.indexOfFirst {
+                MediaReceiver.callbackMap[it.activityInfo.packageName]?.playingSong != null
+            }.coerceAtLeast(0)
+        }
 
-    val pagerState = rememberPagerState(
-        pageCount = { availablePlayers.size },
-        initialPage = initialPage
-    )
+    val pagerState =
+        rememberPagerState(
+            pageCount = { availablePlayers.size },
+            initialPage = initialPage,
+        )
 
     HorizontalPager(
         modifier = modifier,
@@ -124,16 +127,18 @@ fun MediaCards(
         ) { callback ->
             callback?.let {
                 PlaybackCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(400.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(400.dp),
                     media = callback,
                     packageInfo = packageInfo,
                 )
             } ?: EmptyPlayerCard(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(400.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(400.dp),
                 packageInfo = packageInfo,
             )
         }
@@ -156,22 +161,25 @@ fun EmptyPlayerCard(
         shape = MaterialTheme.shapes.extraLarge,
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
+            modifier =
+                Modifier
+                    .fillMaxSize(),
         ) {
             AsyncImage(
                 model = appIcon,
                 imageLoader = context.imageLoader,
                 contentDescription = null,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .align(Alignment.TopStart)
-                    .size(32.dp)
+                modifier =
+                    Modifier
+                        .padding(16.dp)
+                        .align(Alignment.TopStart)
+                        .size(32.dp),
             )
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(24.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -194,7 +202,7 @@ fun EmptyPlayerCard(
                         onClick = {
                             GlobalHelper.startMediaPlayer(
                                 context = context,
-                                packageName = packageInfo.activityInfo.packageName
+                                packageName = packageInfo.activityInfo.packageName,
                             )
                         },
                     ) {
@@ -216,17 +224,19 @@ fun PlaybackCard(
     val context = LocalContext.current
     val packageManager = context.packageManager
 
-    val song = media.playingSong ?: run {
-        EmptyPlayerCard(
-            modifier = modifier,
-            packageInfo = packageInfo,
-        )
-        return
-    }
+    val song =
+        media.playingSong ?: run {
+            EmptyPlayerCard(
+                modifier = modifier,
+                packageInfo = packageInfo,
+            )
+            return
+        }
 
-    val generatedBitmap: Bitmap? = remember(song.coverFilePath) {
-        StorageHelper.loadBitmapFromFile(song.coverFilePath)
-    }
+    val generatedBitmap: Bitmap? =
+        remember(song.coverFilePath) {
+            StorageHelper.loadBitmapFromFile(song.coverFilePath)
+        }
 
     val coverPalette = generatedBitmap?.let { Palette.from(it).generate() }
     val dominantColor =
@@ -240,34 +250,38 @@ fun PlaybackCard(
     val applicationInfo = packageInfo.activityInfo.applicationInfo
     val appIcon = remember(applicationInfo) { packageManager.getApplicationIcon(applicationInfo) }
 
-    val containerColor = Color(
-        ColorUtils.blendARGB(
-            dominantColor.toArgb(),
-            Color.White.toArgb(),
-            0.6f
+    val containerColor =
+        Color(
+            ColorUtils.blendARGB(
+                dominantColor.toArgb(),
+                Color.White.toArgb(),
+                0.6f,
+            ),
         )
-    )
 
     Card(
-        modifier = modifier
-            .height(IntrinsicSize.Min)
-            .fillMaxWidth()
-            .clip(MaterialTheme.shapes.extraLarge),
+        modifier =
+            modifier
+                .height(IntrinsicSize.Min)
+                .fillMaxWidth()
+                .clip(MaterialTheme.shapes.extraLarge),
         shape = MaterialTheme.shapes.extraLarge,
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier =
+                Modifier
+                    .fillMaxSize(),
         ) {
             AsyncImage(
                 model = appIcon,
                 contentDescription = null,
                 imageLoader = context.imageLoader,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .align(Alignment.TopStart)
-                    .size(32.dp)
-                    .zIndex(1f)
+                modifier =
+                    Modifier
+                        .padding(16.dp)
+                        .align(Alignment.TopStart)
+                        .size(32.dp)
+                        .zIndex(1f),
             )
             Crossfade(
                 modifier = Modifier.fillMaxSize(),
@@ -279,32 +293,35 @@ fun PlaybackCard(
                     contentDescription = null,
                     imageLoader = context.imageLoader,
                     contentScale = ContentScale.Crop,
-                    colorFilter = ColorFilter.tint(
-                        color = dominantColor.copy(alpha = 0.5f),
-                        blendMode = BlendMode.Color
-                    ),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .drawWithContent {
-                            drawContent()
-                            drawRect(
-                                brush = Brush.radialGradient(
-                                    listOf(
-                                        Color.Transparent,
-                                        Color.Black.copy(alpha = 0.35f)
-                                    ),
-                                    center = size.center,
-                                    radius = size.width / 2f
-                                ),
-                                size = size,
-                                blendMode = BlendMode.Darken
-                            )
-                        }
+                    colorFilter =
+                        ColorFilter.tint(
+                            color = dominantColor.copy(alpha = 0.5f),
+                            blendMode = BlendMode.Color,
+                        ),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .drawWithContent {
+                                drawContent()
+                                drawRect(
+                                    brush =
+                                        Brush.radialGradient(
+                                            listOf(
+                                                Color.Transparent,
+                                                Color.Black.copy(alpha = 0.35f),
+                                            ),
+                                            center = size.center,
+                                            radius = size.width / 2f,
+                                        ),
+                                    size = size,
+                                    blendMode = BlendMode.Darken,
+                                )
+                            },
                 )
             }
 
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             ) {
                 Spacer(modifier = Modifier.weight(1f))
 
@@ -313,13 +330,14 @@ fun PlaybackCard(
                     verticalAlignment = Alignment.Bottom,
                 ) {
                     Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(
-                                start = 24.dp,
-                                end = 24.dp,
-                                bottom = 24.dp,
-                            ),
+                        modifier =
+                            Modifier
+                                .weight(1f)
+                                .padding(
+                                    start = 24.dp,
+                                    end = 24.dp,
+                                    bottom = 24.dp,
+                                ),
                         verticalArrangement = Arrangement.spacedBy(2.dp),
                     ) {
                         AnimatedContent(
@@ -327,7 +345,7 @@ fun PlaybackCard(
                             label = "Song title",
                             transitionSpec = {
                                 slideInHorizontally { height -> height } + fadeIn() togetherWith
-                                        slideOutHorizontally { height -> -height } + fadeOut()
+                                    slideOutHorizontally { height -> -height } + fadeOut()
                             },
                         ) { title ->
                             Text(
@@ -344,7 +362,7 @@ fun PlaybackCard(
                             label = "Song artist",
                             transitionSpec = {
                                 slideInHorizontally { height -> height } + fadeIn() togetherWith
-                                        slideOutHorizontally { height -> -height } + fadeOut()
+                                    slideOutHorizontally { height -> -height } + fadeOut()
                             },
                         ) { artist ->
                             Text(
@@ -359,64 +377,69 @@ fun PlaybackCard(
                     }
 
                     Row(
-                        modifier = Modifier
-                            .padding(end = 24.dp, bottom = 24.dp),
+                        modifier =
+                            Modifier
+                                .padding(end = 24.dp, bottom = 24.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
-                            modifier = Modifier
-                                .padding(4.dp)
-                                .size(24.dp)
-                                .clickable(
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = rememberRipple(
-                                        bounded = false,
-                                        color = Color.White,
-                                        radius = 400.dp
+                            modifier =
+                                Modifier
+                                    .padding(4.dp)
+                                    .size(24.dp)
+                                    .clickable(
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        indication =
+                                            rememberRipple(
+                                                bounded = false,
+                                                color = Color.White,
+                                                radius = 400.dp,
+                                            ),
+                                        onClick = { media.skipToPrevious() },
                                     ),
-                                    onClick = { media.skipToPrevious() }
-                                ),
                             imageVector = Icons.Outlined.SkipPrevious,
                             contentDescription = "Previous track",
-                            tint = Color.White
+                            tint = Color.White,
                         )
                         FilledTonalIconButton(
                             modifier = Modifier.size(48.dp),
                             shape = RoundedCornerShape(playbackCornerRadius),
                             onClick = { media.togglePlayPause() },
-                            colors = IconButtonDefaults.filledTonalIconButtonColors(
-                                containerColor = containerColor,
-                                contentColor = Color.Black
-                            ),
+                            colors =
+                                IconButtonDefaults.filledTonalIconButtonColors(
+                                    containerColor = containerColor,
+                                    contentColor = Color.Black,
+                                ),
                         ) {
                             Icon(
                                 imageVector = if (media.isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                                contentDescription = "Play/Pause"
+                                contentDescription = "Play/Pause",
                             )
                         }
 
                         Icon(
-                            modifier = Modifier
-                                .padding(4.dp)
-                                .size(24.dp)
-                                .clickable(
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = rememberRipple(
-                                        bounded = false,
-                                        color = Color.White,
-                                        radius = 400.dp
+                            modifier =
+                                Modifier
+                                    .padding(4.dp)
+                                    .size(24.dp)
+                                    .clickable(
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        indication =
+                                            rememberRipple(
+                                                bounded = false,
+                                                color = Color.White,
+                                                radius = 400.dp,
+                                            ),
+                                        onClick = { media.skipToNext() },
                                     ),
-                                    onClick = { media.skipToNext() }
-                                ),
                             imageVector = Icons.Outlined.SkipNext,
                             contentDescription = "Next track",
-                            tint = Color.White
+                            tint = Color.White,
                         )
                     }
                 }
             }
         }
-
     }
 }

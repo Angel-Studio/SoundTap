@@ -93,8 +93,8 @@ import fr.angel.soundtap.data.enums.AutoPlayMode
 import fr.angel.soundtap.data.enums.HapticFeedbackLevel
 import fr.angel.soundtap.data.enums.WorkingMode
 import fr.angel.soundtap.ui.components.settings.SettingsItemCustomBottom
-import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -118,34 +118,39 @@ fun SharedTransitionScope.CustomizationScreen(
     }
 
     Card(
-        modifier = modifier
-            .padding(8.dp)
-            .fillMaxSize()
-            .sharedElement(
-                state = rememberSharedContentState(
-                    key = "Customize-card",
+        modifier =
+            modifier
+                .padding(8.dp)
+                .fillMaxSize()
+                .sharedElement(
+                    state =
+                        rememberSharedContentState(
+                            key = "Customize-card",
+                        ),
+                    animatedVisibilityScope = animatedVisibilityScope,
                 ),
-                animatedVisibilityScope = animatedVisibilityScope
-            )
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                    .padding(16.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                        .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Icon(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .sharedElement(
-                            state = rememberSharedContentState(
-                                key = "Customize-icon",
+                    modifier =
+                        Modifier
+                            .size(48.dp)
+                            .sharedElement(
+                                state =
+                                    rememberSharedContentState(
+                                        key = "Customize-icon",
+                                    ),
+                                animatedVisibilityScope = animatedVisibilityScope,
                             ),
-                            animatedVisibilityScope = animatedVisibilityScope
-                        ),
                     imageVector = Icons.Default.Tune,
                     contentDescription = null,
                 )
@@ -154,19 +159,20 @@ fun SharedTransitionScope.CustomizationScreen(
                     text = "Customization",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .sharedBounds(
-                            rememberSharedContentState(
-                                key = "Customize"
+                    modifier =
+                        Modifier
+                            .sharedBounds(
+                                rememberSharedContentState(
+                                    key = "Customize",
+                                ),
+                                animatedVisibilityScope = animatedVisibilityScope,
                             ),
-                            animatedVisibilityScope = animatedVisibilityScope
-                        )
                 )
             }
             HorizontalDivider()
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(8.dp)
+                contentPadding = PaddingValues(8.dp),
             ) {
                 item {
                     SettingsItemCustomBottom(
@@ -177,70 +183,78 @@ fun SharedTransitionScope.CustomizationScreen(
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
                             ) {
                                 val settingsList = WorkingMode.entries
 
                                 settingsList.forEachIndexed { index, item ->
 
                                     val backgroundColor by animateColorAsState(
-                                        targetValue = if (uiState.customizationSettings.workingMode.ordinal == index) {
-                                            MaterialTheme.colorScheme.primary.copy(0.3f)
-                                        } else {
-                                            MaterialTheme.colorScheme.onSurface.copy(0.05f)
-                                        }, label = "backgroundColor"
+                                        targetValue =
+                                            if (uiState.customizationSettings.workingMode.ordinal == index) {
+                                                MaterialTheme.colorScheme.primary.copy(0.3f)
+                                            } else {
+                                                MaterialTheme.colorScheme.onSurface.copy(0.05f)
+                                            },
+                                        label = "backgroundColor",
                                     )
 
                                     val borderColor by animateColorAsState(
-                                        targetValue = if (uiState.customizationSettings.workingMode.ordinal == index) {
-                                            MaterialTheme.colorScheme.primary
-                                        } else {
-                                            MaterialTheme.colorScheme.onSurface.copy(0.1f)
-                                        }, label = "borderColor"
+                                        targetValue =
+                                            if (uiState.customizationSettings.workingMode.ordinal == index) {
+                                                MaterialTheme.colorScheme.primary
+                                            } else {
+                                                MaterialTheme.colorScheme.onSurface.copy(0.1f)
+                                            },
+                                        label = "borderColor",
                                     )
 
                                     val cornerShape by animateFloatAsState(
-                                        targetValue = if (uiState.customizationSettings.workingMode.ordinal == index) {
-                                            16f
-                                        } else {
-                                            12f
-                                        }, label = "cornerShape"
+                                        targetValue =
+                                            if (uiState.customizationSettings.workingMode.ordinal == index) {
+                                                16f
+                                            } else {
+                                                12f
+                                            },
+                                        label = "cornerShape",
                                     )
 
                                     Box(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .clip(RoundedCornerShape(cornerShape.dp))
-                                            .aspectRatio(1f)
-                                            .background(backgroundColor)
-                                            .border(
-                                                width = 1.dp,
-                                                color = borderColor,
-                                                shape = RoundedCornerShape(cornerShape.dp)
-                                            )
-                                            .clickable {
-                                                VibratorHelper(context = context).click()
-                                                scope.launch {
-                                                    mainViewModel.setWorkingMode(item)
+                                        modifier =
+                                            Modifier
+                                                .weight(1f)
+                                                .clip(RoundedCornerShape(cornerShape.dp))
+                                                .aspectRatio(1f)
+                                                .background(backgroundColor)
+                                                .border(
+                                                    width = 1.dp,
+                                                    color = borderColor,
+                                                    shape = RoundedCornerShape(cornerShape.dp),
+                                                )
+                                                .clickable {
+                                                    VibratorHelper(context = context).click()
+                                                    scope.launch {
+                                                        mainViewModel.setWorkingMode(item)
+                                                    }
                                                 }
-                                            }
-                                            .padding(8.dp)
+                                                .padding(8.dp),
                                     ) {
                                         item.selectedComposable(
                                             this,
-                                            uiState.customizationSettings.workingMode == item
+                                            uiState.customizationSettings.workingMode == item,
                                         )
                                         Text(
                                             text = item.title,
                                             style = MaterialTheme.typography.bodyMedium,
-                                            modifier = Modifier
-                                                .padding(8.dp)
-                                                .align(Alignment.BottomCenter)
+                                            modifier =
+                                                Modifier
+                                                    .padding(8.dp)
+                                                    .align(Alignment.BottomCenter),
                                         )
                                     }
                                 }
                             }
-                        }
+                        },
                     )
                 }
                 item {
@@ -252,55 +266,62 @@ fun SharedTransitionScope.CustomizationScreen(
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
                             ) {
                                 val settingsList = HapticFeedbackLevel.entries
 
                                 settingsList.forEachIndexed { index, item ->
 
                                     val backgroundColor by animateColorAsState(
-                                        targetValue = if (uiState.customizationSettings.hapticFeedbackLevel.ordinal == index) {
-                                            MaterialTheme.colorScheme.primary.copy(0.3f)
-                                        } else {
-                                            MaterialTheme.colorScheme.onSurface.copy(0.05f)
-                                        }, label = "backgroundColor"
+                                        targetValue =
+                                            if (uiState.customizationSettings.hapticFeedbackLevel.ordinal == index) {
+                                                MaterialTheme.colorScheme.primary.copy(0.3f)
+                                            } else {
+                                                MaterialTheme.colorScheme.onSurface.copy(0.05f)
+                                            },
+                                        label = "backgroundColor",
                                     )
 
                                     val borderColor by animateColorAsState(
-                                        targetValue = if (uiState.customizationSettings.hapticFeedbackLevel.ordinal == index) {
-                                            MaterialTheme.colorScheme.primary
-                                        } else {
-                                            MaterialTheme.colorScheme.onSurface.copy(0.1f)
-                                        }, label = "borderColor"
+                                        targetValue =
+                                            if (uiState.customizationSettings.hapticFeedbackLevel.ordinal == index) {
+                                                MaterialTheme.colorScheme.primary
+                                            } else {
+                                                MaterialTheme.colorScheme.onSurface.copy(0.1f)
+                                            },
+                                        label = "borderColor",
                                     )
 
                                     val cornerShape by animateFloatAsState(
-                                        targetValue = if (uiState.customizationSettings.hapticFeedbackLevel.ordinal == index) {
-                                            16f
-                                        } else {
-                                            12f
-                                        }, label = "cornerShape"
+                                        targetValue =
+                                            if (uiState.customizationSettings.hapticFeedbackLevel.ordinal == index) {
+                                                16f
+                                            } else {
+                                                12f
+                                            },
+                                        label = "cornerShape",
                                     )
 
                                     Box(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .clip(RoundedCornerShape(cornerShape.dp))
-                                            .aspectRatio(1f)
-                                            .background(backgroundColor)
-                                            .border(
-                                                width = 1.dp,
-                                                color = borderColor,
-                                                shape = RoundedCornerShape(cornerShape.dp)
-                                            )
-                                            .clickable {
-                                                scope.launch {
-                                                    mainViewModel.setHapticFeedback(item)
-                                                    VibratorHelper(context = context).createHapticFeedback(
-                                                        item
-                                                    )
-                                                }
-                                            }
+                                        modifier =
+                                            Modifier
+                                                .weight(1f)
+                                                .clip(RoundedCornerShape(cornerShape.dp))
+                                                .aspectRatio(1f)
+                                                .background(backgroundColor)
+                                                .border(
+                                                    width = 1.dp,
+                                                    color = borderColor,
+                                                    shape = RoundedCornerShape(cornerShape.dp),
+                                                )
+                                                .clickable {
+                                                    scope.launch {
+                                                        mainViewModel.setHapticFeedback(item)
+                                                        VibratorHelper(context = context).createHapticFeedback(
+                                                            item,
+                                                        )
+                                                    }
+                                                },
                                     ) {
                                         val selected =
                                             uiState.customizationSettings.hapticFeedbackLevel.ordinal == index
@@ -323,17 +344,18 @@ fun SharedTransitionScope.CustomizationScreen(
                                                             shader.setFloatUniform(
                                                                 "resolution",
                                                                 size.width.toFloat() * (0.4f + 0.2f * index),
-                                                                size.height.toFloat() * (0.4f + 0.2f * index)
+                                                                size.height.toFloat() * (0.4f + 0.2f * index),
                                                             )
                                                         }
                                                         .graphicsLayer {
                                                             shader.setFloatUniform("time", time)
-                                                            renderEffect = RenderEffect
-                                                                .createRuntimeShaderEffect(
-                                                                    shader,
-                                                                    "contents"
-                                                                )
-                                                                .asComposeRenderEffect()
+                                                            renderEffect =
+                                                                RenderEffect
+                                                                    .createRuntimeShaderEffect(
+                                                                        shader,
+                                                                        "contents",
+                                                                    )
+                                                                    .asComposeRenderEffect()
                                                         }
                                                 } else {
                                                     Modifier
@@ -346,20 +368,21 @@ fun SharedTransitionScope.CustomizationScreen(
                                             imageVector = ImageVector.vectorResource(id = item.icon),
                                             contentDescription = null,
                                             tint = MaterialTheme.colorScheme.primary,
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .alpha(
-                                                    animateFloatAsState(
-                                                        targetValue = if (selected) 1f else 0.2f,
-                                                        label = "iconAlpha"
-                                                    ).value
-                                                )
-                                                .then(shaderModifier)
+                                            modifier =
+                                                Modifier
+                                                    .fillMaxSize()
+                                                    .alpha(
+                                                        animateFloatAsState(
+                                                            targetValue = if (selected) 1f else 0.2f,
+                                                            label = "iconAlpha",
+                                                        ).value,
+                                                    )
+                                                    .then(shaderModifier),
                                         )
                                     }
                                 }
                             }
-                        }
+                        },
                     )
                 }
                 item {
@@ -374,7 +397,7 @@ fun SharedTransitionScope.CustomizationScreen(
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
                             ) {
                                 IconButton(
                                     onClick = {
@@ -382,15 +405,15 @@ fun SharedTransitionScope.CustomizationScreen(
                                         VibratorHelper(context = context).tick()
                                         scope.launch {
                                             mainViewModel.setLongPressDuration(
-                                                longPressDurationTempValue.toLong()
+                                                longPressDurationTempValue.toLong(),
                                             )
                                         }
                                     },
-                                    enabled = longPressDurationTempValue > 300
+                                    enabled = longPressDurationTempValue > 300,
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Remove,
-                                        contentDescription = null
+                                        contentDescription = null,
                                     )
                                 }
                                 Slider(
@@ -406,37 +429,39 @@ fun SharedTransitionScope.CustomizationScreen(
                                     onValueChangeFinished = {
                                         scope.launch {
                                             mainViewModel.setLongPressDuration(
-                                                longPressDurationTempValue.toLong()
+                                                longPressDurationTempValue.toLong(),
                                             )
                                         }
                                     },
                                     thumb = {
                                         Box(
-                                            modifier = Modifier
-                                                .width(12.dp)
-                                                .height(24.dp)
-                                                .offset(x = 6.dp),
+                                            modifier =
+                                                Modifier
+                                                    .width(12.dp)
+                                                    .height(24.dp)
+                                                    .offset(x = 6.dp),
                                             contentAlignment = Alignment.Center,
                                         ) {
-
                                             Surface(
-                                                modifier = Modifier
-                                                    .fillMaxSize()
-                                                    .clip(MaterialTheme.shapes.small),
+                                                modifier =
+                                                    Modifier
+                                                        .fillMaxSize()
+                                                        .clip(MaterialTheme.shapes.small),
                                                 tonalElevation = 12.dp,
                                             ) { }
 
                                             Box(
-                                                modifier = Modifier
-                                                    .fillMaxWidth(
-                                                        animateFloatAsState(
-                                                            targetValue = if (isPressed) 0.1f else 0.3f,
-                                                            label = "thumbScale"
-                                                        ).value
-                                                    )
-                                                    .fillMaxHeight()
-                                                    .clip(CircleShape)
-                                                    .background(MaterialTheme.colorScheme.primary)
+                                                modifier =
+                                                    Modifier
+                                                        .fillMaxWidth(
+                                                            animateFloatAsState(
+                                                                targetValue = if (isPressed) 0.1f else 0.3f,
+                                                                label = "thumbScale",
+                                                            ).value,
+                                                        )
+                                                        .fillMaxHeight()
+                                                        .clip(CircleShape)
+                                                        .background(MaterialTheme.colorScheme.primary),
                                             )
                                         }
                                     },
@@ -446,32 +471,35 @@ fun SharedTransitionScope.CustomizationScreen(
                                         val selectedFraction = adjustedTempValue / rangeSpan
 
                                         Row(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .height(12.dp),
+                                            modifier =
+                                                Modifier
+                                                    .fillMaxWidth()
+                                                    .height(12.dp),
                                             verticalAlignment = Alignment.CenterVertically,
-                                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                            horizontalArrangement = Arrangement.spacedBy(4.dp),
                                         ) {
                                             Box(
-                                                modifier = Modifier
-                                                    .fillMaxWidth(selectedFraction)
-                                                    .fillMaxHeight()
-                                                    .clip(CircleShape)
-                                                    .background(MaterialTheme.colorScheme.primary)
+                                                modifier =
+                                                    Modifier
+                                                        .fillMaxWidth(selectedFraction)
+                                                        .fillMaxHeight()
+                                                        .clip(CircleShape)
+                                                        .background(MaterialTheme.colorScheme.primary),
                                             )
                                             Box(
-                                                modifier = Modifier
-                                                    .weight(1f)
-                                                    .fillMaxHeight()
-                                                    .clip(CircleShape)
-                                                    .background(
-                                                        MaterialTheme.colorScheme.primary.copy(
-                                                            0.3f
-                                                        )
-                                                    )
+                                                modifier =
+                                                    Modifier
+                                                        .weight(1f)
+                                                        .fillMaxHeight()
+                                                        .clip(CircleShape)
+                                                        .background(
+                                                            MaterialTheme.colorScheme.primary.copy(
+                                                                0.3f,
+                                                            ),
+                                                        ),
                                             )
                                         }
-                                    }
+                                    },
                                 )
                                 IconButton(
                                     onClick = {
@@ -479,19 +507,19 @@ fun SharedTransitionScope.CustomizationScreen(
                                         VibratorHelper(context = context).tick()
                                         scope.launch {
                                             mainViewModel.setLongPressDuration(
-                                                longPressDurationTempValue.toLong()
+                                                longPressDurationTempValue.toLong(),
                                             )
                                         }
                                     },
-                                    enabled = longPressDurationTempValue < 2000
+                                    enabled = longPressDurationTempValue < 2000,
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Add,
-                                        contentDescription = null
+                                        contentDescription = null,
                                     )
                                 }
                             }
-                        }
+                        },
                     )
                 }
                 item {
@@ -506,7 +534,7 @@ fun SharedTransitionScope.CustomizationScreen(
                                     scope.launch {
                                         mainViewModel.setAutoPlay(it)
                                     }
-                                }
+                                },
                             )
                         },
                         onClick = {
@@ -517,81 +545,89 @@ fun SharedTransitionScope.CustomizationScreen(
                         content = {
                             Column(
                                 modifier = Modifier.fillMaxWidth(),
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
                             ) {
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                                 ) {
                                     val settingsList = AutoPlayMode.entries
 
                                     settingsList.forEachIndexed { index, item ->
 
                                         val backgroundColor by animateColorAsState(
-                                            targetValue = if (uiState.customizationSettings.autoPlayMode.ordinal == index) {
-                                                MaterialTheme.colorScheme.primary.copy(0.3f)
-                                            } else {
-                                                MaterialTheme.colorScheme.onSurface.copy(0.05f)
-                                            }, label = "backgroundColor"
+                                            targetValue =
+                                                if (uiState.customizationSettings.autoPlayMode.ordinal == index) {
+                                                    MaterialTheme.colorScheme.primary.copy(0.3f)
+                                                } else {
+                                                    MaterialTheme.colorScheme.onSurface.copy(0.05f)
+                                                },
+                                            label = "backgroundColor",
                                         )
 
                                         val borderColor by animateColorAsState(
-                                            targetValue = if (uiState.customizationSettings.autoPlayMode.ordinal == index) {
-                                                MaterialTheme.colorScheme.primary
-                                            } else {
-                                                MaterialTheme.colorScheme.onSurface.copy(0.1f)
-                                            }, label = "borderColor"
+                                            targetValue =
+                                                if (uiState.customizationSettings.autoPlayMode.ordinal == index) {
+                                                    MaterialTheme.colorScheme.primary
+                                                } else {
+                                                    MaterialTheme.colorScheme.onSurface.copy(0.1f)
+                                                },
+                                            label = "borderColor",
                                         )
 
                                         val cornerShape by animateFloatAsState(
-                                            targetValue = if (uiState.customizationSettings.autoPlayMode.ordinal == index) {
-                                                16f
-                                            } else {
-                                                12f
-                                            }, label = "cornerShape"
+                                            targetValue =
+                                                if (uiState.customizationSettings.autoPlayMode.ordinal == index) {
+                                                    16f
+                                                } else {
+                                                    12f
+                                                },
+                                            label = "cornerShape",
                                         )
 
                                         Box(
-                                            modifier = Modifier
-                                                .weight(1f)
-                                                .clip(RoundedCornerShape(cornerShape.dp))
-                                                .aspectRatio(1f)
-                                                .background(backgroundColor)
-                                                .border(
-                                                    width = 1.dp,
-                                                    color = borderColor,
-                                                    shape = RoundedCornerShape(cornerShape.dp)
-                                                )
-                                                .clickable {
-                                                    VibratorHelper(context = context).click()
-                                                    scope.launch {
-                                                        mainViewModel.setAutoPlayMode(item)
+                                            modifier =
+                                                Modifier
+                                                    .weight(1f)
+                                                    .clip(RoundedCornerShape(cornerShape.dp))
+                                                    .aspectRatio(1f)
+                                                    .background(backgroundColor)
+                                                    .border(
+                                                        width = 1.dp,
+                                                        color = borderColor,
+                                                        shape = RoundedCornerShape(cornerShape.dp),
+                                                    )
+                                                    .clickable {
+                                                        VibratorHelper(context = context).click()
+                                                        scope.launch {
+                                                            mainViewModel.setAutoPlayMode(item)
+                                                        }
                                                     }
-                                                }
-                                                .padding(8.dp)
+                                                    .padding(8.dp),
                                         ) {
                                             item.selectedComposable(
                                                 this,
-                                                uiState.customizationSettings.autoPlayMode == item
+                                                uiState.customizationSettings.autoPlayMode == item,
                                             )
                                             Text(
                                                 text = item.title,
                                                 style = MaterialTheme.typography.bodyMedium,
-                                                modifier = Modifier
-                                                    .padding(8.dp)
-                                                    .align(Alignment.BottomCenter)
+                                                modifier =
+                                                    Modifier
+                                                        .padding(8.dp)
+                                                        .align(Alignment.BottomCenter),
                                             )
                                         }
                                     }
                                 }
                                 Button(
                                     modifier = Modifier.fillMaxWidth(),
-                                    onClick = navigateToSettings
+                                    onClick = navigateToSettings,
                                 ) {
                                     Row(
                                         verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                                     ) {
                                         Icon(
                                             imageVector = Icons.Default.Tune,
@@ -604,7 +640,7 @@ fun SharedTransitionScope.CustomizationScreen(
                                     }
                                 }
                             }
-                        }
+                        },
                     )
                 }
             }

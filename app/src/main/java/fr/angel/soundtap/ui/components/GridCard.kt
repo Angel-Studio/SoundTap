@@ -43,31 +43,36 @@ fun SharedTransitionScope.GridCard(
     onClick: () -> Unit,
 ) {
     Card(
-        modifier = modifier
-            .aspectRatio(1f)
-            .sharedElement(
-                state = rememberSharedContentState(
-                    key = "$label-card",
+        modifier =
+            modifier
+                .aspectRatio(1f)
+                .sharedElement(
+                    state =
+                        rememberSharedContentState(
+                            key = "$label-card",
+                        ),
+                    animatedVisibilityScope = animatedVisibilityScope,
                 ),
-                animatedVisibilityScope = animatedVisibilityScope
-            ),
         shape = MaterialTheme.shapes.extraLarge,
-        onClick = onClick
+        onClick = onClick,
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
         ) {
             Icon(
-                modifier = Modifier
-                    .size(64.dp)
-                    .sharedElement(
-                        state = rememberSharedContentState(
-                            key = "$label-icon",
+                modifier =
+                    Modifier
+                        .size(64.dp)
+                        .sharedElement(
+                            state =
+                                rememberSharedContentState(
+                                    key = "$label-icon",
+                                ),
+                            animatedVisibilityScope = animatedVisibilityScope,
                         ),
-                        animatedVisibilityScope = animatedVisibilityScope
-                    ),
                 imageVector = icon,
                 contentDescription = null,
             )
@@ -75,14 +80,15 @@ fun SharedTransitionScope.GridCard(
             Text(
                 text = label,
                 style = MaterialTheme.typography.titleSmall,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .sharedBounds(
-                        rememberSharedContentState(
-                            key = label
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomCenter)
+                        .sharedBounds(
+                            rememberSharedContentState(
+                                key = label,
+                            ),
+                            animatedVisibilityScope = animatedVisibilityScope,
                         ),
-                        animatedVisibilityScope = animatedVisibilityScope
-                    )
             )
         }
     }

@@ -83,25 +83,27 @@ fun BottomControlBar(
         isSelectedServiceMethodRunning && serviceUiState.isActivated
 
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(108.dp)
-            .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
-            .background(MaterialTheme.colorScheme.surfaceContainerHigh),
-        contentAlignment = Alignment.Center
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(108.dp)
+                .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh),
+        contentAlignment = Alignment.Center,
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 24.dp, vertical = 8.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             StatusBadgedBox(
                 validIcon = Icons.Outlined.Battery0Bar,
                 invalidIcon = Icons.Default.BatteryAlert,
                 valid = mainUiState.isBackgroundOptimizationDisabled,
-                onClick = { GlobalHelper.requestBatteryOptimization(context = context) }
+                onClick = { GlobalHelper.requestBatteryOptimization(context = context) },
             )
             StatusBadgedBox(
                 validIcon = Icons.Default.NotificationsNone,
@@ -109,15 +111,15 @@ fun BottomControlBar(
                 valid = mainUiState.hasNotificationListenerPermission,
                 onClick = {
                     GlobalHelper.openNotificationListenerSettings(
-                        context = context
+                        context = context,
                     )
-                }
+                },
             )
             if (mainUiState.hasNotificationListenerPermission) {
                 StatusBadgedBox(
                     validIcon = Icons.Default.SettingsAccessibility,
                     valid = serviceUiState.isRunning,
-                    onClick = { GlobalHelper.openAccessibilitySettings(context = context) }
+                    onClick = { GlobalHelper.openAccessibilitySettings(context = context) },
                 )
             }
 
@@ -126,28 +128,29 @@ fun BottomControlBar(
 
             val buttonBackgroundColor by animateColorAsState(
                 targetValue = if (isSelectedServiceMethodRunningAndActivated) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.surfaceTint,
-                label = "Button Background Color"
+                label = "Button Background Color",
             )
 
             var scale by remember { mutableFloatStateOf(1f) }
             val animatedScale by animateFloatAsState(
                 targetValue = scale,
                 label = "Button Scale",
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                    stiffness = Spring.StiffnessMedium
-                )
+                animationSpec =
+                    spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessMedium,
+                    ),
             )
 
             Button(
-                modifier = Modifier
-                    .graphicsLayer(
-                        scaleX = 2f * animatedScale,
-                        scaleY = 2f * animatedScale,
-
-                        translationX = with(LocalDensity.current) { 16.dp.toPx() },
-                    )
-                    .aspectRatio(1f),
+                modifier =
+                    Modifier
+                        .graphicsLayer(
+                            scaleX = 2f * animatedScale,
+                            scaleY = 2f * animatedScale,
+                            translationX = with(LocalDensity.current) { 16.dp.toPx() },
+                        )
+                        .aspectRatio(1f),
                 onClick = {
                     scale = 0.9f
 
@@ -159,17 +162,18 @@ fun BottomControlBar(
                     VibratorHelper(context = context).doubleClick()
                     mainViewModel.onToggleService()
                 },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = buttonBackgroundColor
-                ),
-                enabled = permissionsGranted
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = buttonBackgroundColor,
+                    ),
+                enabled = permissionsGranted,
             ) {
                 AnimatedContent(
                     targetState = isSelectedServiceMethodRunningAndActivated,
-                    label = "Toggle Service Button"
+                    label = "Toggle Service Button",
                 ) { running ->
                     Text(
-                        text = if (running) "Pause" else "Start"
+                        text = if (running) "Pause" else "Start",
                     )
                 }
             }

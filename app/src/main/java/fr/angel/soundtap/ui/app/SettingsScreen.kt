@@ -100,36 +100,41 @@ fun SharedTransitionScope.SettingsScreen(
     val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
 
     Card(
-        modifier = modifier
-            .padding(8.dp)
-            .fillMaxSize()
-            .sharedElement(
-                state = rememberSharedContentState(
-                    key = "Settings-card"
+        modifier =
+            modifier
+                .padding(8.dp)
+                .fillMaxSize()
+                .sharedElement(
+                    state =
+                        rememberSharedContentState(
+                            key = "Settings-card",
+                        ),
+                    animatedVisibilityScope = animatedVisibilityScope,
                 ),
-                animatedVisibilityScope = animatedVisibilityScope
-            )
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                    .padding(16.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                        .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Icon(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .sharedElement(
-                            state = rememberSharedContentState(
-                                key = "Settings-icon",
+                    modifier =
+                        Modifier
+                            .size(48.dp)
+                            .sharedElement(
+                                state =
+                                    rememberSharedContentState(
+                                        key = "Settings-icon",
+                                    ),
+                                animatedVisibilityScope = animatedVisibilityScope,
                             ),
-                            animatedVisibilityScope = animatedVisibilityScope
-                        ),
                     imageVector = Icons.Default.Settings,
                     contentDescription = null,
                 )
@@ -138,26 +143,27 @@ fun SharedTransitionScope.SettingsScreen(
                     text = "Settings",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .sharedBounds(
-                            rememberSharedContentState(
-                                key = "Settings"
+                    modifier =
+                        Modifier
+                            .sharedBounds(
+                                rememberSharedContentState(
+                                    key = "Settings",
+                                ),
+                                animatedVisibilityScope = animatedVisibilityScope,
                             ),
-                            animatedVisibilityScope = animatedVisibilityScope
-                        )
                 )
             }
             HorizontalDivider()
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 item {
                     AnimatedVisibility(
                         visible = ServiceTile.isAdded.not() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU,
                         enter = fadeIn() + expandVertically(),
-                        exit = fadeOut() + shrinkVertically()
+                        exit = fadeOut() + shrinkVertically(),
                     ) {
                         SettingsItem(
                             title = "Add quick tile",
@@ -166,23 +172,24 @@ fun SharedTransitionScope.SettingsScreen(
                             onClick = {
                                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return@SettingsItem
                                 statusBarManager.requestAddTileService(
-                                    /* tileServiceComponentName = */ ComponentName(
+                                    // tileServiceComponentName =
+                                    ComponentName(
                                         context,
-                                        ServiceTile::class.java
+                                        ServiceTile::class.java,
                                     ),
-                                    /* tileLabel = */
+                                    // tileLabel =
                                     context.getString(R.string.app_name),
-                                    /* icon = */
+                                    // icon =
                                     android.graphics.drawable.Icon.createWithResource(
                                         context,
-                                        R.drawable.app_icon
+                                        R.drawable.app_icon,
                                     ),
-                                    /* resultExecutor = */
+                                    // resultExecutor =
                                     { it.run() },
-                                    /* resultCallback = */
-                                    { Log.i("Settings", "Tile added") }
+                                    // resultCallback =
+                                    { Log.i("Settings", "Tile added") },
                                 )
-                            }
+                            },
                         )
                     }
                 }
@@ -190,7 +197,7 @@ fun SharedTransitionScope.SettingsScreen(
                 item {
                     var supportedMediaPlayersExpanded by rememberSaveable {
                         mutableStateOf(
-                            uiState.playersPackages.size < 5
+                            uiState.playersPackages.size < 5,
                         )
                     }
                     SettingsItemCustomBottom(
@@ -206,21 +213,22 @@ fun SharedTransitionScope.SettingsScreen(
                                 supportedMediaPlayersExpanded = supportedMediaPlayersExpanded.not()
                             }) {
                                 Icon(
-                                    modifier = Modifier.rotate(
-                                        animateFloatAsState(
-                                            targetValue = if (supportedMediaPlayersExpanded) 180f else 0f,
-                                            label = "SupportedMediaPlayerIconRotation"
-                                        ).value
-                                    ),
+                                    modifier =
+                                        Modifier.rotate(
+                                            animateFloatAsState(
+                                                targetValue = if (supportedMediaPlayersExpanded) 180f else 0f,
+                                                label = "SupportedMediaPlayerIconRotation",
+                                            ).value,
+                                        ),
                                     imageVector = Icons.Default.KeyboardArrowDown,
-                                    contentDescription = null
+                                    contentDescription = null,
                                 )
                             }
                         },
                         content = {
                             Column(
                                 modifier = Modifier.fillMaxWidth(),
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
                             ) {
                                 uiState.playersPackages.forEach { mediaPackage ->
                                     MediaPlayerSwitchRow(
@@ -229,24 +237,25 @@ fun SharedTransitionScope.SettingsScreen(
                                         onClick = {
                                             scope.launch {
                                                 mainViewModel.toggleUnsupportedMediaPlayer(
-                                                    mediaPackage.activityInfo.packageName
+                                                    mediaPackage.activityInfo.packageName,
                                                 )
                                             }
                                         },
-                                        selected = uiState.appSettings.unsupportedMediaPlayers.contains(
-                                            mediaPackage.activityInfo.packageName
-                                        ).not()
+                                        selected =
+                                            uiState.appSettings.unsupportedMediaPlayers.contains(
+                                                mediaPackage.activityInfo.packageName,
+                                            ).not(),
                                     )
                                 }
                             }
-                        }
+                        },
                     )
                 }
 
                 item {
                     var preferredMediaPlayerExpanded by rememberSaveable {
                         mutableStateOf(
-                            uiState.playersPackages.size < 5
+                            uiState.playersPackages.size < 5,
                         )
                     }
                     SettingsItemCustomBottom(
@@ -262,21 +271,22 @@ fun SharedTransitionScope.SettingsScreen(
                                 preferredMediaPlayerExpanded = preferredMediaPlayerExpanded.not()
                             }) {
                                 Icon(
-                                    modifier = Modifier.rotate(
-                                        animateFloatAsState(
-                                            targetValue = if (preferredMediaPlayerExpanded) 180f else 0f,
-                                            label = "SupportedMediaPlayerIconRotation"
-                                        ).value
-                                    ),
+                                    modifier =
+                                        Modifier.rotate(
+                                            animateFloatAsState(
+                                                targetValue = if (preferredMediaPlayerExpanded) 180f else 0f,
+                                                label = "SupportedMediaPlayerIconRotation",
+                                            ).value,
+                                        ),
                                     imageVector = Icons.Default.KeyboardArrowDown,
-                                    contentDescription = null
+                                    contentDescription = null,
                                 )
                             }
                         },
                         content = {
                             Column(
                                 modifier = Modifier.fillMaxWidth(),
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
                             ) {
                                 uiState.playersPackages.forEach { mediaPackage ->
                                     if (mediaPackage.activityInfo.packageName !in supportedStartMediaPlayerPackages) return@forEach
@@ -288,11 +298,11 @@ fun SharedTransitionScope.SettingsScreen(
                                                 mainViewModel.setPreferredMediaPlayer(mediaPackage.activityInfo.packageName)
                                             }
                                         },
-                                        selected = uiState.customizationSettings.preferredMediaPlayer == mediaPackage.activityInfo.packageName
+                                        selected = uiState.customizationSettings.preferredMediaPlayer == mediaPackage.activityInfo.packageName,
                                     )
                                 }
                             }
-                        }
+                        },
                     )
                 }
             }
@@ -309,63 +319,67 @@ private fun MediaPlayerSwitchRow(
 ) {
     val context = LocalContext.current
     val packageManager = context.packageManager
-    val applicationInfo = try {
-        packageManager.getApplicationInfo(resolveInfo.activityInfo.packageName, 0)
-    } catch (e: Exception) {
-        return
-    }
+    val applicationInfo =
+        try {
+            packageManager.getApplicationInfo(resolveInfo.activityInfo.packageName, 0)
+        } catch (e: Exception) {
+            return
+        }
 
-    val appName = rememberSaveable(applicationInfo) {
-        packageManager.getApplicationLabel(applicationInfo).toString()
-    }
+    val appName =
+        rememberSaveable(applicationInfo) {
+            packageManager.getApplicationLabel(applicationInfo).toString()
+        }
     val appIcon = remember(applicationInfo) { packageManager.getApplicationIcon(applicationInfo) }
 
     val backgroundColor by animateColorAsState(
         targetValue = if (selected) MaterialTheme.colorScheme.surfaceContainer else MaterialTheme.colorScheme.surfaceContainerHighest,
-        label = "MediaPlayerSwitchRowBackgroundColor"
+        label = "MediaPlayerSwitchRowBackgroundColor",
     )
 
     Row(
-        modifier = modifier
-            .clip(MaterialTheme.shapes.medium)
-            .background(backgroundColor)
-            .clickable(onClick = onClick)
-            .padding(8.dp)
-            .height(IntrinsicSize.Min),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            modifier
+                .clip(MaterialTheme.shapes.medium)
+                .background(backgroundColor)
+                .clickable(onClick = onClick)
+                .padding(8.dp)
+                .height(IntrinsicSize.Min),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         AsyncImage(
             model = appIcon,
             imageLoader = context.imageLoader,
             contentDescription = null,
-            modifier = Modifier.size(48.dp)
+            modifier = Modifier.size(48.dp),
         )
         Spacer(Modifier.width(8.dp))
         Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f)
-                .padding(4.dp),
-            verticalArrangement = Arrangement.SpaceEvenly
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
+                    .padding(4.dp),
+            verticalArrangement = Arrangement.SpaceEvenly,
         ) {
             Text(
                 text = appName,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
             Text(
                 text = resolveInfo.activityInfo.packageName,
                 style = MaterialTheme.typography.bodySmall,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
         }
         Spacer(modifier = Modifier.width(8.dp))
         Switch(
             checked = selected,
-            onCheckedChange = null
+            onCheckedChange = null,
         )
         Spacer(modifier = Modifier.width(8.dp))
     }
@@ -380,63 +394,67 @@ private fun MediaPlayerRadioRow(
 ) {
     val context = LocalContext.current
     val packageManager = context.packageManager
-    val applicationInfo = try {
-        packageManager.getApplicationInfo(resolveInfo.activityInfo.packageName, 0)
-    } catch (e: Exception) {
-        return
-    }
+    val applicationInfo =
+        try {
+            packageManager.getApplicationInfo(resolveInfo.activityInfo.packageName, 0)
+        } catch (e: Exception) {
+            return
+        }
 
-    val appName = rememberSaveable(applicationInfo) {
-        packageManager.getApplicationLabel(applicationInfo).toString()
-    }
+    val appName =
+        rememberSaveable(applicationInfo) {
+            packageManager.getApplicationLabel(applicationInfo).toString()
+        }
     val appIcon = remember(applicationInfo) { packageManager.getApplicationIcon(applicationInfo) }
 
     val backgroundColor by animateColorAsState(
         targetValue = if (selected) MaterialTheme.colorScheme.surfaceContainer else MaterialTheme.colorScheme.surfaceContainerHighest,
-        label = "MediaPlayerSwitchRowBackgroundColor"
+        label = "MediaPlayerSwitchRowBackgroundColor",
     )
 
     Row(
-        modifier = modifier
-            .clip(MaterialTheme.shapes.medium)
-            .background(backgroundColor)
-            .clickable(onClick = onClick)
-            .padding(8.dp)
-            .height(IntrinsicSize.Min),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            modifier
+                .clip(MaterialTheme.shapes.medium)
+                .background(backgroundColor)
+                .clickable(onClick = onClick)
+                .padding(8.dp)
+                .height(IntrinsicSize.Min),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         AsyncImage(
             model = appIcon,
             imageLoader = context.imageLoader,
             contentDescription = null,
-            modifier = Modifier.size(48.dp)
+            modifier = Modifier.size(48.dp),
         )
         Spacer(Modifier.width(8.dp))
         Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f)
-                .padding(4.dp),
-            verticalArrangement = Arrangement.SpaceEvenly
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
+                    .padding(4.dp),
+            verticalArrangement = Arrangement.SpaceEvenly,
         ) {
             Text(
                 text = appName,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
             Text(
                 text = resolveInfo.activityInfo.packageName,
                 style = MaterialTheme.typography.bodySmall,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
         }
         Spacer(modifier = Modifier.width(8.dp))
         RadioButton(
             selected = selected,
-            onClick = null
+            onClick = null,
         )
         Spacer(modifier = Modifier.width(8.dp))
     }

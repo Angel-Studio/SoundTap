@@ -60,34 +60,39 @@ fun SharedTransitionScope.SupportScreen(
     val uriHandler = LocalUriHandler.current
 
     Card(
-        modifier = modifier
-            .padding(8.dp)
-            .fillMaxSize()
-            .sharedElement(
-                state = rememberSharedContentState(
-                    key = "Support-card"
+        modifier =
+            modifier
+                .padding(8.dp)
+                .fillMaxSize()
+                .sharedElement(
+                    state =
+                        rememberSharedContentState(
+                            key = "Support-card",
+                        ),
+                    animatedVisibilityScope = animatedVisibilityScope,
                 ),
-                animatedVisibilityScope = animatedVisibilityScope
-            )
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                    .padding(16.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                        .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Icon(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .sharedElement(
-                            state = rememberSharedContentState(
-                                key = "Support-icon",
+                    modifier =
+                        Modifier
+                            .size(48.dp)
+                            .sharedElement(
+                                state =
+                                    rememberSharedContentState(
+                                        key = "Support-icon",
+                                    ),
+                                animatedVisibilityScope = animatedVisibilityScope,
                             ),
-                            animatedVisibilityScope = animatedVisibilityScope
-                        ),
                     imageVector = Icons.Default.Support,
                     contentDescription = null,
                 )
@@ -96,21 +101,23 @@ fun SharedTransitionScope.SupportScreen(
                     text = "Support",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .sharedBounds(
-                            rememberSharedContentState(
-                                key = "Support"
+                    modifier =
+                        Modifier
+                            .sharedBounds(
+                                rememberSharedContentState(
+                                    key = "Support",
+                                ),
+                                animatedVisibilityScope = animatedVisibilityScope,
                             ),
-                            animatedVisibilityScope = animatedVisibilityScope
-                        )
                 )
             }
             HorizontalDivider()
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp)
-                    .verticalScroll(rememberScrollState()),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp)
+                        .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
@@ -118,31 +125,31 @@ fun SharedTransitionScope.SupportScreen(
                     title = "Report a Bug or Suggest a Feature",
                     subtitle = "Report a bug or issue with the app or suggest a feature that you would like to see",
                     icon = Icons.Default.BugReport,
-                    onClick = { uriHandler.openUri("https://github.com/Angel-Studio/SoundTap/issues/new/choose") }
+                    onClick = { uriHandler.openUri("https://github.com/Angel-Studio/SoundTap/issues/new/choose") },
                 )
                 SettingsItem(
                     title = "View on GitHub",
                     subtitle = "View the source code and contribute to the project",
                     icon = Icons.Default.Code,
-                    onClick = { uriHandler.openUri("https://github.com/Angel-Studio/SoundTap") }
+                    onClick = { uriHandler.openUri("https://github.com/Angel-Studio/SoundTap") },
                 )
                 SettingsItem(
                     title = "Discord Server",
                     subtitle = "Join the community and get support",
                     icon = Icons.Default.Groups,
-                    onClick = { uriHandler.openUri("https://discord.gg/8NfBrxKs4T") }
+                    onClick = { uriHandler.openUri("https://discord.gg/8NfBrxKs4T") },
                 )
                 SettingsItem(
                     title = "Privacy Policy",
                     subtitle = "Read the privacy policy of the app",
                     icon = Icons.Default.Policy,
-                    onClick = { uriHandler.openUri(GlobalHelper.PRIVACY_POLICY_URL) }
+                    onClick = { uriHandler.openUri(GlobalHelper.PRIVACY_POLICY_URL) },
                 )
                 SettingsItem(
                     title = "Terms of Service",
                     subtitle = "Read the terms of service of the app",
                     icon = Icons.Default.Gavel,
-                    onClick = { uriHandler.openUri(GlobalHelper.TERMS_OF_SERVICE_URL) }
+                    onClick = { uriHandler.openUri(GlobalHelper.TERMS_OF_SERVICE_URL) },
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
