@@ -33,6 +33,9 @@ firebase-crashlytics = "3.0.1"
 firebase-perfs = "1.4.2"
 lifecycleCommon = "2.8.0"
 lifecycleService = "2.8.0"
+detekt = "1.23.6"
+ktlint = "12.1.1"
+spotless = "6.3.0"
 
 [libraries]
 accompanist-drawablepainter = { module = "com.google.accompanist:accompanist-drawablepainter", version.ref = "accompanistDrawablepainter" }
@@ -86,3 +89,6 @@ google-services = { id = "com.google.gms.google-services", version.ref = "google
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
 firebase-perf = { id = "com.google.firebase.firebase-perf", version.ref = "firebase-perfs" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ci-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+ci-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+ci-spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
