@@ -18,13 +18,18 @@ package fr.angel.soundtap.ui.app
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -34,6 +39,9 @@ import androidx.compose.material.icons.filled.Support
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material.icons.outlined.NotificationImportant
 import androidx.compose.material.icons.outlined.SettingsAccessibility
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,9 +49,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -51,14 +61,17 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.angel.soundtap.GlobalHelper
 import fr.angel.soundtap.MainViewModel
+import fr.angel.soundtap.data.models.BottomSheetState
+import fr.angel.soundtap.service.SleepTimerService
 import fr.angel.soundtap.service.SoundTapAccessibilityService
 import fr.angel.soundtap.service.media.MediaReceiver
 import fr.angel.soundtap.ui.components.GridCard
 import fr.angel.soundtap.ui.components.InfoCard
 import fr.angel.soundtap.ui.components.InfoCardType
 import fr.angel.soundtap.ui.components.MediaCards
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SharedTransitionScope.App(
 	modifier: Modifier = Modifier,
@@ -68,8 +81,10 @@ fun SharedTransitionScope.App(
 	navigateToSettings: () -> Unit,
 	navigateToSupport: () -> Unit,
 	mainViewModel: MainViewModel,
+	innerPadding: PaddingValues,
 ) {
 	val context = LocalContext.current
+	val scope = rememberCoroutineScope()
 	val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
 	val accessibilityServiceState by SoundTapAccessibilityService.uiState.collectAsStateWithLifecycle()
 	val mediaCallback = MediaReceiver.firstCallback
@@ -85,7 +100,8 @@ fun SharedTransitionScope.App(
 		modifier =
 			modifier
 				.fillMaxWidth()
-				.verticalScroll(rememberScrollState()),
+				.verticalScroll(rememberScrollState())
+				.padding(top = innerPadding.calculateTopPadding()),
 		verticalArrangement = Arrangement.spacedBy(8.dp),
 	) {
 		Text(
@@ -194,6 +210,70 @@ fun SharedTransitionScope.App(
 			)
 		}
 
-		Spacer(modifier = Modifier.height(8.dp))
+		Row(
+			modifier =
+				Modifier
+					.fillMaxWidth()
+					.padding(horizontal = 8.dp)
+					.clip(MaterialTheme.shapes.extraLarge)
+					.background(MaterialTheme.colorScheme.surfaceVariant)
+					.clickable { }
+					.padding(vertical = 16.dp, horizontal = 16.dp),
+			horizontalArrangement = Arrangement.spacedBy(8.dp),
+			verticalAlignment = Alignment.CenterVertically,
+		) {
+			Spacer(modifier = Modifier.width(8.dp))
+			Text(
+				text =
+					if (SleepTimerService.isRunning) {
+						"Music will stop in ${GlobalHelper.formatTime(SleepTimerService.remainingTime)}"
+					} else {
+						"Sleep Timer"
+					},
+				style = MaterialTheme.typography.titleMedium,
+			)
+			Spacer(modifier = Modifier.weight(1f))
+			Button(
+				shape = MaterialTheme.shapes.large,
+				colors =
+					if (SleepTimerService.isRunning) {
+						ButtonDefaults.buttonColors(
+							containerColor = MaterialTheme.colorScheme.error,
+							contentColor = MaterialTheme.colorScheme.onError,
+						)
+					} else {
+						ButtonDefaults.buttonColors()
+					},
+				onClick = {
+					if (SleepTimerService.isRunning) {
+						SleepTimerService.cancelTimer(context)
+					} else {
+						mainViewModel.showBottomSheet(
+							bottomSheetState =
+								BottomSheetState.SetTimer(
+									onTimerSet = { duration -> mainViewModel.setSleepTimer(duration) },
+									onDismiss = { scope.launch { mainViewModel.hideBottomSheet() } },
+								),
+						)
+					}
+				},
+			) {
+				Text(
+					modifier = Modifier.animateContentSize(),
+					text =
+						when (SleepTimerService.isRunning) {
+							true -> "Cancel Timer"
+							false -> "Set Timer"
+						},
+				)
+			}
+		}
+
+		Spacer(
+			modifier =
+				Modifier
+					.height(8.dp)
+					.padding(bottom = innerPadding.calculateBottomPadding()),
+		)
 	}
 }
