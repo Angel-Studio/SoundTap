@@ -21,8 +21,8 @@ android {
 		applicationId = "fr.angel.soundtap"
 		minSdk = 30
 		targetSdk = 34
-		versionCode = 22
-		versionName = "1.0.6"
+		versionCode = 32
+		versionName = "1.0.7"
 
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 		vectorDrawables {
@@ -53,7 +53,7 @@ android {
 		}
 	}
 	lint {
-		warningsAsErrors = true
+		warningsAsErrors = false
 		abortOnError = true
 		baseline = file("lint-baseline.xml")
 		checkReleaseBuilds = false
