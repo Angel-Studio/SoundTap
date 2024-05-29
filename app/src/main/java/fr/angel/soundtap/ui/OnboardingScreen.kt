@@ -1,20 +1,23 @@
 /*
- * Copyright 2024 Angel Studio
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  * Copyright (c) 2024 Angel Studio
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *     http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
  */
 package fr.angel.soundtap.ui
 
+import android.Manifest
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -72,6 +75,9 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.airbnb.lottie.compose.rememberLottieDynamicProperties
 import com.airbnb.lottie.compose.rememberLottieDynamicProperty
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import fr.angel.soundtap.GlobalHelper
 import fr.angel.soundtap.MainViewModel
 import fr.angel.soundtap.R
@@ -89,7 +95,7 @@ data class OnboardingPage(
 	val nextButtonEnabled: Boolean = true,
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun OnboardingScreen(
 	modifier: Modifier = Modifier,
@@ -103,6 +109,8 @@ fun OnboardingScreen(
 
 	var hasAcceptedPrivacyPolicy by rememberSaveable { mutableStateOf(false) }
 	var hasAcceptedAccessibilityServiceConditions by rememberSaveable { mutableStateOf(false) }
+
+	val notificationsPermissionState = rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
 
 	val sheetState =
 		rememberModalBottomSheetState(
@@ -198,6 +206,20 @@ fun OnboardingScreen(
 				tintedAnimation = true,
 				actionButtonLabel = "Disable Battery Optimization",
 				actionButtonOnClick = { GlobalHelper.requestBatteryOptimization(context) },
+			),
+			OnboardingPage(
+				title = "Notifications Access",
+				description =
+					AnnotatedString(
+						"SoundTap will post notifications for diverse purposes, such as for the sleep timer." +
+							"\n\nTo ensure that SoundTap functions correctly, please grant the app access to your notifications." +
+							"\n\nTo enable the Notifications access permission, tap the button below and enable SoundTap from the list." +
+							"\n\nIf you have denied the permission previously, you can enable it from the app settings.",
+					),
+				nextButtonEnabled = notificationsPermissionState.status.isGranted,
+				animationImage = R.raw.notifications,
+				actionButtonLabel = "Grant Notifications Access",
+				actionButtonOnClick = { notificationsPermissionState.launchPermissionRequest() },
 			),
 			OnboardingPage(
 				title = "Accessibility Service",

@@ -46,7 +46,6 @@ data class MainUiState(
 	val finishedInitializations: Boolean = false,
 	val hasNotificationListenerPermission: Boolean = false,
 	val isBackgroundOptimizationDisabled: Boolean = false,
-	val isOverlayPermissionGranted: Boolean = false,
 	val playersPackages: Set<ResolveInfo> = emptySet(),
 	val bottomSheetState: BottomSheetState = BottomSheetState.None,
 	val bottomSheetVisible: Boolean = false,
