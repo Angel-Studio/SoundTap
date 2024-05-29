@@ -3,11 +3,13 @@ import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 plugins {
 	alias(libs.plugins.kotlin.ksp)
 	alias(libs.plugins.android.application)
-	alias(libs.plugins.jetbrains.kotlin.android)
-	alias(libs.plugins.dagger.hilt.android)
+
 	alias(libs.plugins.google.services)
 	alias(libs.plugins.firebase.crashlytics)
 	alias(libs.plugins.firebase.perf)
+	
+	alias(libs.plugins.jetbrains.kotlin.android)
+	alias(libs.plugins.dagger.hilt.android)
 	alias(libs.plugins.serialization)
 }
 
@@ -21,7 +23,7 @@ android {
 		applicationId = "fr.angel.soundtap"
 		minSdk = 30
 		targetSdk = 34
-		versionCode = 32
+		versionCode = 24
 		versionName = "1.0.7"
 
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
