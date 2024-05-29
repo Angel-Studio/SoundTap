@@ -18,17 +18,22 @@ package fr.angel.soundtap
 import android.content.Context
 import android.content.pm.ResolveInfo
 import android.os.PowerManager
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import fr.angel.soundtap.data.enums.AutoPlayMode
 import fr.angel.soundtap.data.enums.HapticFeedbackLevel
 import fr.angel.soundtap.data.enums.WorkingMode
+import fr.angel.soundtap.data.models.BottomSheetState
 import fr.angel.soundtap.data.settings.customization.CustomizationSettings
 import fr.angel.soundtap.data.settings.settings.AppSettings
 import fr.angel.soundtap.data.settings.stats.StatsSettings
 import fr.angel.soundtap.navigation.Screens
+import fr.angel.soundtap.service.SleepTimerService
 import fr.angel.soundtap.service.SoundTapAccessibilityService
 import javax.inject.Inject
 import kotlinx.coroutines.delay
@@ -43,6 +48,8 @@ data class MainUiState(
 	val isBackgroundOptimizationDisabled: Boolean = false,
 	val isOverlayPermissionGranted: Boolean = false,
 	val playersPackages: Set<ResolveInfo> = emptySet(),
+	val bottomSheetState: BottomSheetState = BottomSheetState.None,
+	val bottomSheetVisible: Boolean = false,
 	val customizationSettings: CustomizationSettings = CustomizationSettings(),
 	val appSettings: AppSettings = AppSettings(),
 	val statsSettings: StatsSettings = StatsSettings(),
@@ -55,6 +62,7 @@ data class MainUiState(
 class MainViewModel
 	@Inject
 	constructor(
+		@ApplicationContext private val context: Context,
 		private val customizationSettingsDataStore: DataStore<CustomizationSettings>,
 		private val appSettingsDataStore: DataStore<AppSettings>,
 		private val statsSettingsDataStore: DataStore<StatsSettings>,
@@ -62,6 +70,9 @@ class MainViewModel
 	) : ViewModel() {
 		private val _uiState = MutableStateFlow(MainUiState())
 		val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
+
+		@OptIn(ExperimentalMaterial3Api::class)
+		private lateinit var sheetState: SheetState
 
 		init {
 			// Load the customization settings
@@ -177,5 +188,25 @@ class MainViewModel
 			viewModelScope.launch {
 				customizationSettingsDataStore.updateData { settings -> settings.copy(autoPlayMode = autoPlayMode) }
 			}
+		}
+
+		fun showBottomSheet(bottomSheetState: BottomSheetState) {
+			_uiState.value = _uiState.value.copy(bottomSheetState = bottomSheetState, bottomSheetVisible = true)
+		}
+
+		@OptIn(ExperimentalMaterial3Api::class)
+		suspend fun hideBottomSheet() {
+			sheetState.hide()
+			_uiState.value = _uiState.value.copy(bottomSheetVisible = false, bottomSheetState = BottomSheetState.None)
+		}
+
+		fun setSleepTimer(duration: Long) {
+			// Start the sleep timer service
+			SleepTimerService.startService(context, duration)
+		}
+
+		@OptIn(ExperimentalMaterial3Api::class)
+		fun setBottomSheetState(sheetState: SheetState) {
+			this.sheetState = sheetState
 		}
 	}

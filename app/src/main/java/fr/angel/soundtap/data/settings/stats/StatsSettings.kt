@@ -24,9 +24,10 @@ data class StatsSettings(
 	val totalSongsPlayed: Int = 0,
 	val totalSongsSkipped: Int = 0,
 ) {
-	fun incrementTotalSongsPlayed() = copy(totalSongsPlayed = totalSongsPlayed + 1)
-
 	fun incrementTotalSongsSkipped() = copy(totalSongsSkipped = totalSongsSkipped + 1)
 
-	fun addSongToHistory(song: Song) = copy(history = history + song)
+	fun addSongToHistory(song: Song): StatsSettings {
+		if (history.first().isSimilar(song)) return this
+		return copy(history = history + song, totalSongsPlayed = totalSongsPlayed + 1)
+	}
 }

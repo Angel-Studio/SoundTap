@@ -56,4 +56,11 @@ data class Song(
 	fun isPartial(): Boolean {
 		return title.isBlank() || artist.isBlank() || album.isBlank() || duration == 0L || coverFilePath.isBlank()
 	}
+
+	fun isSimilar(song: Song): Boolean {
+		return title == song.title &&
+			artist == song.artist &&
+			album == song.album &&
+			duration == song.duration
+	}
 }

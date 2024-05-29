@@ -16,11 +16,15 @@
 package fr.angel.soundtap
 
 import android.annotation.SuppressLint
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import android.view.KeyEvent
+import fr.angel.soundtap.service.SleepTimerService
+import fr.angel.soundtap.service.media.MediaReceiver
+import java.util.Locale
 
 val supportedStartMediaPlayerPackages =
 	listOf(
@@ -79,5 +83,50 @@ object GlobalHelper {
 				`package` = packageName
 			}
 		context.sendOrderedBroadcast(startMediaPlayer, null)
+	}
+
+	fun stopMusic() {
+		val musicList = MediaReceiver.callbackMap.values
+		musicList.forEach { callback -> callback.stop() }
+	}
+
+	fun createStopSleepTimerIntent(context: Context): PendingIntent? {
+		val intent =
+			Intent(context, SleepTimerService::class.java).apply {
+				action = SleepTimerService.ACTION_STOP
+			}
+		return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+	}
+
+	fun createAddTimeSleepTimerIntent(
+		context: Context,
+		time: Int,
+	): PendingIntent? {
+		val intent =
+			Intent(context, SleepTimerService::class.java).apply {
+				action = SleepTimerService.ACTION_ADD_TIME
+				putExtra(SleepTimerService.EXTRA_DURATION, time.toLong())
+			}
+		return PendingIntent.getService(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+	}
+
+	fun createNotificationOpenAppIntent(context: Context): PendingIntent? {
+		val intent = Intent(context, MainActivity::class.java)
+		return PendingIntent.getActivity(context, 2, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+	}
+
+	fun formatTime(timeInMs: Long): String {
+		val seconds = timeInMs / 1000
+		val minutes = seconds / 60
+		val hours = minutes / 60
+
+		val formattedSeconds = seconds % 60
+		val formattedMinutes = minutes % 60
+
+		return if (hours > 0) {
+			String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, formattedMinutes, formattedSeconds)
+		} else {
+			String.format(Locale.getDefault(), "%02d:%02d", formattedMinutes, formattedSeconds)
+		}
 	}
 }

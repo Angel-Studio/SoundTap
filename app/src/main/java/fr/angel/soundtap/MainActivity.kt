@@ -28,7 +28,13 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -37,14 +43,18 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
@@ -61,6 +71,7 @@ import fr.angel.soundtap.service.SoundTapAccessibilityService
 import fr.angel.soundtap.ui.components.BottomControlBar
 import fr.angel.soundtap.ui.theme.FontPilowlava
 import fr.angel.soundtap.ui.theme.SoundTapTheme
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -75,6 +86,8 @@ class MainActivity : ComponentActivity() {
 			.setKeepOnScreenCondition { shouldKeepSplashScreenOn.value }
 
 		setContent {
+			val scope = rememberCoroutineScope()
+
 			mainViewModel = hiltViewModel<MainViewModel>()
 			val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -98,7 +111,24 @@ class MainActivity : ComponentActivity() {
 				mainViewModel.updatePermissionStates(this@MainActivity)
 			}
 
-			val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+			val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+
+			val bottomSheetState =
+				rememberModalBottomSheetState(
+					skipPartiallyExpanded =
+						when (uiState.bottomSheetState) {
+							else -> false // Prevents the sheet from being partially expanded
+						},
+					confirmValueChange = {
+						when (uiState.bottomSheetState) {
+							/**
+							 * Prevents the sheet from being expanded
+							 *
+							 is BottomSheetManager.Companion.BottomSheetType.CreateList -> { it != SheetValue.Expanded } // Prevents the sheet from being expanded*/
+							else -> true // Allows the sheet to be expanded
+						}
+					},
+				).also { mainViewModel.setBottomSheetState(it) }
 
 			SoundTapTheme {
 				Scaffold(
@@ -135,6 +165,7 @@ class MainActivity : ComponentActivity() {
 									fontWeight = FontWeight.ExtraBold,
 								)
 							},
+							scrollBehavior = scrollBehavior,
 						)
 					},
 					bottomBar = {
@@ -151,8 +182,40 @@ class MainActivity : ComponentActivity() {
 				) { innerPadding ->
 					SoundTapNavGraph(
 						modifier = Modifier.padding(innerPadding),
+						innerPadding = innerPadding,
 						navController = navController,
 					)
+
+					if (uiState.bottomSheetVisible) {
+						val sheetState = uiState.bottomSheetState
+						ModalBottomSheet(
+							onDismissRequest = {
+								sheetState.onDismiss?.invoke()
+								scope.launch { mainViewModel.hideBottomSheet() }
+							},
+							sheetState = bottomSheetState,
+							windowInsets = WindowInsets(0),
+						) {
+							Column(
+								modifier =
+									Modifier
+										.padding(horizontal = 16.dp)
+										.fillMaxWidth(),
+								horizontalAlignment = Alignment.CenterHorizontally,
+							) {
+								sheetState.displayName?.run {
+									Text(
+										text = this,
+										style = MaterialTheme.typography.titleLarge,
+										fontWeight = FontWeight.SemiBold,
+									)
+								}
+								Spacer(modifier = Modifier.height(24.dp))
+								sheetState.content(sheetState)
+								Spacer(modifier = Modifier.navigationBarsPadding())
+							}
+						}
+					}
 				}
 			}
 		}
