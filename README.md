@@ -1,4 +1,4 @@
-![Cover Image](/RESOURCES/Cover-1024x200.png) 
+![Cover Image](/RESOURCES/Cover-1024x200.png)
 
 # SoundTap - Android Volume Media Controller App
 
@@ -37,6 +37,7 @@ enabling users to skip tracks, pause, and resume music playback with ease.
   and more.
 - [x] **Auto-Play**: Automatically start media playback when the volume buttons are long-pressed or
   when a headset is connected.
+- [x] **Sleep Timer**: Set a timer to stop playback after a certain period.
 - [x] **Customizable Haptics**: Adjust the haptic feedback intensity to suit your preferences.
 - [x] **Customizable Delays**: Adjust the long-press delay to fit your preferred interaction speed.
 - [ ] **Localization**: Available in multiple languages for a global audience.
@@ -81,8 +82,8 @@ Open the project in Android Studio and build the APK file to install on your And
 1. Launch the SoundTap app on your Android device.
 2. Follow the on-screen instructions to grant necessary permissions.
 3. Use the volume buttons on your device to control media playback:
-    - Long-press volume up/down to skip tracks.
-    - Long-press both volume buttons to pause/resume playback.
+	- Long-press volume up/down to skip tracks.
+	- Long-press both volume buttons to pause/resume playback.
 4. Customize controls as desired in the app settings.
 
 ## :hammer_and_wrench: Tech Stack
