@@ -23,7 +23,7 @@ android {
 		applicationId = "fr.angel.soundtap"
 		minSdk = 30
 		targetSdk = 34
-		versionCode = 25
+		versionCode = 27
 		versionName = "1.0.8"
 
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
