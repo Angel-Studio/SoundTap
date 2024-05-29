@@ -7,7 +7,7 @@ plugins {
 	alias(libs.plugins.google.services)
 	alias(libs.plugins.firebase.crashlytics)
 	alias(libs.plugins.firebase.perf)
-	
+
 	alias(libs.plugins.jetbrains.kotlin.android)
 	alias(libs.plugins.dagger.hilt.android)
 	alias(libs.plugins.serialization)
@@ -73,7 +73,7 @@ android {
 		compose = true
 	}
 	composeOptions {
-		kotlinCompilerExtensionVersion = "1.5.13"
+		kotlinCompilerExtensionVersion = "1.5.14"
 	}
 	packaging {
 		resources {
