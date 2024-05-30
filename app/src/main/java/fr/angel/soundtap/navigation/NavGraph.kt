@@ -17,6 +17,7 @@ package fr.angel.soundtap.navigation
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
@@ -42,6 +43,7 @@ fun SoundTapNavGraph(
 	modifier: Modifier = Modifier,
 	mainViewModel: MainViewModel = hiltViewModel<MainViewModel>(),
 	navController: NavHostController,
+	innerPadding: PaddingValues,
 ) {
 	val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -59,7 +61,8 @@ fun SoundTapNavGraph(
 			) {
 				composable(Screens.App.Home.route) {
 					App(
-						modifier = modifier,
+						modifier = Modifier,
+						innerPadding = innerPadding,
 						mainViewModel = mainViewModel,
 						animatedVisibilityScope = this,
 						navigateToCustomization = { navController.navigate(Screens.App.Customization.route) },

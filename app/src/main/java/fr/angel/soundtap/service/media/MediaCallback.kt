@@ -86,6 +86,8 @@ class MediaCallback
 				mediaController.transportControls.play()
 			}
 
+		fun stop() = mediaController.transportControls.stop()
+
 		override fun onPlaybackStateChanged(state: PlaybackState?) {
 			super.onPlaybackStateChanged(state)
 			playbackState.value = state ?: return
@@ -143,12 +145,9 @@ class MediaCallback
 
 					scope.launch {
 						statsDataStore.updateData { settings ->
-							settings.addSongToHistory(
-								this@run,
-							)
+							settings.addSongToHistory(this@run)
 						}
 					}
-					scope.launch { statsDataStore.updateData { settings -> settings.incrementTotalSongsPlayed() } }
 
 					playingSong = this
 				}
