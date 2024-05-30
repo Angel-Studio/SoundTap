@@ -1,17 +1,19 @@
 /*
- * Copyright 2024 Angel Studio
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  * Copyright (c) 2024 Angel Studio
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *     http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
  */
 package fr.angel.soundtap.navigation
 
@@ -22,7 +24,11 @@ sealed class Screens(
 	data object App : Screens(route = "app") {
 		data object Home : Screens(route = "home")
 
-		data object Customization : Screens(route = "customization", showBackArrow = true)
+		data object Customization : Screens(route = "customization", showBackArrow = true) {
+			data object Home : Screens(route = "customization_default", showBackArrow = true)
+
+			data object Controls : Screens(route = "customization_controls", showBackArrow = true)
+		}
 
 		data object History : Screens(route = "history", showBackArrow = true)
 
@@ -39,10 +45,14 @@ sealed class Screens(
 				// App
 				App.route -> App
 				App.Home.route -> App.Home
-				App.Customization.route -> App.Customization
 				App.History.route -> App.History
 				App.Settings.route -> App.Settings
 				App.Support.route -> App.Support
+
+				// Customization
+				App.Customization.route -> App.Customization
+				App.Customization.Home.route -> App.Customization.Home
+				App.Customization.Controls.route -> App.Customization.Controls
 
 				// Onboarding
 				Onboarding.route -> Onboarding

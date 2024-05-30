@@ -1,17 +1,19 @@
 /*
- * Copyright 2024 Angel Studio
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  * Copyright (c) 2024 Angel Studio
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *     http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
  */
 package fr.angel.soundtap.service
 
@@ -29,9 +31,11 @@ import fr.angel.soundtap.data.enums.AutoPlayMode
 import fr.angel.soundtap.data.enums.HapticFeedbackLevel
 import fr.angel.soundtap.data.enums.WorkingMode
 import fr.angel.soundtap.data.enums.isOnHeadsetConnectedActive
+import fr.angel.soundtap.data.settings.customization.CustomizationSettings
 import fr.angel.soundtap.data.settings.customization.DEFAULT_DELAY_BETWEEN_EVENTS
 import fr.angel.soundtap.data.settings.customization.DEFAULT_DOUBLE_PRESS_THRESHOLD
 import fr.angel.soundtap.data.settings.customization.DEFAULT_LONG_PRESS_THRESHOLD
+import fr.angel.soundtap.data.settings.customization.MediaAction
 import fr.angel.soundtap.data.settings.customization.customizationSettingsDataStore
 import fr.angel.soundtap.service.media.MediaReceiver
 import kotlinx.coroutines.CoroutineScope
@@ -88,6 +92,7 @@ class SoundTapAccessibilityService : AccessibilityService() {
 	private var workingMode = WorkingMode.SCREEN_ON_OFF
 	private var autoPlayMode = AutoPlayMode.ON_HEADSET_CONNECTED
 	private var preferredMediaPlayer: String? = null
+	private var customizationSettings = CustomizationSettings()
 
 	companion object {
 		private const val TAG = "SoundTapAccessibilityService"
@@ -210,6 +215,7 @@ class SoundTapAccessibilityService : AccessibilityService() {
 
 		scope.launch(Dispatchers.IO) {
 			customizationSettingsDataStore.data.collect {
+				customizationSettings = it
 				hapticFeedbackLevel = it.hapticFeedbackLevel
 				longPressThreshold = it.longPressThreshold
 				doublePressThreshold = it.doublePressThreshold
@@ -307,13 +313,15 @@ class SoundTapAccessibilityService : AccessibilityService() {
 	 **/
 
 	private fun volumeUpLongPressed() {
+		if (customizationSettings.longVolumeUpPressControlMediaAction.enabled.not()) return
 		vibratorHelper.createHapticFeedback(hapticFeedbackLevel)
-		MediaReceiver.firstCallback?.skipToNext()
+		executeAction(customizationSettings.longVolumeUpPressControlMediaAction.action)
 	}
 
 	private fun volumeDownLongPressed() {
+		if (customizationSettings.longVolumeDownPressControlMediaAction.enabled.not()) return
 		vibratorHelper.createHapticFeedback(hapticFeedbackLevel)
-		MediaReceiver.firstCallback?.skipToPrevious()
+		executeAction(customizationSettings.longVolumeDownPressControlMediaAction.action)
 	}
 
 	private fun bothVolumePressed() {
@@ -323,8 +331,22 @@ class SoundTapAccessibilityService : AccessibilityService() {
 				GlobalHelper.startMediaPlayer(context = this.application, packageName = it)
 			}
 		} else {
+			if (customizationSettings.doubleVolumeLongPressControlMediaAction.enabled) return
 			vibratorHelper.createHapticFeedback(hapticFeedbackLevel)
-			MediaReceiver.firstCallback?.togglePlayPause()
+			executeAction(customizationSettings.doubleVolumeLongPressControlMediaAction.action)
+		}
+	}
+
+	private fun executeAction(action: MediaAction) {
+		when (action) {
+			MediaAction.PLAY_PAUSE -> MediaReceiver.firstCallback?.togglePlayPause()
+			MediaAction.NEXT -> MediaReceiver.firstCallback?.skipToNext()
+			MediaAction.PREVIOUS -> MediaReceiver.firstCallback?.skipToPrevious()
+			MediaAction.STOP -> MediaReceiver.firstCallback?.stop()
+			MediaAction.FAST_FORWARD -> MediaReceiver.firstCallback?.fastForward()
+			MediaAction.REWIND -> MediaReceiver.firstCallback?.rewind()
+			MediaAction.PLAY -> MediaReceiver.firstCallback?.play()
+			MediaAction.PAUSE -> MediaReceiver.firstCallback?.pause()
 		}
 	}
 }

@@ -18,26 +18,33 @@
 
 package fr.angel.soundtap.data.models
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import fr.angel.soundtap.data.settings.customization.MediaAction
 
 sealed class BottomSheetState(
 	open val displayName: String?,
 	open val onDismiss: (() -> Unit)? = null,
-	val content: @Composable (BottomSheetState) -> Unit,
+	val content: @Composable (BottomSheetState, () -> Unit) -> Unit,
 ) {
 	data object None : BottomSheetState(
 		displayName = "Oops, something went wrong",
-		content = { },
+		content = { _, _ ->
+			Text("An error occurred while trying to display the bottom sheet.")
+		},
 	)
 
 	data class SetTimer(
@@ -46,7 +53,7 @@ sealed class BottomSheetState(
 		val onTimerSet: (Long) -> Unit,
 	) : BottomSheetState(
 			displayName = displayName,
-			content = { state ->
+			content = { state, hide ->
 				val timerChoices: Map<String, Long> =
 					mapOf(
 						"5 minutes" to 5 * 60 * 1000,
@@ -58,7 +65,7 @@ sealed class BottomSheetState(
 					)
 
 				Column(
-					verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp),
+					verticalArrangement = Arrangement.spacedBy(4.dp),
 				) {
 					timerChoices.forEach { (label, duration) ->
 						Button(
@@ -71,8 +78,7 @@ sealed class BottomSheetState(
 								),
 							onClick = {
 								onTimerSet(duration)
-
-								// Dismiss the bottom sheet
+								hide()
 								state.onDismiss?.invoke()
 							},
 						) {
@@ -82,6 +88,54 @@ sealed class BottomSheetState(
 										.fillMaxWidth()
 										.padding(vertical = 8.dp),
 								text = label,
+								textAlign = TextAlign.Start,
+							)
+						}
+					}
+				}
+			},
+		)
+
+	data class EditControlMediaAction(
+		override val displayName: String? = "Control Media Action",
+		override val onDismiss: (() -> Unit)? = null,
+		val onSetAction: (MediaAction) -> Unit,
+	) : BottomSheetState(
+			displayName = displayName,
+			content = { state, hide ->
+				val options = MediaAction.entries
+
+				Column(
+					verticalArrangement = Arrangement.spacedBy(4.dp),
+				) {
+					options.forEach { action ->
+						Button(
+							modifier = Modifier.fillMaxWidth(),
+							shape = MaterialTheme.shapes.medium,
+							colors =
+								ButtonDefaults.buttonColors(
+									containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+									contentColor = MaterialTheme.colorScheme.onSurface,
+								),
+							onClick = {
+								onSetAction(action)
+
+								hide()
+								// Dismiss the bottom sheet
+								state.onDismiss?.invoke()
+							},
+						) {
+							Icon(
+								imageVector = action.icon,
+								contentDescription = null,
+							)
+							Spacer(modifier = Modifier.width(8.dp))
+							Text(
+								modifier =
+									Modifier
+										.fillMaxWidth()
+										.padding(vertical = 8.dp),
+								text = action.title,
 								textAlign = TextAlign.Start,
 							)
 						}

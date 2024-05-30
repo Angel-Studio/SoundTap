@@ -1,17 +1,19 @@
 /*
- * Copyright 2024 Angel Studio
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  * Copyright (c) 2024 Angel Studio
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *     http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
  */
 package fr.angel.soundtap.ui.app
 
@@ -41,7 +43,6 @@ import androidx.compose.material.icons.outlined.NotificationImportant
 import androidx.compose.material.icons.outlined.SettingsAccessibility
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,7 +50,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -69,9 +69,8 @@ import fr.angel.soundtap.ui.components.GridCard
 import fr.angel.soundtap.ui.components.InfoCard
 import fr.angel.soundtap.ui.components.InfoCardType
 import fr.angel.soundtap.ui.components.MediaCards
-import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.App(
 	modifier: Modifier = Modifier,
@@ -84,7 +83,6 @@ fun SharedTransitionScope.App(
 	innerPadding: PaddingValues,
 ) {
 	val context = LocalContext.current
-	val scope = rememberCoroutineScope()
 	val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
 	val accessibilityServiceState by SoundTapAccessibilityService.uiState.collectAsStateWithLifecycle()
 	val mediaCallback = MediaReceiver.firstCallback
@@ -250,10 +248,7 @@ fun SharedTransitionScope.App(
 					} else {
 						mainViewModel.showBottomSheet(
 							bottomSheetState =
-								BottomSheetState.SetTimer(
-									onTimerSet = { duration -> mainViewModel.setSleepTimer(duration) },
-									onDismiss = { scope.launch { mainViewModel.hideBottomSheet() } },
-								),
+								BottomSheetState.SetTimer(onTimerSet = { duration -> mainViewModel.setSleepTimer(duration) }),
 						)
 					}
 				},

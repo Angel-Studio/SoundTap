@@ -1,17 +1,19 @@
 /*
- * Copyright 2024 Angel Studio
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  * Copyright (c) 2024 Angel Studio
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *     http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
  */
 package fr.angel.soundtap
 
@@ -23,12 +25,14 @@ import androidx.compose.material3.SheetState
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import fr.angel.soundtap.data.enums.AutoPlayMode
 import fr.angel.soundtap.data.enums.HapticFeedbackLevel
 import fr.angel.soundtap.data.enums.WorkingMode
 import fr.angel.soundtap.data.models.BottomSheetState
+import fr.angel.soundtap.data.settings.customization.ControlMediaAction
 import fr.angel.soundtap.data.settings.customization.CustomizationSettings
 import fr.angel.soundtap.data.settings.settings.AppSettings
 import fr.angel.soundtap.data.settings.stats.StatsSettings
@@ -52,7 +56,11 @@ data class MainUiState(
 	val customizationSettings: CustomizationSettings = CustomizationSettings(),
 	val appSettings: AppSettings = AppSettings(),
 	val statsSettings: StatsSettings = StatsSettings(),
+	val defaultNavController: NavHostController? = null,
+	val focusedNavController: NavHostController? = null,
 ) {
+	val currentNavController: NavHostController
+		get() = focusedNavController ?: defaultNavController!!
 	val defaultScreen: Screens
 		get() = if (appSettings.onboardingPageCompleted) Screens.App else Screens.Onboarding
 }
@@ -207,5 +215,52 @@ class MainViewModel
 		@OptIn(ExperimentalMaterial3Api::class)
 		fun setBottomSheetState(sheetState: SheetState) {
 			this.sheetState = sheetState
+		}
+
+		fun setDefaultNavController(navController: NavHostController) {
+			_uiState.value = _uiState.value.copy(defaultNavController = navController)
+		}
+
+		fun setFocusedNavController(navController: NavHostController) {
+			_uiState.value = _uiState.value.copy(focusedNavController = navController)
+		}
+
+		fun resetFocusedNavController() {
+			_uiState.value = _uiState.value.copy(focusedNavController = null)
+		}
+
+		fun toggleControlMediaAction(action: ControlMediaAction) {
+			viewModelScope.launch {
+				customizationSettingsDataStore.updateData { settings ->
+					val newAction = action.copy(enabled = !action.enabled)
+					when (action.id) {
+						0 -> settings.copy(longVolumeUpPressControlMediaAction = newAction)
+						1 -> settings.copy(longVolumeDownPressControlMediaAction = newAction)
+						2 -> settings.copy(doubleVolumeLongPressControlMediaAction = newAction)
+						else -> settings
+					}
+				}
+			}
+		}
+
+		fun changeControlMediaAction(controlMediaAction: ControlMediaAction) {
+			showBottomSheet(
+				BottomSheetState.EditControlMediaAction(
+					displayName = "Edit ${controlMediaAction.title} action",
+					onSetAction = { newAction ->
+						viewModelScope.launch {
+							customizationSettingsDataStore.updateData { settings ->
+								val newControlMediaAction = controlMediaAction.copy(action = newAction)
+								when (controlMediaAction.id) {
+									0 -> settings.copy(longVolumeUpPressControlMediaAction = newControlMediaAction)
+									1 -> settings.copy(longVolumeDownPressControlMediaAction = newControlMediaAction)
+									2 -> settings.copy(doubleVolumeLongPressControlMediaAction = newControlMediaAction)
+									else -> settings
+								}
+							}
+						}
+					},
+				),
+			)
 		}
 	}

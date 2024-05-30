@@ -159,7 +159,10 @@ fun SharedTransitionScope.SettingsScreen(
 			}
 			HorizontalDivider()
 			LazyColumn(
-				modifier = Modifier.fillMaxWidth(),
+				modifier =
+					Modifier
+						.fillMaxWidth()
+						.skipToLookaheadSize(),
 				contentPadding = PaddingValues(8.dp),
 				verticalArrangement = Arrangement.spacedBy(8.dp),
 			) {

@@ -15,51 +15,75 @@
  *  * limitations under the License.
  *
  */
-package fr.angel.soundtap.ui.app
+package fr.angel.soundtap.ui.app.customization
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BugReport
-import androidx.compose.material.icons.filled.Code
-import androidx.compose.material.icons.filled.Gavel
-import androidx.compose.material.icons.filled.Groups
-import androidx.compose.material.icons.filled.Policy
-import androidx.compose.material.icons.filled.Support
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import fr.angel.soundtap.GlobalHelper
-import fr.angel.soundtap.ui.components.settings.SettingsItem
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import fr.angel.soundtap.MainViewModel
+import fr.angel.soundtap.navigation.Screens
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SharedTransitionScope.SupportScreen(
+fun SharedTransitionScope.CustomizationScreen(
 	modifier: Modifier = Modifier,
+	mainViewModel: MainViewModel,
 	animatedVisibilityScope: AnimatedVisibilityScope,
+	navigateToSettings: () -> Unit,
 ) {
-	val uriHandler = LocalUriHandler.current
+	val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
+
+	val navController = rememberNavController()
+	val currentBackStack by navController.currentBackStackEntryAsState()
+	val currentDestination = currentBackStack?.destination
+	val currentScreen: Screens =
+		Screens.fromRoute(currentDestination?.route ?: uiState.defaultScreen.route)
+
+	LaunchedEffect(currentScreen) {
+		if (currentScreen != Screens.App.Customization.Home) {
+			mainViewModel.setFocusedNavController(navController)
+		} else {
+			mainViewModel.resetFocusedNavController()
+		}
+	}
+
+	DisposableEffect(Unit) {
+		onDispose {
+			mainViewModel.resetFocusedNavController()
+		}
+	}
 
 	Card(
 		modifier =
@@ -69,7 +93,7 @@ fun SharedTransitionScope.SupportScreen(
 				.sharedElement(
 					state =
 						rememberSharedContentState(
-							key = "Support-card",
+							key = "Customize-card",
 						),
 					animatedVisibilityScope = animatedVisibilityScope,
 				),
@@ -91,70 +115,62 @@ fun SharedTransitionScope.SupportScreen(
 							.sharedElement(
 								state =
 									rememberSharedContentState(
-										key = "Support-icon",
+										key = "Customize-icon",
 									),
 								animatedVisibilityScope = animatedVisibilityScope,
 							),
-					imageVector = Icons.Default.Support,
+					imageVector = Icons.Default.Tune,
 					contentDescription = null,
 				)
 
 				Text(
-					text = "Support",
+					text = "Customization",
 					style = MaterialTheme.typography.titleLarge,
 					fontWeight = FontWeight.Bold,
 					modifier =
 						Modifier
 							.sharedBounds(
 								rememberSharedContentState(
-									key = "Support",
+									key = "Customize",
 								),
 								animatedVisibilityScope = animatedVisibilityScope,
 							),
 				)
 			}
 			HorizontalDivider()
-			Column(
+			NavHost(
+				navController = navController,
+				startDestination = Screens.App.Customization.Home.route,
 				modifier =
 					Modifier
 						.fillMaxSize()
-						.padding(horizontal = 16.dp)
-						.verticalScroll(rememberScrollState())
 						.skipToLookaheadSize(),
-				verticalArrangement = Arrangement.spacedBy(8.dp),
 			) {
-				Spacer(modifier = Modifier.height(8.dp))
-				SettingsItem(
-					title = "Report a Bug or Suggest a Feature",
-					subtitle = "Report a bug or issue with the app or suggest a feature that you would like to see",
-					icon = Icons.Default.BugReport,
-					onClick = { uriHandler.openUri("https://github.com/Angel-Studio/SoundTap/issues/new/choose") },
-				)
-				SettingsItem(
-					title = "View on GitHub",
-					subtitle = "View the source code and contribute to the project",
-					icon = Icons.Default.Code,
-					onClick = { uriHandler.openUri("https://github.com/Angel-Studio/SoundTap") },
-				)
-				SettingsItem(
-					title = "Discord Server",
-					subtitle = "Join the community and get support",
-					icon = Icons.Default.Groups,
-					onClick = { uriHandler.openUri("https://discord.gg/8NfBrxKs4T") },
-				)
-				SettingsItem(
-					title = "Privacy Policy",
-					subtitle = "Read the privacy policy of the app",
-					icon = Icons.Default.Policy,
-					onClick = { uriHandler.openUri(GlobalHelper.PRIVACY_POLICY_URL) },
-				)
-				SettingsItem(
-					title = "Terms of Service",
-					subtitle = "Read the terms of service of the app",
-					icon = Icons.Default.Gavel,
-					onClick = { uriHandler.openUri(GlobalHelper.TERMS_OF_SERVICE_URL) },
-				)
-				Spacer(modifier = Modifier.height(8.dp))
+				composable(
+					route = Screens.App.Customization.Home.route,
+					popEnterTransition = { slideInHorizontally(tween(250)) },
+					exitTransition = { fadeOut(tween(250)) },
+				) {
+					CustomizationHome(
+						modifier = Modifier.fillMaxSize(),
+						mainViewModel = mainViewModel,
+						navigateToSettings = navigateToSettings,
+						navigateToControls = { navController.navigate(Screens.App.Customization.Controls.route) },
+					)
+				}
+
+				composable(
+					route = Screens.App.Customization.Controls.route,
+					enterTransition = { slideInHorizontally(tween(250)) { it } },
+					popExitTransition = {
+						fadeOut(tween(250)) + slideOutHorizontally(tween(250)) { it }
+					},
+				) {
+					CustomizationControls(
+						modifier = Modifier.fillMaxSize(),
+						mainViewModel = mainViewModel,
+					)
+				}
 			}
 		}
 	}
