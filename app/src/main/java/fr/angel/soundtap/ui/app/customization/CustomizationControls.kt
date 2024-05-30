@@ -24,10 +24,15 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.FormatListNumbered
 import androidx.compose.material3.Button
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -46,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.angel.soundtap.MainViewModel
 import fr.angel.soundtap.data.settings.customization.ControlMediaAction
+import fr.angel.soundtap.data.settings.customization.CustomControlMediaAction
 import fr.angel.soundtap.ui.components.settings.SettingsItemCustomBottom
 
 @Composable
@@ -83,6 +89,52 @@ fun CustomizationControls(
 				controlMediaAction = controlMediaAction,
 				onToggle = { mainViewModel.toggleControlMediaAction(controlMediaAction) },
 				onActionChange = { mainViewModel.changeControlMediaAction(controlMediaAction) },
+			)
+		}
+		item {
+			Row(
+				modifier =
+					Modifier
+						.fillMaxWidth()
+						.padding(vertical = 16.dp),
+				verticalAlignment = Alignment.CenterVertically,
+				horizontalArrangement = Arrangement.spacedBy(8.dp),
+			) {
+				HorizontalDivider(
+					modifier = Modifier.weight(1f),
+					color = MaterialTheme.colorScheme.onSurfaceVariant,
+				)
+				Text(
+					text = "CUSTOM ACTIONS",
+					fontWeight = FontWeight.Bold,
+					style = MaterialTheme.typography.titleMedium,
+				)
+				HorizontalDivider(
+					modifier = Modifier.weight(1f),
+					color = MaterialTheme.colorScheme.onSurfaceVariant,
+				)
+			}
+		}
+		item {
+			Button(
+				modifier =
+					Modifier
+						.fillMaxWidth()
+						.heightIn(min = 56.dp),
+				onClick = { mainViewModel.addCustomControlMediaAction() },
+				shape = MaterialTheme.shapes.medium,
+			) {
+				Text(text = "Add custom action")
+			}
+		}
+		items(uiState.customizationSettings.customMediaActions, key = { it.id }) { controlMediaAction ->
+			CustomControlCard(
+				modifier = Modifier.fillMaxWidth(),
+				controlMediaAction = controlMediaAction,
+				onToggle = { mainViewModel.toggleControlMediaAction(controlMediaAction) },
+				onActionChange = { mainViewModel.changeControlMediaAction(controlMediaAction) },
+				onRemove = { mainViewModel.removeCustomControlMediaAction(controlMediaAction) },
+				onSequenceChange = { mainViewModel.editCustomControlMediaActionSequence(controlMediaAction) },
 			)
 		}
 	}
@@ -132,6 +184,90 @@ private fun ControlCard(
 				) {
 					Text(text = "Change")
 				}
+			}
+		},
+	)
+}
+
+@Composable
+private fun CustomControlCard(
+	modifier: Modifier = Modifier,
+	controlMediaAction: CustomControlMediaAction,
+	onToggle: (Boolean) -> Unit,
+	onActionChange: () -> Unit,
+	onSequenceChange: () -> Unit,
+	onRemove: () -> Unit,
+) {
+	SettingsItemCustomBottom(
+		modifier = modifier,
+		title = "Custom action",
+		subtitle = controlMediaAction.action.title,
+		icon = controlMediaAction.icon,
+		trailing = {
+			Switch(
+				checked = controlMediaAction.enabled,
+				onCheckedChange = onToggle,
+			)
+		},
+		content = {
+			Row(
+				modifier =
+					Modifier
+						.fillMaxWidth()
+						.clip(MaterialTheme.shapes.medium)
+						.background(color = MaterialTheme.colorScheme.surfaceContainerHigh)
+						.padding(vertical = 8.dp, horizontal = 16.dp),
+				horizontalArrangement = Arrangement.spacedBy(4.dp),
+				verticalAlignment = Alignment.CenterVertically,
+			) {
+				Icon(
+					imageVector = controlMediaAction.action.icon,
+					contentDescription = null,
+				)
+				Text(
+					text = controlMediaAction.action.title,
+					modifier = Modifier.weight(1f),
+					fontWeight = FontWeight.Bold,
+				)
+				Spacer(modifier = Modifier.weight(1f))
+				Button(
+					onClick = onActionChange,
+				) {
+					Text(text = "Change")
+				}
+			}
+			Row(
+				modifier =
+					Modifier
+						.fillMaxWidth()
+						.clip(MaterialTheme.shapes.medium)
+						.background(color = MaterialTheme.colorScheme.surfaceContainerHigh)
+						.padding(vertical = 8.dp, horizontal = 16.dp),
+				horizontalArrangement = Arrangement.spacedBy(4.dp),
+				verticalAlignment = Alignment.CenterVertically,
+			) {
+				Icon(
+					imageVector = Icons.Rounded.FormatListNumbered,
+					contentDescription = null,
+				)
+				Text(
+					text = "Sequence",
+					modifier = Modifier.weight(1f),
+					fontWeight = FontWeight.Bold,
+				)
+				Spacer(modifier = Modifier.weight(1f))
+				Button(
+					onClick = onSequenceChange,
+				) {
+					Text(text = "Edit")
+				}
+			}
+			FilledTonalButton(
+				modifier = Modifier.fillMaxWidth(),
+				onClick = onRemove,
+				shape = MaterialTheme.shapes.medium,
+			) {
+				Text(text = "Remove")
 			}
 		},
 	)

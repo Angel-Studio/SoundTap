@@ -18,6 +18,7 @@
 package fr.angel.soundtap.data.settings.customization
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Block
 import androidx.compose.material.icons.rounded.FastForward
 import androidx.compose.material.icons.rounded.FastRewind
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
@@ -82,6 +83,7 @@ data class CustomizationSettings(
 			enabled = true,
 			action = MediaAction.PLAY_PAUSE,
 		),
+	val customMediaActions: List<CustomControlMediaAction> = listOf(),
 ) {
 	companion object {
 		const val ACTION_PLAY_PAUSE = "play_pause"
@@ -100,6 +102,7 @@ enum class MediaAction(
 	val icon: ImageVector,
 	val title: String,
 ) {
+	NONE("", Icons.Rounded.Block, "None"),
 	PLAY_PAUSE(ACTION_PLAY_PAUSE, Icons.Rounded.ToggleOn, "Play/Pause"),
 	NEXT(ACTION_NEXT, Icons.Rounded.SkipNext, "Next"),
 	PREVIOUS(ACTION_PREVIOUS, Icons.Rounded.SkipPrevious, "Previous"),
@@ -110,6 +113,15 @@ enum class MediaAction(
 	PAUSE(ACTION_PAUSE, Icons.Rounded.Pause, "Pause"),
 }
 
+enum class HardwareButtonsEvent(
+	val title: String,
+	val icon: ImageVector,
+) {
+	VOLUME_UP("Volume up", Icons.Rounded.KeyboardArrowUp),
+	VOLUME_DOWN("Volume down", Icons.Rounded.KeyboardArrowDown),
+	BOTH_VOLUME("Both volume", Icons.Rounded.UnfoldMoreDouble),
+}
+
 @Serializable
 data class ControlMediaAction(
 	val id: Int,
@@ -117,4 +129,13 @@ data class ControlMediaAction(
 	val enabled: Boolean,
 	val action: MediaAction,
 	@Transient val icon: ImageVector? = null,
+)
+
+@Serializable
+data class CustomControlMediaAction(
+	val id: Int,
+	val enabled: Boolean,
+	val action: MediaAction,
+	@Transient val icon: ImageVector? = null,
+	val eventsSequenceList: List<HardwareButtonsEvent> = listOf(),
 )

@@ -33,13 +33,16 @@ import fr.angel.soundtap.data.enums.HapticFeedbackLevel
 import fr.angel.soundtap.data.enums.WorkingMode
 import fr.angel.soundtap.data.models.BottomSheetState
 import fr.angel.soundtap.data.settings.customization.ControlMediaAction
+import fr.angel.soundtap.data.settings.customization.CustomControlMediaAction
 import fr.angel.soundtap.data.settings.customization.CustomizationSettings
+import fr.angel.soundtap.data.settings.customization.MediaAction
 import fr.angel.soundtap.data.settings.settings.AppSettings
 import fr.angel.soundtap.data.settings.stats.StatsSettings
 import fr.angel.soundtap.navigation.Screens
 import fr.angel.soundtap.service.SleepTimerService
 import fr.angel.soundtap.service.SoundTapAccessibilityService
 import javax.inject.Inject
+import kotlin.random.Random
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -257,6 +260,92 @@ class MainViewModel
 									2 -> settings.copy(doubleVolumeLongPressControlMediaAction = newControlMediaAction)
 									else -> settings
 								}
+							}
+						}
+					},
+				),
+			)
+		}
+
+		fun toggleControlMediaAction(action: CustomControlMediaAction) {
+			viewModelScope.launch {
+				customizationSettingsDataStore.updateData { settings ->
+					val newAction = action.copy(enabled = !action.enabled)
+					settings.copy(
+						customMediaActions =
+							settings.customMediaActions.map {
+								if (it.id == action.id) newAction else it
+							},
+					)
+				}
+			}
+		}
+
+		fun changeControlMediaAction(controlMediaAction: CustomControlMediaAction) {
+			showBottomSheet(
+				BottomSheetState.EditControlMediaAction(
+					displayName = "Edit custom control action",
+					onSetAction = { newAction ->
+						viewModelScope.launch {
+							customizationSettingsDataStore.updateData { settings ->
+								val newControlMediaAction = controlMediaAction.copy(action = newAction)
+								settings.copy(
+									customMediaActions =
+										settings.customMediaActions.map {
+											if (it.id == controlMediaAction.id) newControlMediaAction else it
+										},
+								)
+							}
+						}
+					},
+				),
+			)
+		}
+
+		fun addCustomControlMediaAction() {
+			viewModelScope.launch {
+				customizationSettingsDataStore.updateData { settings ->
+					val newAction =
+						CustomControlMediaAction(
+							id = settings.customMediaActions.size + 100 * Random.nextInt(),
+							action = MediaAction.NEXT,
+							enabled = false,
+						)
+					settings.copy(
+						customMediaActions =
+							settings.customMediaActions.toMutableList().apply {
+								add(newAction)
+							},
+					)
+				}
+			}
+		}
+
+		fun removeCustomControlMediaAction(action: CustomControlMediaAction) {
+			viewModelScope.launch {
+				customizationSettingsDataStore.updateData { settings ->
+					settings.copy(
+						customMediaActions = settings.customMediaActions.filter { it.id != action.id },
+					)
+				}
+			}
+		}
+
+		fun editCustomControlMediaActionSequence(controlMediaAction: CustomControlMediaAction) {
+			showBottomSheet(
+				BottomSheetState.EditControlMediaActionSequence(
+					displayName = "Edit custom control action sequence",
+					customControlMediaAction = controlMediaAction,
+					onSetSequence = { newSequence ->
+						viewModelScope.launch {
+							customizationSettingsDataStore.updateData { settings ->
+								val newControlMediaAction = controlMediaAction.copy(eventsSequenceList = newSequence)
+								settings.copy(
+									customMediaActions =
+										settings.customMediaActions.map {
+											if (it.id == controlMediaAction.id) newControlMediaAction else it
+										},
+								)
 							}
 						}
 					},

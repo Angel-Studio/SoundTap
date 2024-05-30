@@ -35,17 +35,21 @@ import fr.angel.soundtap.data.settings.customization.CustomizationSettings
 import fr.angel.soundtap.data.settings.customization.DEFAULT_DELAY_BETWEEN_EVENTS
 import fr.angel.soundtap.data.settings.customization.DEFAULT_DOUBLE_PRESS_THRESHOLD
 import fr.angel.soundtap.data.settings.customization.DEFAULT_LONG_PRESS_THRESHOLD
+import fr.angel.soundtap.data.settings.customization.HardwareButtonsEvent
 import fr.angel.soundtap.data.settings.customization.MediaAction
 import fr.angel.soundtap.data.settings.customization.customizationSettingsDataStore
 import fr.angel.soundtap.service.media.MediaReceiver
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import okhttp3.internal.toImmutableList
 
 data class AccessibilityServiceState(
 	val isRunning: Boolean = false,
@@ -81,6 +85,7 @@ data class AccessibilityServiceState(
 class SoundTapAccessibilityService : AccessibilityService() {
 	private val scope by lazy { CoroutineScope(Dispatchers.IO) }
 	private val listenerScope by lazy { CoroutineScope(Dispatchers.IO) }
+	private val keySequenceTimeoutScope by lazy { CoroutineScope(Dispatchers.IO) }
 
 	private lateinit var audioManager: AudioManager
 	private lateinit var displayManager: DisplayManager
@@ -93,6 +98,8 @@ class SoundTapAccessibilityService : AccessibilityService() {
 	private var autoPlayMode = AutoPlayMode.ON_HEADSET_CONNECTED
 	private var preferredMediaPlayer: String? = null
 	private var customizationSettings = CustomizationSettings()
+
+	private val keySequence = mutableListOf<HardwareButtonsEvent>()
 
 	companion object {
 		private const val TAG = "SoundTapAccessibilityService"
@@ -117,6 +124,7 @@ class SoundTapAccessibilityService : AccessibilityService() {
 		}
 	}
 
+	@OptIn(ExperimentalCoroutinesApi::class)
 	override fun onKeyEvent(event: KeyEvent?): Boolean {
 		// Skip the event if the service is not activated or that no media receiver is registered
 		if (event == null ||
@@ -155,13 +163,25 @@ class SoundTapAccessibilityService : AccessibilityService() {
 
 		when (action) {
 			KeyEvent.ACTION_DOWN -> {
+				keySequenceTimeoutScope.cancel()
+
 				when (keyCode) {
 					KeyEvent.KEYCODE_VOLUME_UP -> {
+						keySequence.add(HardwareButtonsEvent.VOLUME_UP)
+						keySequenceTimeoutScope.launch(
+							start = CoroutineStart.ATOMIC,
+						) { keySequenceTimeout() }
 						_uiState.value =
-							_uiState.value.copy(volumeUpLastPressedTime = System.currentTimeMillis())
+							_uiState.value.copy(
+								volumeUpLastPressedTime = System.currentTimeMillis(),
+							)
 					}
 
 					KeyEvent.KEYCODE_VOLUME_DOWN -> {
+						keySequence.add(HardwareButtonsEvent.VOLUME_DOWN)
+						keySequenceTimeoutScope.launch(
+							start = CoroutineStart.ATOMIC,
+						) { keySequenceTimeout() }
 						_uiState.value =
 							_uiState.value.copy(volumeDownLastPressedTime = System.currentTimeMillis())
 					}
@@ -247,6 +267,27 @@ class SoundTapAccessibilityService : AccessibilityService() {
 	override fun onAccessibilityEvent(event: AccessibilityEvent?) {}
 
 	override fun onInterrupt() {}
+
+	private suspend fun keySequenceTimeout() {
+		val keySequenceCopy = keySequence.toImmutableList()
+
+		// Check if the key sequence is valid
+		val customActions = customizationSettings.customMediaActions.filter { it.enabled }
+
+		customActions.forEach { customAction ->
+			if (customAction.eventsSequenceList.toImmutableList() == keySequenceCopy) {
+				vibratorHelper.createHapticFeedback(hapticFeedbackLevel)
+				executeAction(customAction.action)
+
+				keySequence.clear()
+				return
+			}
+		}
+
+		// Delay before clearing the key sequence
+		delay(1000)
+		keySequence.clear()
+	}
 
 	/**
 	 * EVENT:
@@ -347,6 +388,8 @@ class SoundTapAccessibilityService : AccessibilityService() {
 			MediaAction.REWIND -> MediaReceiver.firstCallback?.rewind()
 			MediaAction.PLAY -> MediaReceiver.firstCallback?.play()
 			MediaAction.PAUSE -> MediaReceiver.firstCallback?.pause()
+			MediaAction.NONE -> { // Do nothing
+			}
 		}
 	}
 }

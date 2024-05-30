@@ -26,6 +26,7 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -161,7 +162,9 @@ fun SettingsItemCustomBottom(
 					enter = fadeIn() + expandVertically(),
 					exit = fadeOut() + shrinkVertically(),
 				) {
-					Column {
+					Column(
+						verticalArrangement = Arrangement.spacedBy(4.dp),
+					) {
 						Spacer(modifier = Modifier.height(16.dp))
 						content()
 					}

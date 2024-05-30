@@ -18,21 +18,41 @@
 
 package fr.angel.soundtap.data.models
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.toMutableStateList
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import fr.angel.soundtap.data.settings.customization.CustomControlMediaAction
+import fr.angel.soundtap.data.settings.customization.HardwareButtonsEvent
 import fr.angel.soundtap.data.settings.customization.MediaAction
 
 sealed class BottomSheetState(
@@ -138,6 +158,129 @@ sealed class BottomSheetState(
 								text = action.title,
 								textAlign = TextAlign.Start,
 							)
+						}
+					}
+				}
+			},
+		)
+
+	@OptIn(ExperimentalLayoutApi::class)
+	data class EditControlMediaActionSequence(
+		override val displayName: String? = "Edit Action Sequence",
+		override val onDismiss: (() -> Unit)? = null,
+		val customControlMediaAction: CustomControlMediaAction,
+		val onSetSequence: (List<HardwareButtonsEvent>) -> Unit,
+	) : BottomSheetState(
+			displayName = displayName,
+			content = { state, hide ->
+				val sequence = remember { customControlMediaAction.eventsSequenceList.toMutableStateList() }
+
+				Column(
+					modifier =
+						Modifier
+							.fillMaxWidth()
+							.verticalScroll(rememberScrollState()),
+					verticalArrangement = Arrangement.spacedBy(16.dp),
+				) {
+					Text(
+						text = "Create a sequence of hardware button events to trigger the action",
+						style = MaterialTheme.typography.labelMedium,
+					)
+					FlowRow(
+						modifier = Modifier.fillMaxWidth(),
+						horizontalArrangement = Arrangement.spacedBy(4.dp),
+						verticalArrangement = Arrangement.spacedBy(4.dp),
+					) {
+						HardwareButtonsEvent.entries.forEach { event ->
+							Box(
+								modifier =
+									Modifier
+										.size(48.dp)
+										.clip(MaterialTheme.shapes.medium)
+										.background(MaterialTheme.colorScheme.surfaceContainerHigh)
+										.clickable(onClick = { sequence.add(event) }),
+								contentAlignment = Alignment.Center,
+							) {
+								Icon(
+									imageVector = event.icon,
+									contentDescription = null,
+								)
+							}
+						}
+					}
+
+					HorizontalDivider()
+
+					Text(
+						text = "The current sequence is:",
+						style = MaterialTheme.typography.labelMedium,
+					)
+					FlowRow(
+						modifier = Modifier.fillMaxWidth(),
+						horizontalArrangement = Arrangement.spacedBy(4.dp),
+						verticalArrangement = Arrangement.spacedBy(4.dp),
+					) {
+						if (sequence.isEmpty()) {
+							Text(
+								text = "No events in the sequence",
+								style = MaterialTheme.typography.bodyMedium,
+								fontWeight = FontWeight.Bold,
+							)
+						}
+						sequence.forEachIndexed { index, event ->
+							Row(
+								horizontalArrangement = Arrangement.spacedBy(4.dp),
+								verticalAlignment = Alignment.CenterVertically,
+							) {
+								if (index != 0) {
+									Icon(
+										modifier = Modifier.size(16.dp),
+										imageVector = Icons.AutoMirrored.Rounded.ArrowForward,
+										contentDescription = null,
+									)
+								}
+								Box(
+									modifier =
+										Modifier
+											.size(48.dp)
+											.clip(MaterialTheme.shapes.medium)
+											.background(MaterialTheme.colorScheme.surfaceContainerHigh)
+											.clickable(onClick = { sequence.remove(event) }),
+									contentAlignment = Alignment.Center,
+								) {
+									Icon(
+										imageVector = event.icon,
+										contentDescription = null,
+									)
+								}
+							}
+						}
+					}
+
+					Row(
+						modifier =
+							Modifier
+								.fillMaxWidth()
+								.padding(top = 16.dp),
+						horizontalArrangement = Arrangement.spacedBy(8.dp),
+					) {
+						FilledTonalButton(
+							onClick = {
+								hide()
+								state.onDismiss?.invoke()
+							},
+						) {
+							Text("Cancel")
+						}
+						Button(
+							modifier = Modifier.weight(1f),
+							onClick = {
+								hide()
+								onSetSequence(sequence)
+								state.onDismiss?.invoke()
+							},
+						) {
+							Text("Done")
 						}
 					}
 				}
