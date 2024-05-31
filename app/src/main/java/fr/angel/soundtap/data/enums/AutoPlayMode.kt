@@ -1,20 +1,23 @@
 /*
- * Copyright 2024 Angel Studio
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  * Copyright (c) 2024 Angel Studio
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *     http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
  */
 package fr.angel.soundtap.data.enums
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
@@ -32,13 +35,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
+import fr.angel.soundtap.R
 
 enum class AutoPlayMode(
-	val title: String,
+	@StringRes val title: Int,
 	val selectedComposable: @Composable BoxScope.(selected: Boolean) -> Unit,
 ) {
 	ON_HEADSET_CONNECTED(
-		title = "On headset connected",
+		title = R.string.auto_play_mode_on_headset_connected,
 		selectedComposable = { selected ->
 			val alpha by animateFloatAsState(
 				if (selected) 1f else 0.2f,
@@ -60,7 +64,7 @@ enum class AutoPlayMode(
 		},
 	),
 	ON_DOUBLE_VOLUME_LONG_PRESS(
-		title = "On double volume long press",
+		title = R.string.auto_play_mode_on_double_volume_long_press,
 		selectedComposable = { selected ->
 			val alpha by animateFloatAsState(
 				if (selected) 1f else 0.2f,
@@ -82,7 +86,7 @@ enum class AutoPlayMode(
 		},
 	),
 	BOTH(
-		title = "Both",
+		title = R.string.auto_play_mode_both,
 		selectedComposable = { selected ->
 			val alpha by animateFloatAsState(
 				if (selected) 1f else 0.2f,

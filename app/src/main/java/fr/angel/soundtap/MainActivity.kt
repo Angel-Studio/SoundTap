@@ -59,6 +59,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -164,7 +165,7 @@ class MainActivity : ComponentActivity() {
 											horizontal = 16.dp,
 											vertical = 8.dp,
 										),
-									text = "SoundTap",
+									text = stringResource(id = R.string.app_name).uppercase(),
 									style = MaterialTheme.typography.displayMedium,
 									fontFamily = FontPilowlava,
 									fontWeight = FontWeight.ExtraBold,

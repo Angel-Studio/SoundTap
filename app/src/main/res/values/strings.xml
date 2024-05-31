@@ -1,5 +1,160 @@
+<!--
+  ~ /*
+  ~  * Copyright (c) 2024 Angel Studio
+  ~  *
+  ~  * Licensed under the Apache License, Version 2.0 (the "License");
+  ~  * you may not use this file except in compliance with the License.
+  ~  * You may obtain a copy of the License at
+  ~  *
+  ~  *     http://www.apache.org/licenses/LICENSE-2.0
+  ~  *
+  ~  * Unless required by applicable law or agreed to in writing, software
+  ~  * distributed under the License is distributed on an "AS IS" BASIS,
+  ~  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  * See the License for the specific language governing permissions and
+  ~  * limitations under the License.
+  ~  */
+  -->
+
 <resources>
-	<string name="app_name">SoundTap</string>
-	<string name="accessibility_service_label">SoundTap</string>
+	<string name="app_name" translatable="false">SoundTap</string>
 	<string name="accessibility_service_description">SoundTap uses the accessibility service to receive events of the volume buttons getting pressed.\n\nNo data other than volume buttons events is collected.</string>
+
+	<!-- General -->
+	<string name="previous">Previous</string>
+	<string name="start">Start</string>
+	<string name="finish">Finish</string>
+	<string name="next">Next</string>
+	<string name="decline">Decline</string>
+	<string name="agree_continue">Agree &amp; Continue</string>
+	<string name="change">Change</string>
+	<string name="sequence">Sequence</string>
+	<string name="edit">Edit</string>
+	<string name="remove">Remove</string>
+	<string name="cancel">Cancel</string>
+	<string name="done">Done</string>
+	<string name="save">Save</string>
+	<string name="sleep">SLEEP</string>
+	<string name="awake">AWAKE</string>
+	<string name="start_player">Start media player</string>
+	<string name="pause">Pause</string>
+	<string name="stop">Stop</string>
+
+	<!-- On-Boarding -->
+	<string name="onboarding_welcome_message">Welcome to SoundTap</string>
+	<string name="onboarding_welcome_description">SoundTap is your ultimate companion for controlling your music playback effortlessly.\n\nWith intuitive volume button controls, customizable settings, and seamless integration with your favorite media players, SoundTap makes managing your music a breeze.\n\nJoin us on this journey to enhance your music listening experience!</string>
+	<string name="onboarding_accept_privacy_policy">I have read and agree to the </string>
+	<string name="onboarding_privacy_policy_link">privacy policy</string>
+	<string name="onboarding_and"> and the </string>
+	<string name="onboarding_terms_of_service_link">terms of service</string>
+	<string name="onboarding_notification_access">Access Media Controls</string>
+	<string name="onboarding_notification_access_description">SoundTap requires access to your notifications to detect media playback and control your music. The app does not collect any personal data or information.\n\nThis permission is necessary for SoundTap to function properly. Please enable the Notifications access permission to continue.\n\nTo enable the permission, tap the button below and enable SoundTap from the list.</string>
+	<string name="onboarding_open_notification_settings">Open Notification Access Settings</string>
+	<string name="onboarding_background_optimization">Battery Optimization</string>
+	<string name="onboarding_background_optimization_description">SoundTap runs in the background to provide you with seamless music playback controls. To ensure that SoundTap works reliably, please disable battery optimization for the app.\n\nThis will prevent the system from killing SoundTap in the background and ensure that you can control your music playback at all times.\n\nTo disable battery optimization, tap the button below and select \'Don\'t optimize\' for SoundTap.</string>
+	<string name="onboarding_open_battery_optimization">Disable Battery Optimization</string>
+	<string name="onboarding_notifications">Notifications Access</string>
+	<string name="onboarding_notifications_description">SoundTap will post notifications for diverse purposes, such as for the sleep timer.\n\nTo ensure that SoundTap functions correctly, please grant the app access to your notifications.\n\nTo enable the Notifications access permission, tap the button below and enable SoundTap from the list.\n\nIf you have denied the permission previously, you can enable it from the app settings.</string>
+	<string name="onboarding_accessibility_service">Accessibility Service</string>
+	<string name="onboarding_accessibility_service_description">SoundTap requires the Accessibility Service permission to detect volume button presses and control your music playback.\n\nThe Accessibility Service only allows SoundTap to detect volume button presses and does not collect any other personal data or information. It does NOT read the screen.\n\nTo enable the Accessibility Service, tap the button below and enable SoundTap from the list.</string>
+	<string name="onboarding_open_accessibility_settings">Open Accessibility Settings</string>
+	<string name="onboarding_done">All Set!</string>
+	<string name="onboarding_done_description">Congratulations! You\'re all set to start using SoundTap.\n\nTo get started, press the volume up and down buttons simultaneously to toggle the music playback.\n\nIf you have any questions or need help, feel free to reach out to us.</string>
+	<string name="onboarding_done_bottom_content">Happy listening!</string>
+	<string name="onboarding_accessibility_service_usage">Accessibility Service Usage</string>
+	<string name="onboarding_personal_sensitive_data">Personal and Sensitive User Data:</string>
+	<string name="onboarding_personal_sensitive_data_description">SoundTap uses the accessibility service to register volume button click events only. This allows you to control your music playback using volume buttons without unlocking your phone or switching apps. No personal or sensitive user data is collected, stored, or shared.</string>
+	<string name="onboarding_core_functionality">Core Functionality:</string>
+	<string name="onboarding_core_functionality_description">To function properly, SoundTap requires accessibility permission to detect volume button presses. This permission is necessary for the core functionality of the app and ensures that you can seamlessly control your music playback. By granting this permission, you acknowledge and consent to its use for this purpose only.</string>
+	<string name="onboarding_data_security_privacy">Data Security &amp; Privacy:</string>
+	<string name="onboarding_data_security_privacy_description">SoundTap strictly uses the accessibility service for registering volume button events and does not access, collect, or transmit any personal or sensitive data. Your privacy is our top priority.\n\nSoundTap does not collect or share any personal data or information through the accessibility service. All operations are conducted locally on your device, ensuring your data remains secure and private.\n\nFor more information, please refer to our Privacy Policy.</string>
+	<string name="onboarding_accessibility_service_usage_consent">By enabling the accessibility service for SoundTap, you consent to the app using this service solely for detecting volume button events to control media playback. You can disable this permission at any time through your device\'s accessibility settings.</string>
+
+	<!-- App -->
+	<string name="app_take_control">Take Control of Your Music</string>
+	<string name="app_notification_listener_permission">Notification Listener Permission</string>
+	<string name="app_notification_listener_permission_description">SoundTap needs the Notification Listener permission to receive media information and control your music. Please enable it by pressing the button at the bottom of the screen.</string>
+	<string name="app_accessibility_service">Accessibility Service</string>
+	<string name="app_accessibility_service_description">SoundTap needs the Accessibility Service to receive volume key events. Please enable it by pressing the button at the bottom of the screen.</string>
+	<string name="app_customize">Customize</string>
+	<string name="app_settings">Settings</string>
+	<string name="app_history">History</string>
+	<string name="app_support">Support</string>
+	<string name="app_sleep_timer">Sleep Timer</string>
+	<string name="app_music_will_stop">Music will stop in %1$s</string>
+	<string name="app_cancel_timer">Cancel Timer</string>
+	<string name="app_set_timer">Set Timer</string>
+
+	<!-- History -->
+	<string name="history_title">History</string>
+	<string name="history_no_history">No history</string>
+	<string name="history_your_history_and_stats_will_be_displayed_here">Your history and stats will be displayed here</string>
+	<string name="history_total_songs_played">Total songs played</string>
+	<string name="history_total_songs_skipped">Total songs skipped</string>
+
+	<!-- Settings -->
+	<string name="settings_title">Settings</string>
+	<string name="settings_add_quick_tile">Add quick tile</string>
+	<string name="settings_add_quick_tile_subtitle">Add a tile to the quick settings panel to quickly access SoundTap</string>
+	<string name="settings_notifications">Notifications settings</string>
+	<string name="settings_notifications_subtitle">Configure the notifications that SoundTap should show</string>
+	<string name="settings_supported_players">Supported players</string>
+	<string name="settings_supported_players_subtitle">Select the players you want to control with SoundTap</string>
+	<string name="settings_preferred_player">Preferred player</string>
+	<string name="settings_preferred_player_subtitle">Select the preferred player that SoundTap should control by default</string>
+
+	<!-- Support -->
+	<string name="support_title">Support</string>
+	<string name="support_report_bug_feature">Report a Bug or Suggest a Feature</string>
+	<string name="support_report_bug_feature_description">Report a bug or issue with the app or suggest a feature that you would like to see</string>
+	<string name="support_view_github">View on GitHub</string>
+	<string name="support_view_github_description">View the source code and contribute to the project</string>
+	<string name="support_discord_server">Discord Server</string>
+	<string name="support_discord_server_description">Join the community and get support</string>
+	<string name="support_privacy_policy">Privacy Policy</string>
+	<string name="support_privacy_policy_description">Read the privacy policy of the app</string>
+	<string name="support_terms_of_service">Terms of Service</string>
+	<string name="support_terms_of_service_description">Read the terms of service of the app</string>
+
+	<!-- Customization -->
+	<string name="customization_title">Customization</string>
+	<string name="customization_customize_controls">Customize controls</string>
+	<string name="customization_customize_controls_subtitle">Change the behavior of the volume buttons as you like.</string>
+	<string name="customization_working_mode">Working mode</string>
+	<string name="customization_working_mode_subtitle">Select when the skipping action should be available.</string>
+	<string name="customization_haptic_feedback">Haptic feedback</string>
+	<string name="customization_haptic_feedback_subtitle">Vibrate when an action is performed.</string>
+	<string name="customization_long_press_duration">Long press duration - %1$s ms</string>
+	<string name="customization_long_press_duration_subtitle">Set the duration for a long press action.</string>
+	<string name="customization_auto_play">Auto play</string>
+	<string name="customization_auto_play_subtitle">Automatically resume your selected favorite media player music when you connect your headphones.</string>
+	<string name="customization_set_preferred_media_player">Set preferred media player</string>
+	<string name="customization_custom_actions">Custom actions</string>
+	<string name="customization_add_custom_action">Add custom action</string>
+
+	<!-- Bottom Sheet -->
+	<string name="custom_control_media_action_sequence_description">Create a sequence of hardware button events to trigger the action</string>
+	<string name="custom_control_media_action_sequence_current">The current sequence is:</string>
+	<string name="custom_control_media_action_sequence_empty">No events in the sequence</string>
+
+	<!-- Auto Play -->
+	<string name="auto_play_mode_on_headset_connected">On headset connected</string>
+	<string name="auto_play_mode_on_double_volume_long_press">On double volume long press</string>
+	<string name="auto_play_mode_both">Both</string>
+
+	<!-- Working Mode -->
+	<string name="working_mode_screen_on_off">Screen ON and OFF</string>
+	<string name="working_mode_screen_on">Screen ON</string>
+	<string name="working_mode_screen_off">Screen OFF</string>
+
+	<!-- Haptic Feedback -->
+	<string name="haptic_feedback_none">None</string>
+	<string name="haptic_feedback_light">Light</string>
+	<string name="haptic_feedback_medium">Medium</string>
+	<string name="haptic_feedback_strong">Strong</string>
+
+	<!-- Sleep Timer -->
+	<string name="app_sleep_timer_message">Music will stop when the timer ends.</string>
+	<string name="app_sleep_timer_add_time_15_min">Add 15 minutes</string>
+
 </resources>

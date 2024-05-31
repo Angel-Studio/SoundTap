@@ -75,6 +75,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -144,7 +145,7 @@ fun SharedTransitionScope.SettingsScreen(
 				)
 
 				Text(
-					text = "Settings",
+					text = stringResource(id = R.string.settings_title),
 					style = MaterialTheme.typography.titleLarge,
 					fontWeight = FontWeight.Bold,
 					modifier =
@@ -173,8 +174,8 @@ fun SharedTransitionScope.SettingsScreen(
 						exit = fadeOut() + shrinkVertically(),
 					) {
 						SettingsItem(
-							title = "Add quick tile",
-							subtitle = "Add a tile to the quick settings panel to quickly access SoundTap",
+							title = stringResource(id = R.string.settings_add_quick_tile),
+							subtitle = stringResource(id = R.string.settings_add_quick_tile_subtitle),
 							icon = Icons.Rounded.GridView,
 							onClick = {
 								if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return@SettingsItem
@@ -203,8 +204,8 @@ fun SharedTransitionScope.SettingsScreen(
 
 				item {
 					SettingsItem(
-						title = "Notifications settings",
-						subtitle = "Configure the notifications that SoundTap should show",
+						title = stringResource(id = R.string.settings_notifications),
+						subtitle = stringResource(id = R.string.settings_notifications_subtitle),
 						icon = Icons.Rounded.NotificationsNone,
 						onClick = {
 							GlobalHelper.openNotificationSettings(context)
@@ -219,8 +220,8 @@ fun SharedTransitionScope.SettingsScreen(
 						)
 					}
 					SettingsItemCustomBottom(
-						title = "Supported players",
-						subtitle = "Select the players you want to control with SoundTap",
+						title = stringResource(id = R.string.settings_supported_players),
+						subtitle = stringResource(id = R.string.settings_supported_players_subtitle),
 						icon = Icons.Rounded.Radio,
 						expanded = supportedMediaPlayersExpanded,
 						onClick = {
@@ -277,8 +278,8 @@ fun SharedTransitionScope.SettingsScreen(
 						)
 					}
 					SettingsItemCustomBottom(
-						title = "Preferred player",
-						subtitle = "Select the preferred player that SoundTap should control by default",
+						title = stringResource(id = R.string.settings_preferred_player),
+						subtitle = stringResource(id = R.string.settings_preferred_player_subtitle),
 						icon = Icons.Rounded.StarBorder,
 						expanded = preferredMediaPlayerExpanded,
 						onClick = {

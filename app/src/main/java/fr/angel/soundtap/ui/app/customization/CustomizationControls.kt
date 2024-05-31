@@ -46,10 +46,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.angel.soundtap.MainViewModel
+import fr.angel.soundtap.R
 import fr.angel.soundtap.data.settings.customization.ControlMediaAction
 import fr.angel.soundtap.data.settings.customization.CustomControlMediaAction
 import fr.angel.soundtap.ui.components.settings.SettingsItemCustomBottom
@@ -105,7 +107,7 @@ fun CustomizationControls(
 					color = MaterialTheme.colorScheme.onSurfaceVariant,
 				)
 				Text(
-					text = "CUSTOM ACTIONS",
+					text = stringResource(R.string.customization_custom_actions).uppercase(),
 					fontWeight = FontWeight.Bold,
 					style = MaterialTheme.typography.titleMedium,
 				)
@@ -124,7 +126,7 @@ fun CustomizationControls(
 				onClick = { mainViewModel.addCustomControlMediaAction() },
 				shape = MaterialTheme.shapes.medium,
 			) {
-				Text(text = "Add custom action")
+				Text(text = stringResource(R.string.customization_add_custom_action))
 			}
 		}
 		items(uiState.customizationSettings.customMediaActions, key = { it.id }) { controlMediaAction ->
@@ -182,7 +184,7 @@ private fun ControlCard(
 				Button(
 					onClick = onActionChange,
 				) {
-					Text(text = "Change")
+					Text(text = stringResource(R.string.change))
 				}
 			}
 		},
@@ -233,7 +235,7 @@ private fun CustomControlCard(
 				Button(
 					onClick = onActionChange,
 				) {
-					Text(text = "Change")
+					Text(text = stringResource(R.string.change))
 				}
 			}
 			Row(
@@ -251,7 +253,7 @@ private fun CustomControlCard(
 					contentDescription = null,
 				)
 				Text(
-					text = "Sequence",
+					text = stringResource(R.string.sequence),
 					modifier = Modifier.weight(1f),
 					fontWeight = FontWeight.Bold,
 				)
@@ -259,7 +261,7 @@ private fun CustomControlCard(
 				Button(
 					onClick = onSequenceChange,
 				) {
-					Text(text = "Edit")
+					Text(text = stringResource(R.string.edit))
 				}
 			}
 			FilledTonalButton(
@@ -267,7 +269,7 @@ private fun CustomControlCard(
 				onClick = onRemove,
 				shape = MaterialTheme.shapes.medium,
 			) {
-				Text(text = "Remove")
+				Text(text = stringResource(R.string.remove))
 			}
 		},
 	)

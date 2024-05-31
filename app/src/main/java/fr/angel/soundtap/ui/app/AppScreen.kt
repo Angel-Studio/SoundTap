@@ -31,7 +31,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -55,12 +54,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.angel.soundtap.GlobalHelper
 import fr.angel.soundtap.MainViewModel
+import fr.angel.soundtap.R
 import fr.angel.soundtap.data.models.BottomSheetState
 import fr.angel.soundtap.service.SleepTimerService
 import fr.angel.soundtap.service.SoundTapAccessibilityService
@@ -107,7 +108,7 @@ fun SharedTransitionScope.App(
 				Modifier
 					.align(Alignment.CenterHorizontally)
 					.padding(horizontal = 8.dp),
-			text = "Take Control of Your Music",
+			text = stringResource(id = R.string.app_take_control),
 			style = MaterialTheme.typography.labelLarge,
 			fontWeight = FontWeight.SemiBold,
 			textAlign = TextAlign.Center,
@@ -123,10 +124,8 @@ fun SharedTransitionScope.App(
 							.padding(horizontal = 8.dp),
 					cardType = InfoCardType.Notification,
 					icon = Icons.Outlined.NotificationImportant,
-					title = "Notification Listener Permission",
-					body =
-						"SoundTap needs the Notification Listener permission to receive media information and control your music." +
-							" Please enable it by pressing the button at the bottom of the screen.",
+					title = stringResource(id = R.string.app_notification_listener_permission),
+					body = stringResource(id = R.string.app_notification_listener_permission_description),
 					onCardClick = {
 						GlobalHelper.openNotificationListenerSettings(context = context)
 					},
@@ -141,10 +140,8 @@ fun SharedTransitionScope.App(
 							.padding(horizontal = 8.dp),
 					cardType = InfoCardType.Accessibility,
 					icon = Icons.Outlined.SettingsAccessibility,
-					title = "Accessibility Service",
-					body =
-						"SoundTap needs the Accessibility Service to receive volume key events." +
-							" Please enable it by pressing the button at the bottom of the screen.",
+					title = stringResource(id = R.string.app_accessibility_service),
+					body = stringResource(id = R.string.app_accessibility_service_description),
 					onCardClick = {
 						GlobalHelper.openAccessibilitySettings(context = context)
 					},
@@ -171,15 +168,17 @@ fun SharedTransitionScope.App(
 		) {
 			GridCard(
 				modifier = Modifier.weight(1f),
+				animationId = "Customize",
 				icon = Icons.Default.Tune,
-				label = "Customize",
+				label = stringResource(id = R.string.app_customize),
 				animatedVisibilityScope = animatedVisibilityScope,
 				onClick = navigateToCustomization,
 			)
 			GridCard(
 				modifier = Modifier.weight(1f),
+				animationId = "Settings",
 				icon = Icons.Default.Settings,
-				label = "Settings",
+				label = stringResource(id = R.string.app_settings),
 				animatedVisibilityScope = animatedVisibilityScope,
 				onClick = navigateToSettings,
 			)
@@ -194,15 +193,17 @@ fun SharedTransitionScope.App(
 		) {
 			GridCard(
 				modifier = Modifier.weight(1f),
+				animationId = "History",
 				icon = Icons.Default.History,
-				label = "History",
+				label = stringResource(id = R.string.app_history),
 				animatedVisibilityScope = animatedVisibilityScope,
 				onClick = navigateToHistory,
 			)
 			GridCard(
 				modifier = Modifier.weight(1f),
+				animationId = "Support",
 				icon = Icons.Default.Support,
-				label = "Support",
+				label = stringResource(id = R.string.app_support),
 				animatedVisibilityScope = animatedVisibilityScope,
 				onClick = navigateToSupport,
 			)
@@ -220,17 +221,19 @@ fun SharedTransitionScope.App(
 			horizontalArrangement = Arrangement.spacedBy(8.dp),
 			verticalAlignment = Alignment.CenterVertically,
 		) {
-			Spacer(modifier = Modifier.width(8.dp))
 			Text(
+				modifier =
+					Modifier
+						.padding(start = 8.dp, end = 16.dp)
+						.weight(1f),
 				text =
 					if (SleepTimerService.isRunning) {
-						"Music will stop in ${GlobalHelper.formatTime(SleepTimerService.remainingTime)}"
+						stringResource(id = R.string.app_music_will_stop, GlobalHelper.formatTime(SleepTimerService.remainingTime))
 					} else {
-						"Sleep Timer"
+						stringResource(id = R.string.app_sleep_timer)
 					},
 				style = MaterialTheme.typography.titleMedium,
 			)
-			Spacer(modifier = Modifier.weight(1f))
 			Button(
 				shape = MaterialTheme.shapes.large,
 				colors =
@@ -257,9 +260,10 @@ fun SharedTransitionScope.App(
 					modifier = Modifier.animateContentSize(),
 					text =
 						when (SleepTimerService.isRunning) {
-							true -> "Cancel Timer"
-							false -> "Set Timer"
+							true -> stringResource(id = R.string.app_cancel_timer)
+							false -> stringResource(id = R.string.app_set_timer)
 						},
+					textAlign = TextAlign.Center,
 				)
 			}
 		}

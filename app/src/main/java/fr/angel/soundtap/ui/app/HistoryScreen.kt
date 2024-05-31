@@ -51,6 +51,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asComposeRenderEffect
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -121,7 +122,7 @@ fun SharedTransitionScope.HistoryScreen(
 				)
 
 				Text(
-					text = "History",
+					text = stringResource(id = R.string.history_title),
 					style = MaterialTheme.typography.titleLarge,
 					fontWeight = FontWeight.Bold,
 					modifier =
@@ -193,13 +194,13 @@ fun SharedTransitionScope.HistoryScreen(
 								.then(shaderModifier),
 					)
 					Text(
-						text = "No history",
+						text = stringResource(id = R.string.history_no_history),
 						modifier = Modifier.align(Alignment.CenterHorizontally),
 						style = MaterialTheme.typography.titleLarge,
 						fontWeight = FontWeight.SemiBold,
 					)
 					Text(
-						text = "Your history and stats will be displayed here",
+						text = stringResource(id = R.string.history_your_history_and_stats_will_be_displayed_here),
 						modifier = Modifier.align(Alignment.CenterHorizontally),
 						style = MaterialTheme.typography.bodyMedium,
 					)
@@ -224,7 +225,7 @@ fun SharedTransitionScope.HistoryScreen(
 								horizontalAlignment = Alignment.CenterHorizontally,
 							) {
 								Text(
-									text = "Total songs played",
+									text = stringResource(id = R.string.history_total_songs_played),
 									style = MaterialTheme.typography.labelSmall,
 								)
 								Text(
@@ -239,7 +240,7 @@ fun SharedTransitionScope.HistoryScreen(
 								horizontalAlignment = Alignment.CenterHorizontally,
 							) {
 								Text(
-									text = "Total songs skipped",
+									text = stringResource(id = R.string.history_total_songs_skipped),
 									style = MaterialTheme.typography.labelSmall,
 								)
 								Text(

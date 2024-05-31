@@ -48,9 +48,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import fr.angel.soundtap.GlobalHelper
+import fr.angel.soundtap.R
 import fr.angel.soundtap.ui.components.settings.SettingsItem
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -100,7 +102,7 @@ fun SharedTransitionScope.SupportScreen(
 				)
 
 				Text(
-					text = "Support",
+					text = stringResource(id = R.string.support_title),
 					style = MaterialTheme.typography.titleLarge,
 					fontWeight = FontWeight.Bold,
 					modifier =
@@ -125,32 +127,32 @@ fun SharedTransitionScope.SupportScreen(
 			) {
 				Spacer(modifier = Modifier.height(8.dp))
 				SettingsItem(
-					title = "Report a Bug or Suggest a Feature",
-					subtitle = "Report a bug or issue with the app or suggest a feature that you would like to see",
+					title = stringResource(id = R.string.support_report_bug_feature),
+					subtitle = stringResource(id = R.string.support_report_bug_feature_description),
 					icon = Icons.Default.BugReport,
 					onClick = { uriHandler.openUri("https://github.com/Angel-Studio/SoundTap/issues/new/choose") },
 				)
 				SettingsItem(
-					title = "View on GitHub",
-					subtitle = "View the source code and contribute to the project",
+					title = stringResource(id = R.string.support_view_github),
+					subtitle = stringResource(id = R.string.support_view_github_description),
 					icon = Icons.Default.Code,
 					onClick = { uriHandler.openUri("https://github.com/Angel-Studio/SoundTap") },
 				)
 				SettingsItem(
-					title = "Discord Server",
-					subtitle = "Join the community and get support",
+					title = stringResource(id = R.string.support_discord_server),
+					subtitle = stringResource(id = R.string.support_discord_server_description),
 					icon = Icons.Default.Groups,
 					onClick = { uriHandler.openUri("https://discord.gg/8NfBrxKs4T") },
 				)
 				SettingsItem(
-					title = "Privacy Policy",
-					subtitle = "Read the privacy policy of the app",
+					title = stringResource(id = R.string.support_privacy_policy),
+					subtitle = stringResource(id = R.string.support_privacy_policy_description),
 					icon = Icons.Default.Policy,
 					onClick = { uriHandler.openUri(GlobalHelper.PRIVACY_POLICY_URL) },
 				)
 				SettingsItem(
-					title = "Terms of Service",
-					subtitle = "Read the terms of service of the app",
+					title = stringResource(id = R.string.support_terms_of_service),
+					subtitle = stringResource(id = R.string.support_terms_of_service_description),
 					icon = Icons.Default.Gavel,
 					onClick = { uriHandler.openUri(GlobalHelper.TERMS_OF_SERVICE_URL) },
 				)

@@ -1,3 +1,21 @@
+/*
+ *
+ *  * Copyright (c) 2024 Angel Studio
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *     http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *
+ */
+
 package fr.angel.soundtap
 
 import android.app.NotificationChannel
@@ -30,7 +48,7 @@ class NotificationHelper
 					// id =
 					CHANNEL_ID_SLEEP_TIMER,
 					// name =
-					"Sleep Timer",
+					context.getString(R.string.app_sleep_timer),
 					// importance =
 					NotificationManager.IMPORTANCE_MIN,
 				)
@@ -40,8 +58,8 @@ class NotificationHelper
 		fun showSleepTimerNotification(millisUntilFinished: Long) {
 			val notification =
 				NotificationCompat.Builder(context, CHANNEL_ID_SLEEP_TIMER)
-					.setContentTitle("Sleep Timer")
-					.setContentText("Music will stop when the timer ends.")
+					.setContentTitle(context.getString(R.string.app_sleep_timer))
+					.setContentText(context.getString(R.string.app_sleep_timer_message))
 					.setSilent(true)
 					.setOngoing(true)
 					.setUsesChronometer(true)
@@ -54,14 +72,14 @@ class NotificationHelper
 						// icon =
 						R.drawable.twotone_stop_circle_24,
 						// title =
-						"Stop",
+						context.getString(R.string.stop),
 						// intent =
 						GlobalHelper.createStopSleepTimerIntent(context),
 					).addAction(
 						// icon =
 						R.drawable.twotone_more_time_24,
 						// title =
-						"Add 15 minutes",
+						context.getString(R.string.app_sleep_timer_add_time_15_min),
 						// intent =
 						GlobalHelper.createAddTimeSleepTimerIntent(context, 15 * 60 * 1000),
 					).setContentIntent(GlobalHelper.createNotificationOpenAppIntent(context))

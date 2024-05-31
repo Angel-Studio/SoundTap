@@ -21,7 +21,6 @@ package fr.angel.soundtap.ui.app.customization
 import android.graphics.RenderEffect
 import android.graphics.RuntimeShader
 import android.os.Build
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.withInfiniteAnimationFrameMillis
@@ -81,10 +80,12 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.angel.soundtap.MainViewModel
+import fr.angel.soundtap.R
 import fr.angel.soundtap.VibratorHelper
 import fr.angel.soundtap.animations.PERLIN_NOISE
 import fr.angel.soundtap.data.enums.AutoPlayMode
@@ -95,7 +96,7 @@ import fr.angel.soundtap.ui.components.settings.SettingsItemCustomBottom
 import kotlin.math.roundToInt
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomizationHome(
 	modifier: Modifier = Modifier,
@@ -123,8 +124,8 @@ fun CustomizationHome(
 	) {
 		item {
 			SettingsItem(
-				title = "Customize controls",
-				subtitle = "Change the behavior of the volume buttons as you like.",
+				title = stringResource(id = R.string.customization_customize_controls),
+				subtitle = stringResource(id = R.string.customization_customize_controls_subtitle),
 				icon = Icons.Rounded.ControlCamera,
 				onClick = navigateToControls,
 			)
@@ -132,8 +133,8 @@ fun CustomizationHome(
 
 		item {
 			SettingsItemCustomBottom(
-				title = "Working mode",
-				subtitle = "Select when the skipping action should be available.",
+				title = stringResource(id = R.string.customization_working_mode),
+				subtitle = stringResource(id = R.string.customization_working_mode_subtitle),
 				icon = Icons.Default.ToggleOn,
 				content = {
 					Row(
@@ -200,7 +201,7 @@ fun CustomizationHome(
 									uiState.customizationSettings.workingMode == item,
 								)
 								Text(
-									text = item.title,
+									text = stringResource(item.title),
 									style = MaterialTheme.typography.bodyMedium,
 									modifier =
 										Modifier
@@ -215,8 +216,8 @@ fun CustomizationHome(
 		}
 		item {
 			SettingsItemCustomBottom(
-				title = "Haptic feedback",
-				subtitle = "Vibrate when an action is performed.",
+				title = stringResource(id = R.string.customization_haptic_feedback),
+				subtitle = stringResource(id = R.string.customization_haptic_feedback_subtitle),
 				icon = Icons.Default.Vibration,
 				content = {
 					Row(
@@ -343,8 +344,8 @@ fun CustomizationHome(
 		}
 		item {
 			SettingsItemCustomBottom(
-				title = "Long press duration - ${longPressDurationTempValue.roundToInt()} ms",
-				subtitle = "Set the duration for a long press action.",
+				title = stringResource(id = R.string.customization_long_press_duration, longPressDurationTempValue.roundToInt()),
+				subtitle = stringResource(id = R.string.customization_long_press_duration_subtitle),
 				icon = Icons.Default.TouchApp,
 				content = {
 					val interactionSource = remember { MutableInteractionSource() }
@@ -480,8 +481,8 @@ fun CustomizationHome(
 		}
 		item {
 			SettingsItemCustomBottom(
-				title = "Auto play",
-				subtitle = "Automatically resume your selected favorite media player music when you connect your headphones.",
+				title = stringResource(id = R.string.customization_auto_play),
+				subtitle = stringResource(id = R.string.customization_auto_play_subtitle),
 				icon = Icons.Default.PlayCircleOutline,
 				trailing = {
 					Switch(
@@ -567,7 +568,7 @@ fun CustomizationHome(
 										uiState.customizationSettings.autoPlayMode == item,
 									)
 									Text(
-										text = item.title,
+										text = stringResource(item.title),
 										style = MaterialTheme.typography.bodyMedium,
 										modifier =
 											Modifier
@@ -590,7 +591,7 @@ fun CustomizationHome(
 									contentDescription = null,
 								)
 								Text(
-									text = "Set preferred media player",
+									text = stringResource(id = R.string.customization_set_preferred_media_player),
 									style = MaterialTheme.typography.bodyMedium,
 								)
 							}

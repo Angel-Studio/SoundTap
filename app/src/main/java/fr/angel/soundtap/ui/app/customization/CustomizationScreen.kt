@@ -45,6 +45,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -53,6 +54,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import fr.angel.soundtap.MainViewModel
+import fr.angel.soundtap.R
 import fr.angel.soundtap.navigation.Screens
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -124,7 +126,7 @@ fun SharedTransitionScope.CustomizationScreen(
 				)
 
 				Text(
-					text = "Customization",
+					text = stringResource(id = R.string.customization_title),
 					style = MaterialTheme.typography.titleLarge,
 					fontWeight = FontWeight.Bold,
 					modifier =

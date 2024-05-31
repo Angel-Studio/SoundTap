@@ -48,9 +48,11 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import fr.angel.soundtap.R
 import fr.angel.soundtap.data.settings.customization.CustomControlMediaAction
 import fr.angel.soundtap.data.settings.customization.HardwareButtonsEvent
 import fr.angel.soundtap.data.settings.customization.MediaAction
@@ -183,7 +185,7 @@ sealed class BottomSheetState(
 					verticalArrangement = Arrangement.spacedBy(16.dp),
 				) {
 					Text(
-						text = "Create a sequence of hardware button events to trigger the action",
+						text = stringResource(R.string.custom_control_media_action_sequence_description),
 						style = MaterialTheme.typography.labelMedium,
 					)
 					FlowRow(
@@ -212,7 +214,7 @@ sealed class BottomSheetState(
 					HorizontalDivider()
 
 					Text(
-						text = "The current sequence is:",
+						text = stringResource(R.string.custom_control_media_action_sequence_current),
 						style = MaterialTheme.typography.labelMedium,
 					)
 					FlowRow(
@@ -222,7 +224,7 @@ sealed class BottomSheetState(
 					) {
 						if (sequence.isEmpty()) {
 							Text(
-								text = "No events in the sequence",
+								text = stringResource(R.string.custom_control_media_action_sequence_empty),
 								style = MaterialTheme.typography.bodyMedium,
 								fontWeight = FontWeight.Bold,
 							)
@@ -270,7 +272,7 @@ sealed class BottomSheetState(
 								state.onDismiss?.invoke()
 							},
 						) {
-							Text("Cancel")
+							Text(stringResource(R.string.cancel))
 						}
 						Button(
 							modifier = Modifier.weight(1f),
@@ -280,7 +282,7 @@ sealed class BottomSheetState(
 								state.onDismiss?.invoke()
 							},
 						) {
-							Text("Done")
+							Text(stringResource(R.string.save))
 						}
 					}
 				}

@@ -56,6 +56,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -121,13 +122,10 @@ fun OnboardingScreen(
 	val onboardingPages: List<OnboardingPage> =
 		listOf(
 			OnboardingPage(
-				title = "Welcome to SoundTap",
+				title = stringResource(id = R.string.onboarding_welcome_message),
 				description =
 					AnnotatedString(
-						"SoundTap is your ultimate companion for controlling your music playback effortlessly." +
-							"\n\nWith intuitive volume button controls, customizable settings, and seamless integration" +
-							" with your favorite media players, SoundTap makes managing your music a breeze." +
-							"\n\nJoin us on this journey to enhance your music listening experience!",
+						stringResource(R.string.onboarding_welcome_description),
 					),
 				nextButtonEnabled = hasAcceptedPrivacyPolicy,
 				animationImage = R.raw.welcome_music,
@@ -143,7 +141,7 @@ fun OnboardingScreen(
 						Text(
 							text =
 								buildAnnotatedString {
-									append("I have read and agree to the ")
+									append(stringResource(R.string.onboarding_accept_privacy_policy))
 
 									withLink(link = LinkAnnotation.Url(GlobalHelper.PRIVACY_POLICY_URL)) {
 										withStyle(
@@ -153,11 +151,11 @@ fun OnboardingScreen(
 													fontWeight = FontWeight.Bold,
 												),
 										) {
-											append("privacy policy")
+											append(stringResource(R.string.onboarding_privacy_policy_link))
 										}
 									}
 
-									append(" and the ")
+									append(stringResource(R.string.onboarding_and))
 
 									withLink(link = LinkAnnotation.Url(GlobalHelper.TERMS_OF_SERVICE_URL)) {
 										withStyle(
@@ -167,7 +165,7 @@ fun OnboardingScreen(
 													fontWeight = FontWeight.Bold,
 												),
 										) {
-											append("terms of service")
+											append(stringResource(R.string.onboarding_terms_of_service_link))
 										}
 									}
 
@@ -180,58 +178,48 @@ fun OnboardingScreen(
 				},
 			),
 			OnboardingPage(
-				title = "Access Media Controls",
+				title = stringResource(id = R.string.onboarding_notification_access),
 				description =
 					AnnotatedString(
-						"SoundTap requires access to your notifications to detect media playback and control your music." +
-							"The app does not collect any personal data or information." +
-							"\n\nThis permission is necessary for SoundTap to function properly. Please enable the Notifications access permission to continue." +
-							"\n\nTo enable the permission, tap the button below and enable SoundTap from the list.",
+						stringResource(R.string.onboarding_notification_access_description),
 					),
 				nextButtonEnabled = uiState.hasNotificationListenerPermission,
 				animationImage = R.raw.music_player,
-				actionButtonLabel = "Open Notification Access Settings",
+				actionButtonLabel = stringResource(id = R.string.onboarding_open_notification_settings),
 				actionButtonOnClick = { GlobalHelper.openNotificationListenerSettings(context) },
 			),
 			OnboardingPage(
-				title = "Battery Optimization",
+				title = stringResource(id = R.string.onboarding_background_optimization),
 				description =
 					AnnotatedString(
-						"SoundTap runs in the background to provide you with seamless music playback controls. To ensure that SoundTap works reliably, please disable battery optimization for the app." +
-							"\n\nThis will prevent the system from killing SoundTap in the background and ensure that you can control your music playback at all times." +
-							"\n\nTo disable battery optimization, tap the button below and select 'Don't optimize' for SoundTap.",
+						stringResource(R.string.onboarding_background_optimization_description),
 					),
 				nextButtonEnabled = uiState.isBackgroundOptimizationDisabled,
 				animationImage = R.raw.battery,
 				tintedAnimation = true,
-				actionButtonLabel = "Disable Battery Optimization",
+				actionButtonLabel = stringResource(id = R.string.onboarding_open_battery_optimization),
 				actionButtonOnClick = { GlobalHelper.requestBatteryOptimization(context) },
 			),
 			OnboardingPage(
-				title = "Notifications Access",
+				title = stringResource(id = R.string.onboarding_notifications),
 				description =
 					AnnotatedString(
-						"SoundTap will post notifications for diverse purposes, such as for the sleep timer." +
-							"\n\nTo ensure that SoundTap functions correctly, please grant the app access to your notifications." +
-							"\n\nTo enable the Notifications access permission, tap the button below and enable SoundTap from the list." +
-							"\n\nIf you have denied the permission previously, you can enable it from the app settings.",
+						stringResource(R.string.onboarding_notifications_description),
 					),
 				nextButtonEnabled = notificationsPermissionState.status.isGranted,
 				animationImage = R.raw.notifications,
-				actionButtonLabel = "Grant Notifications Access",
+				actionButtonLabel = stringResource(id = R.string.onboarding_open_notification_settings),
 				actionButtonOnClick = { notificationsPermissionState.launchPermissionRequest() },
 			),
 			OnboardingPage(
-				title = "Accessibility Service",
+				title = stringResource(id = R.string.onboarding_accessibility_service),
 				description =
 					AnnotatedString(
-						"SoundTap requires the Accessibility Service permission to detect volume button presses and control your music playback." +
-							"\n\nThe Accessibility Service only allows SoundTap to detect volume button presses and does not collect any other personal data or information. It does NOT read the screen." +
-							"\n\nTo enable the Accessibility Service, tap the button below and enable SoundTap from the list.",
+						stringResource(R.string.onboarding_accessibility_service_description),
 					),
 				nextButtonEnabled = accessibilityServiceUiState.isRunning && hasAcceptedAccessibilityServiceConditions,
 				animationImage = R.raw.empty,
-				actionButtonLabel = "Open Accessibility Settings",
+				actionButtonLabel = stringResource(id = R.string.onboarding_open_accessibility_settings),
 				actionButtonOnClick = {
 					if (hasAcceptedAccessibilityServiceConditions.not()) {
 						showBottomSheet = true
@@ -241,18 +229,16 @@ fun OnboardingScreen(
 				},
 			),
 			OnboardingPage(
-				title = "All Set!",
+				title = stringResource(id = R.string.onboarding_done),
 				description =
 					AnnotatedString(
-						"Congratulations! You're all set to start using SoundTap." +
-							"\n\nTo get started, press the volume up and down buttons simultaneously to toggle the music playback." +
-							"\n\nIf you have any questions or need help, feel free to reach out to us.",
+						stringResource(R.string.onboarding_done_description),
 					),
 				animationImage = R.raw.confetti,
 				bottomContent = {
 					Spacer(modifier = Modifier.weight(1f))
 					Text(
-						text = "Happy listening!",
+						text = stringResource(id = R.string.onboarding_done_bottom_content),
 						style = MaterialTheme.typography.bodyMedium,
 					)
 					Spacer(modifier = Modifier.weight(1f))
@@ -262,9 +248,10 @@ fun OnboardingScreen(
 
 	var currentPage by rememberSaveable { mutableIntStateOf(0) }
 
+	val accessibilityTitle = stringResource(id = R.string.onboarding_accessibility_service)
 	LaunchedEffect(key1 = currentPage) {
 		if (hasAcceptedAccessibilityServiceConditions.not() &&
-			currentPage == onboardingPages.indexOfLast { it.title == "Accessibility Service" }
+			currentPage == onboardingPages.indexOfLast { it.title == accessibilityTitle }
 		) {
 			showBottomSheet = true
 		}
@@ -306,7 +293,7 @@ fun OnboardingScreen(
 					TextButton(
 						onClick = { currentPage = (currentPage - 1).coerceAtLeast(0) },
 					) {
-						Text("Previous")
+						Text(stringResource(id = R.string.previous))
 					}
 				}
 
@@ -326,9 +313,9 @@ fun OnboardingScreen(
 						modifier = Modifier.animateContentSize(),
 						text =
 							when (currentPage) {
-								0 -> "Start"
-								onboardingPages.size - 1 -> "Finish"
-								else -> "Next"
+								0 -> stringResource(id = R.string.start)
+								onboardingPages.size - 1 -> stringResource(id = R.string.finish)
+								else -> stringResource(id = R.string.next)
 							},
 					)
 				}
@@ -349,47 +336,45 @@ fun OnboardingScreen(
 					verticalArrangement = Arrangement.spacedBy(16.dp),
 				) {
 					Text(
-						"Accessibility Service Usage",
+						stringResource(id = R.string.onboarding_accessibility_service_usage),
 						style = MaterialTheme.typography.headlineMedium,
 					)
 
 					Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
 						Text(
-							"Personal and Sensitive User Data:",
+							stringResource(id = R.string.onboarding_personal_sensitive_data),
 							style = MaterialTheme.typography.titleSmall,
 						)
 						Text(
-							"SoundTap uses the accessibility service to register volume button click events only. This allows you to control your music playback using volume buttons without unlocking your phone or switching apps. No personal or sensitive user data is collected, stored, or shared.",
+							stringResource(id = R.string.onboarding_personal_sensitive_data_description),
 							style = MaterialTheme.typography.bodySmall,
 						)
 					}
 
 					Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
 						Text(
-							"Core Functionality:",
+							stringResource(id = R.string.onboarding_core_functionality),
 							style = MaterialTheme.typography.titleSmall,
 						)
 						Text(
-							"To function properly, SoundTap requires accessibility permission to detect volume button presses. This permission is necessary for the core functionality of the app and ensures that you can seamlessly control your music playback. By granting this permission, you acknowledge and consent to its use for this purpose only.",
+							stringResource(id = R.string.onboarding_core_functionality_description),
 							style = MaterialTheme.typography.bodySmall,
 						)
 					}
 
 					Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
 						Text(
-							"Data Security & Privacy:",
+							stringResource(id = R.string.onboarding_data_security_privacy),
 							style = MaterialTheme.typography.titleSmall,
 						)
 						Text(
-							"SoundTap strictly uses the accessibility service for registering volume button events and does not access, collect, or transmit any personal or sensitive data. Your privacy is our top priority." +
-								"\n\nSoundTap does not collect or share any personal data or information through the accessibility service. All operations are conducted locally on your device, ensuring your data remains secure and private." +
-								"\n\nFor more information, please refer to our Privacy Policy.",
+							stringResource(id = R.string.onboarding_data_security_privacy_description),
 							style = MaterialTheme.typography.bodySmall,
 						)
 					}
 
 					Text(
-						"By enabling the accessibility service for SoundTap, you consent to the app using this service solely for detecting volume button events to control media playback. You can disable this permission at any time through your device's accessibility settings.",
+						stringResource(id = R.string.onboarding_accessibility_service_usage_consent),
 						style = MaterialTheme.typography.bodySmall,
 					)
 
@@ -405,7 +390,7 @@ fun OnboardingScreen(
 								}
 							}
 						}) {
-							Text("Decline")
+							Text(stringResource(id = R.string.decline))
 						}
 						Button(onClick = {
 							hasAcceptedAccessibilityServiceConditions = true
@@ -415,7 +400,7 @@ fun OnboardingScreen(
 								}
 							}
 						}) {
-							Text("Agree & Continue")
+							Text(stringResource(id = R.string.agree_continue))
 						}
 					}
 				}

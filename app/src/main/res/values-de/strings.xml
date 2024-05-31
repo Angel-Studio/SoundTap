@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ /*
+  ~  * Copyright (c) 2024 Angel Studio
+  ~  *
+  ~  * Licensed under the Apache License, Version 2.0 (the "License");
+  ~  * you may not use this file except in compliance with the License.
+  ~  * You may obtain a copy of the License at
+  ~  *
+  ~  *     http://www.apache.org/licenses/LICENSE-2.0
+  ~  *
+  ~  * Unless required by applicable law or agreed to in writing, software
+  ~  * distributed under the License is distributed on an "AS IS" BASIS,
+  ~  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  * See the License for the specific language governing permissions and
+  ~  * limitations under the License.
+  ~  */
+  -->
+
+<resources>
+	<string name="app_name" translatable="false">SoundTap</string>
+	<string name="accessibility_service_description">SoundTap verwendet den Barrierefreiheitsdienst, um Ereignisse der Lautstärketastenbetätigung zu empfangen.\n\nEs werden keine Daten außer Ereignissen der Lautstärketasten erfasst.</string>
+
+	<!-- General -->
+	<string name="previous">Vorherige</string>
+	<string name="start">Starten</string>
+	<string name="finish">Beenden</string>
+	<string name="next">Weiter</string>
+	<string name="decline">Ablehnen</string>
+	<string name="agree_continue">Zustimmen und fortfahren</string>
+	<string name="change">Ändern</string>
+	<string name="sequence">Sequenz</string>
+	<string name="edit">Bearbeiten</string>
+	<string name="remove">Entfernen</string>
+	<string name="cancel">Abbrechen</string>
+	<string name="done">Fertig</string>
+	<string name="save">Speichern</string>
+	<string name="sleep">SCHLAFEN</string>
+	<string name="awake">WACH</string>
+	<string name="start_player">Medienplayer starten</string>
+	<string name="pause">Pause</string>
+	<string name="stop">Stoppen</string>
+
+	<!-- On-Boarding -->
+	<string name="onboarding_welcome_message">Willkommen bei SoundTap</string>
+	<string name="onboarding_welcome_description">SoundTap ist Ihr ultimativer Begleiter zur mühelosen Steuerung Ihrer Musikwiedergabe.\n\nMit intuitiven Steuertasten für die Lautstärke, anpassbaren Einstellungen und nahtloser Integration mit Ihren bevorzugten Medienplayern macht SoundTap das Verwalten Ihrer Musik zum Kinderspiel.\n\nBegleiten Sie uns auf dieser Reise, um Ihr Musikhörerlebnis zu verbessern!</string>
+	<string name="onboarding_accept_privacy_policy">Ich habe die </string>
+	<string name="onboarding_privacy_policy_link">Datenschutzrichtlinie</string>
+	<string name="onboarding_and"> und die </string>
+	<string name="onboarding_terms_of_service_link">Nutzungsbedingungen</string>
+	<string name="onboarding_notification_access">Zugriff auf Benachrichtigungen</string>
+	<string name="onboarding_notification_access_description">SoundTap benötigt Zugriff auf Ihre Benachrichtigungen, um Mediawiedergabe zu erkennen und Ihre Musik zu steuern. Die App sammelt keine persönlichen Daten oder Informationen.\n\nDiese Berechtigung ist erforderlich, damit SoundTap ordnungsgemäß funktioniert. Bitte aktivieren Sie die Berechtigung für den Zugriff auf Benachrichtigungen, um fortzufahren.\n\nUm die Berechtigung zu aktivieren, tippen Sie auf die Schaltfläche unten und aktivieren Sie SoundTap in der Liste.</string>
+	<string name="onboarding_open_notification_settings">Benachrichtigungszugriffseinstellungen öffnen</string>
+	<string name="onboarding_background_optimization">Batterieoptimierung</string>
+	<string name="onboarding_background_optimization_description">SoundTap läuft im Hintergrund, um Ihnen nahtlose Musikwiedergabesteuerungen zu bieten. Um sicherzustellen, dass SoundTap zuverlässig funktioniert, deaktivieren Sie bitte die Batterieoptimierung für die App.\n\nDadurch wird verhindert, dass das System SoundTap im Hintergrund beendet, und stellt sicher, dass Sie Ihre Musikwiedergabe jederzeit steuern können.\n\nUm die Batterieoptimierung zu deaktivieren, tippen Sie auf die Schaltfläche unten und wählen Sie \'Nicht optimieren\' für SoundTap aus.</string>
+	<string name="onboarding_open_battery_optimization">Batterieoptimierung deaktivieren</string>
+	<string name="onboarding_notifications">Benachrichtigungszugriff</string>
+	<string name="onboarding_notifications_description">SoundTap sendet Benachrichtigungen für verschiedene Zwecke, wie z. B. den Sleep-Timer.\n\nUm sicherzustellen, dass SoundTap korrekt funktioniert, gewähren Sie der App bitte Zugriff auf Ihre Benachrichtigungen.\n\nUm die Berechtigung für den Benachrichtigungszugriff zu aktivieren, tippen Sie auf die Schaltfläche unten und aktivieren Sie SoundTap in der Liste.\n\nWenn Sie die Berechtigung zuvor verweigert haben, können Sie sie in den App-Einstellungen aktivieren.</string>
+	<string name="onboarding_accessibility_service">Barrierefreiheitsdienst</string>
+	<string name="onboarding_accessibility_service_description">SoundTap benötigt die Berechtigung des Barrierefreiheitsdienstes, um die Betätigung der Lautstärketasten zu erkennen und Ihre Musikwiedergabe zu steuern.\n\nDer Barrierefreiheitsdienst ermöglicht es SoundTap nur, die Betätigung der Lautstärketasten zu erkennen, und sammelt keine anderen persönlichen Daten oder Informationen. Er liest NICHT den Bildschirm.\n\nUm den Barrierefreiheitsdienst zu aktivieren, tippen Sie auf die Schaltfläche unten und aktivieren Sie SoundTap in der Liste.</string>
+	<string name="onboarding_open_accessibility_settings">Barrierefreiheitseinstellungen öffnen</string>
+	<string name="onboarding_done">Alles erledigt!</string>
+	<string name="onboarding_done_description">Herzlichen Glückwunsch! Sie sind bereit, SoundTap zu verwenden.\n\nUm loszulegen, drücken Sie gleichzeitig die Lautstärketasten nach oben und unten, um die Musikwiedergabe umzuschalten.\n\nWenn Sie Fragen haben oder Hilfe benötigen, können Sie sich gerne an uns wenden.</string>
+	<string name="onboarding_done_bottom_content">Viel Spaß beim Hören!</string>
+	<string name="onboarding_accessibility_service_usage">Verwendung des Barrierefreiheitsdienstes</string>
+	<string name="onboarding_personal_sensitive_data">Persönliche und sensible Benutzerdaten:</string>
+	<string name="onboarding_personal_sensitive_data_description">SoundTap verwendet den Barrierefreiheitsdienst nur zum Erfassen von Ereignissen durch Drücken der Lautstärketasten. Dadurch können Sie Ihre Musikwiedergabe mit den Lautstärketasten steuern, ohne Ihr Telefon zu entsperren oder zwischen Apps zu wechseln. Es werden keine persönlichen oder sensiblen Benutzerdaten erfasst, gespeichert oder weitergegeben.</string>
+	<string name="onboarding_core_functionality">Kernfunktionen:</string>
+	<string name="onboarding_core_functionality_description">Um ordnungsgemäß zu funktionieren, benötigt SoundTap die Barrierefreiheitsberechtigung, um das Drücken der Lautstärketasten zu erkennen. Diese Berechtigung ist für die Kernfunktionalität der App erforderlich und gewährleistet, dass Sie Ihre Musikwiedergabe nahtlos steuern können. Durch Erteilen dieser Berechtigung erkennen Sie an und stimmen zu, dass sie ausschließlich zu diesem Zweck verwendet wird.</string>
+	<string name="onboarding_data_security_privacy">Datensicherheit und Datenschutz:</string>
+	<string name="onboarding_data_security_privacy_description">SoundTap verwendet ausschließlich den Barrierefreiheitsdienst zum Erfassen von Ereignissen der Lautstärketasten und greift nicht auf persönliche oder sensitive Daten zu, erfasst sie nicht und übermittelt sie nicht. Ihre Privatsphäre hat für uns oberste Priorität.\n\nSoundTap erfasst oder teilt über den Barrierefreiheitsdienst keine persönlichen Daten oder Informationen. Alle Operationen werden lokal auf Ihrem Gerät durchgeführt, um sicherzustellen, dass Ihre Daten sicher und privat bleiben.\n\nFür weitere Informationen lesen Sie bitte unsere Datenschutzrichtlinie.</string>
+	<string name="onboarding_accessibility_service_usage_consent">Durch Aktivieren des Barrierefreiheitsdienstes für SoundTap stimmen Sie zu, dass die App diesen Dienst ausschließlich zur Erkennung von Ereignissen der Lautstärketasten zur Steuerung der Medienwiedergabe verwendet. Sie können diese Berechtigung jederzeit über die Barrierefreiheitseinstellungen Ihres Geräts deaktivieren.</string>
+
+	<!-- App -->
+	<string name="app_take_control">Übernehmen Sie die Kontrolle über Ihre Musik</string>
+	<string name="app_notification_listener_permission">Berechtigung zum Abhören von Benachrichtigungen</string>
+	<string name="app_notification_listener_permission_description">SoundTap benötigt die Berechtigung zum Abhören von Benachrichtigungen, um Mediainformationen zu empfangen und Ihre Musik zu steuern. Bitte aktivieren Sie sie, indem Sie auf die Schaltfläche am unteren Bildschirmrand drücken.</string>
+	<string name="app_accessibility_service">Barrierefreiheitsdienst</string>
+	<string name="app_accessibility_service_description">SoundTap benötigt den Barrierefreiheitsdienst, um Ereignisse der Lautstärketasten zu empfangen. Bitte aktivieren Sie ihn, indem Sie auf die Schaltfläche am unteren Bildschirmrand drücken.</string>
+	<string name="app_customize">Anpassen</string>
+	<string name="app_settings">Einstellungen</string>
+	<string name="app_history">Verlauf</string>
+	<string name="app_support">Support</string>
+	<string name="app_sleep_timer">Schlaf-Timer</string>
+	<string name="app_music_will_stop">Musik wird in %1$s stoppen</string>
+	<string name="app_cancel_timer">Timer abbrechen</string>
+	<string name="app_set_timer">Timer einstellen</string>
+
+	<!-- History -->
+	<string name="history_title">Verlauf</string>
+	<string name="history_no_history">Kein Verlauf</string>
+	<string name="history_your_history_and_stats_will_be_displayed_here">Ihr Verlauf und Ihre Statistiken werden hier angezeigt</string>
+	<string name="history_total_songs_played">Gespielte Gesamtsongs</string>
+	<string name="history_total_songs_skipped">Gesamtsongs übersprungen</string>
+
+	<!-- Settings -->
+	<string name="settings_title">Einstellungen</string>
+	<string name="settings_add_quick_tile">Schnellzugriffs-Schaltfläche hinzufügen</string>
+	<string name="settings_add_quick_tile_subtitle">Fügen Sie eine Schaltfläche zum Schnellzugriffspanel hinzu, um schnell auf SoundTap zuzugreifen</string>
+	<string name="settings_notifications">Benachrichtigungseinstellungen</string>
+	<string name="settings_notifications_subtitle">Konfigurieren Sie die Benachrichtigungen, die SoundTap anzeigen soll</string>
+	<string name="settings_supported_players">Unterstützte Player</string>
+	<string name="settings_supported_players_subtitle">Wählen Sie die Player aus, die Sie mit SoundTap steuern möchten</string>
+	<string name="settings_preferred_player">Bevorzugter Player</string>
+	<string name="settings_preferred_player_subtitle">Wählen Sie den bevorzugten Player aus, den SoundTap standardmäßig steuern soll</string>
+
+	<!-- Support -->
+	<string name="support_title">Support</string>
+	<string name="support_report_bug_feature">Fehler melden oder Funktion vorschlagen</string>
+	<string name="support_report_bug_feature_description">Melden Sie einen Fehler oder ein Problem mit der App oder schlagen Sie eine Funktion vor, die Sie gerne sehen würden</string>
+	<string name="support_view_github">Auf GitHub anzeigen</string>
+	<string name="support_view_github_description">Sehen Sie sich den Quellcode an und tragen Sie zum Projekt bei</string>
+	<string name="support_discord_server">Discord-Server</string>
+	<string name="support_discord_server_description">Treten Sie der Community bei und erhalten Sie Unterstützung</string>
+	<string name="support_privacy_policy">Datenschutzrichtlinie</string>
+	<string name="support_privacy_policy_description">Lesen Sie die Datenschutzrichtlinie der App</string>
+	<string name="support_terms_of_service">Nutzungsbedingungen</string>
+	<string name="support_terms_of_service_description">Lesen Sie die Nutzungsbedingungen der App</string>
+
+	<!-- Customization -->
+	<string name="customization_title">Anpassung</string>
+	<string name="customization_customize_controls">Steuerungen anpassen</string>
+	<string name="customization_customize_controls_subtitle">Ändern Sie das Verhalten der Lautstärketasten nach Ihren Wünschen.</string>
+	<string name="customization_working_mode">Arbeitsmodus</string>
+	<string name="customization_working_mode_subtitle">Wählen Sie aus, wann die Übersprungaktion verfügbar sein soll.</string>
+	<string name="customization_haptic_feedback">Haptisches Feedback</string>
+	<string name="customization_haptic_feedback_subtitle">Vibrieren, wenn eine Aktion ausgeführt wird.</string>
+	<string name="customization_long_press_duration">Lange Druckdauer - %1$s ms</string>
+	<string name="customization_long_press_duration_subtitle">Legen Sie die Dauer für eine lange Druckaktion fest.</string>
+	<string name="customization_auto_play">Automatisch abspielen</string>
+	<string name="customization_auto_play_subtitle">Starten Sie automatisch die Musik Ihres ausgewählten Lieblingsmediaplayers, wenn Sie Ihre Kopfhörer anschließen.</string>
+	<string name="customization_set_preferred_media_player">Bevorzugten Mediaplayer festlegen</string>
+	<string name="customization_custom_actions">Benutzerdefinierte Aktionen</string>
+	<string name="customization_add_custom_action">Benutzerdefinierte Aktion hinzufügen</string>
+	<!-- Bottom Sheet -->
+	<string name="custom_control_media_action_sequence_description">Erstellen Sie eine Sequenz von Hardware-Tastenereignissen, um die Aktion auszulösen</string>
+	<string name="custom_control_media_action_sequence_current">Die aktuelle Sequenz lautet:</string>
+	<string name="custom_control_media_action_sequence_empty">Keine Ereignisse in der Sequenz</string>
+
+	<!-- Auto Play -->
+	<string name="auto_play_mode_on_headset_connected">Bei Anschluss des Headsets</string>
+	<string name="auto_play_mode_on_double_volume_long_press">Bei doppeltem Drücken der Lautstärke lange</string>
+	<string name="auto_play_mode_both">Beide</string>
+
+	<!-- Working Mode -->
+	<string name="working_mode_screen_on_off">Bildschirm an und aus</string>
+	<string name="working_mode_screen_on">Bildschirm an</string>
+	<string name="working_mode_screen_off">Bildschirm aus</string>
+
+	<!-- Haptic Feedback -->
+	<string name="haptic_feedback_none">Kein</string>
+	<string name="haptic_feedback_light">Leicht</string>
+	<string name="haptic_feedback_medium">Mittel</string>
+	<string name="haptic_feedback_strong">Stark</string>
+
+	<!-- Sleep Timer -->
+	<string name="app_sleep_timer_message">Die Musik wird gestoppt, wenn der Timer endet.</string>
+	<string name="app_sleep_timer_add_time_15_min">15 Minuten hinzufügen</string>
+
+</resources>

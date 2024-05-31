@@ -73,6 +73,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -84,6 +85,7 @@ import coil.compose.AsyncImage
 import coil.imageLoader
 import fr.angel.soundtap.GlobalHelper
 import fr.angel.soundtap.MainViewModel
+import fr.angel.soundtap.R
 import fr.angel.soundtap.data.StorageHelper
 import fr.angel.soundtap.service.media.MediaCallback
 import fr.angel.soundtap.service.media.MediaReceiver
@@ -206,7 +208,7 @@ fun EmptyPlayerCard(
 							)
 						},
 					) {
-						Text(text = "Start media player")
+						Text(text = stringResource(id = R.string.start_player))
 					}
 				}
 				Spacer(modifier = Modifier.weight(1f))

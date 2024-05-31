@@ -2,9 +2,11 @@
 accompanistDrawablepainter = "0.34.0"
 accompanistPermissions = "0.34.0"
 agp = "8.4.1"
+appcompat = "1.7.0"
+appcompatResources = "1.7.0"
 coilCompose = "2.6.0"
 datastorePreferences = "1.1.1"
-firebaseBom = "33.0.0"
+firebaseBom = "33.1.0"
 gradle = "8.4.1"
 gson = "2.11.0"
 hiltAndroid = "2.51.1"
@@ -16,27 +18,28 @@ junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 kotlinxCollectionsImmutable = "0.3.7"
 kotlinxSerializationJson = "1.6.3"
-lifecycleRuntimeKtx = "2.8.0"
+lifecycleRuntimeKtx = "2.8.1"
 activityCompose = "1.9.0"
 composeBom = "2024.05.00"
 core-splashscreen = "1.0.1"
 lottieCompose = "6.4.1"
 material-icons-extended = "1.6.7"
-navigationCompose = "2.8.0-beta01"
-uiCompose = "1.7.0-beta01"
-animationCompose = "1.7.0-beta01"
-foundationCompose = "1.7.0-beta01"
+navigationCompose = "2.8.0-beta02"
+uiCompose = "1.7.0-beta02"
+animationCompose = "1.7.0-beta02"
+foundationCompose = "1.7.0-beta02"
 paletteKtx = "1.0.0"
 ksp = "1.9.24-1.0.20"
-google-services = "4.4.1"
+google-services = "4.4.2"
 firebase-crashlytics = "3.0.1"
 firebase-perfs = "1.4.2"
-lifecycleCommon = "2.8.0"
-lifecycleService = "2.8.0"
+lifecycle = "2.8.1"
 ktlint = "12.1.1"
 
 [libraries]
 accompanist-drawablepainter = { module = "com.google.accompanist:accompanist-drawablepainter", version.ref = "accompanistDrawablepainter" }
+androidx-appcompat-resources = { module = "androidx.appcompat:appcompat-resources", version.ref = "appcompatResources" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastorePreferences" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationFragment" }
@@ -75,8 +78,8 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 androidx-palette-ktx = { group = "androidx.palette", name = "palette-ktx", version.ref = "paletteKtx" }
-lifecycle-common = { group = "androidx.lifecycle", name = "lifecycle-common", version.ref = "lifecycleCommon" }
-lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycleService" }
+lifecycle-common = { group = "androidx.lifecycle", name = "lifecycle-common", version.ref = "lifecycle" }
+lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycle" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
