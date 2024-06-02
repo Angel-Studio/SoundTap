@@ -39,6 +39,7 @@
 	<string name="start_player">Medienplayer starten</string>
 	<string name="pause">Pause</string>
 	<string name="stop">Stoppen</string>
+	<string name="permission_required">Erlaubnis erforderlich</string>
 
 	<!-- On-Boarding -->
 	<string name="onboarding_welcome_message">Willkommen bei SoundTap</string>
@@ -131,6 +132,8 @@
 	<string name="customization_set_preferred_media_player">Bevorzugten Mediaplayer festlegen</string>
 	<string name="customization_custom_actions">Benutzerdefinierte Aktionen</string>
 	<string name="customization_add_custom_action">Benutzerdefinierte Aktion hinzufügen</string>
+	<string name="customization_auto_play_bluetooth_subtitle">SoundTap muss die Erlaubnis haben, Geräte in der Nähe zu erkennen, damit es erkennen kann, wenn ein Gerät mit dem Telefon verbunden ist.</string>
+
 	<!-- Bottom Sheet -->
 	<string name="custom_control_media_action_sequence_description">Erstellen Sie eine Sequenz von Hardware-Tastenereignissen, um die Aktion auszulösen</string>
 	<string name="custom_control_media_action_sequence_current">Die aktuelle Sequenz lautet:</string>

@@ -39,6 +39,7 @@
 	<string name="start_player">Start media player</string>
 	<string name="pause">Pause</string>
 	<string name="stop">Stop</string>
+	<string name="permission_required">Permission Required</string>
 
 	<!-- On-Boarding -->
 	<string name="onboarding_welcome_message">Welcome to SoundTap</string>
@@ -131,6 +132,7 @@
 	<string name="customization_set_preferred_media_player">Set preferred media player</string>
 	<string name="customization_custom_actions">Custom actions</string>
 	<string name="customization_add_custom_action">Add custom action</string>
+	<string name="customization_auto_play_bluetooth_subtitle">SoundTap needs to have nearby devices permission granted for it to be able to detect when a device is connected to the phone.</string>
 
 	<!-- Bottom Sheet -->
 	<string name="custom_control_media_action_sequence_description">Create a sequence of hardware button events to trigger the action</string>

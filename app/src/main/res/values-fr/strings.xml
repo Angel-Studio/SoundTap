@@ -38,6 +38,7 @@
 	<string name="start_player">Lancer la musique</string>
 	<string name="pause">Pause</string>
 	<string name="stop">Stop</string>
+	<string name="permission_required">Permission nécessaire</string>
 
 	<!-- On-Boarding -->
 	<string name="onboarding_welcome_message">Bienvenue sur SoundTap</string>
@@ -130,6 +131,7 @@
 	<string name="customization_set_preferred_media_player">Définir le lecteur multimédia préféré</string>
 	<string name="customization_custom_actions">Actions personnalisées</string>
 	<string name="customization_add_custom_action">Ajouter une action personnalisée</string>
+	<string name="customization_auto_play_bluetooth_subtitle">SoundTap doit pouvoir accéder aux appareils à proximité pour pouvoir détecter lorsqu\'un appareil se connecte au téléphone.</string>
 
 	<!-- Bottom Sheet -->
 	<string name="custom_control_media_action_sequence_description">Créer une séquence d\'événements de boutons matériels pour déclencher l\'action</string>
