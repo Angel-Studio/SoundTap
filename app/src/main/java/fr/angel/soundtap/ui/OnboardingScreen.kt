@@ -151,7 +151,7 @@ fun OnboardingScreen(
 													fontWeight = FontWeight.Bold,
 												),
 										) {
-											append(stringResource(R.string.onboarding_privacy_policy_link))
+											append(" ${stringResource(R.string.onboarding_privacy_policy_link)} ")
 										}
 									}
 
@@ -165,7 +165,7 @@ fun OnboardingScreen(
 													fontWeight = FontWeight.Bold,
 												),
 										) {
-											append(stringResource(R.string.onboarding_terms_of_service_link))
+											append(" ${stringResource(R.string.onboarding_terms_of_service_link)}")
 										}
 									}
 

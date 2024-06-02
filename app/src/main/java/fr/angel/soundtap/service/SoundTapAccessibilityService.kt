@@ -30,6 +30,7 @@ import fr.angel.soundtap.VibratorHelper
 import fr.angel.soundtap.data.enums.AutoPlayMode
 import fr.angel.soundtap.data.enums.HapticFeedbackLevel
 import fr.angel.soundtap.data.enums.WorkingMode
+import fr.angel.soundtap.data.enums.isOnDoubleVolumeLongPressActive
 import fr.angel.soundtap.data.enums.isOnHeadsetConnectedActive
 import fr.angel.soundtap.data.settings.customization.CustomizationSettings
 import fr.angel.soundtap.data.settings.customization.DEFAULT_DELAY_BETWEEN_EVENTS
@@ -366,13 +367,13 @@ class SoundTapAccessibilityService : AccessibilityService() {
 	}
 
 	private fun bothVolumePressed() {
-		if (MediaReceiver.firstCallback == null) {
+		if (MediaReceiver.firstCallback == null && customizationSettings.autoPlayMode.isOnDoubleVolumeLongPressActive) {
 			preferredMediaPlayer?.let {
 				vibratorHelper.doubleClick()
 				GlobalHelper.startMediaPlayer(context = this.application, packageName = it)
 			}
 		} else {
-			if (customizationSettings.doubleVolumeLongPressControlMediaAction.enabled) return
+			if (customizationSettings.doubleVolumeLongPressControlMediaAction.enabled.not()) return
 			vibratorHelper.createHapticFeedback(hapticFeedbackLevel)
 			executeAction(customizationSettings.doubleVolumeLongPressControlMediaAction.action)
 		}
@@ -388,7 +389,7 @@ class SoundTapAccessibilityService : AccessibilityService() {
 			MediaAction.REWIND -> MediaReceiver.firstCallback?.rewind()
 			MediaAction.PLAY -> MediaReceiver.firstCallback?.play()
 			MediaAction.PAUSE -> MediaReceiver.firstCallback?.pause()
-			MediaAction.NONE -> { // Do nothing
+			MediaAction.NONE -> { // Do Nothing
 			}
 		}
 	}
