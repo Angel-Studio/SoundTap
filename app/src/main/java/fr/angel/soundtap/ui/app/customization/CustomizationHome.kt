@@ -47,6 +47,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.NearbyError
 import androidx.compose.material.icons.filled.PlayCircleOutline
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.ToggleOn
@@ -84,6 +85,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import fr.angel.soundtap.MainViewModel
 import fr.angel.soundtap.R
 import fr.angel.soundtap.VibratorHelper
@@ -96,7 +100,7 @@ import fr.angel.soundtap.ui.components.settings.SettingsItemCustomBottom
 import kotlin.math.roundToInt
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun CustomizationHome(
 	modifier: Modifier = Modifier,
@@ -116,6 +120,8 @@ fun CustomizationHome(
 			longPressDurationTempValue = uiState.customizationSettings.longPressThreshold.toFloat()
 		}
 	}
+
+	val bluetoothConnectPermissionState = rememberPermissionState(android.Manifest.permission.BLUETOOTH_CONNECT)
 
 	LazyColumn(
 		modifier = modifier,
@@ -504,6 +510,18 @@ fun CustomizationHome(
 						modifier = Modifier.fillMaxWidth(),
 						verticalArrangement = Arrangement.spacedBy(8.dp),
 					) {
+						if (bluetoothConnectPermissionState.status.isGranted.not()) {
+							SettingsItem(
+								title = stringResource(id = R.string.permission_required),
+								subtitle = stringResource(id = R.string.customization_auto_play_bluetooth_subtitle),
+								icon = Icons.Default.NearbyError,
+								onClick = {
+									scope.launch {
+										bluetoothConnectPermissionState.launchPermissionRequest()
+									}
+								},
+							)
+						}
 						Row(
 							modifier = Modifier.fillMaxWidth(),
 							verticalAlignment = Alignment.CenterVertically,
