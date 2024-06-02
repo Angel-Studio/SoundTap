@@ -40,8 +40,8 @@ import fr.angel.soundtap.data.settings.customization.HardwareButtonsEvent
 import fr.angel.soundtap.data.settings.customization.MediaAction
 import fr.angel.soundtap.data.settings.customization.customizationSettingsDataStore
 import fr.angel.soundtap.service.media.MediaReceiver
+import kotlin.math.abs
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
@@ -71,7 +71,7 @@ data class AccessibilityServiceState(
 		isVolumeDownPressed && (System.currentTimeMillis() - volumeDownLastPressedTime >= longPressThreshold)
 
 	// Both volume buttons pressed
-	private val isBothVolumePressed: Boolean
+	val isBothVolumePressed: Boolean
 		get() = isVolumeUpPressed && isVolumeDownPressed
 
 	// Long press both volume buttons
@@ -83,10 +83,14 @@ data class AccessibilityServiceState(
 			)
 }
 
+data class TimedHardwareButtonsEvent(
+	val event: HardwareButtonsEvent,
+	val creationTime: Long,
+)
+
 class SoundTapAccessibilityService : AccessibilityService() {
 	private val scope by lazy { CoroutineScope(Dispatchers.IO) }
 	private val listenerScope by lazy { CoroutineScope(Dispatchers.IO) }
-	private val keySequenceTimeoutScope by lazy { CoroutineScope(Dispatchers.IO) }
 
 	private lateinit var audioManager: AudioManager
 	private lateinit var displayManager: DisplayManager
@@ -100,7 +104,8 @@ class SoundTapAccessibilityService : AccessibilityService() {
 	private var preferredMediaPlayer: String? = null
 	private var customizationSettings = CustomizationSettings()
 
-	private val keySequence = mutableListOf<HardwareButtonsEvent>()
+	private var keySequence = mutableListOf<TimedHardwareButtonsEvent>()
+	private var lastKeySequenceTime = 0L
 
 	companion object {
 		private const val TAG = "SoundTapAccessibilityService"
@@ -164,14 +169,15 @@ class SoundTapAccessibilityService : AccessibilityService() {
 
 		when (action) {
 			KeyEvent.ACTION_DOWN -> {
-				keySequenceTimeoutScope.cancel()
-
 				when (keyCode) {
 					KeyEvent.KEYCODE_VOLUME_UP -> {
-						keySequence.add(HardwareButtonsEvent.VOLUME_UP)
-						keySequenceTimeoutScope.launch(
-							start = CoroutineStart.ATOMIC,
-						) { keySequenceTimeout() }
+						keySequenceTimeout(
+							keyPressed =
+								TimedHardwareButtonsEvent(
+									event = HardwareButtonsEvent.VOLUME_UP,
+									creationTime = System.currentTimeMillis(),
+								),
+						)
 						_uiState.value =
 							_uiState.value.copy(
 								volumeUpLastPressedTime = System.currentTimeMillis(),
@@ -179,10 +185,13 @@ class SoundTapAccessibilityService : AccessibilityService() {
 					}
 
 					KeyEvent.KEYCODE_VOLUME_DOWN -> {
-						keySequence.add(HardwareButtonsEvent.VOLUME_DOWN)
-						keySequenceTimeoutScope.launch(
-							start = CoroutineStart.ATOMIC,
-						) { keySequenceTimeout() }
+						keySequenceTimeout(
+							keyPressed =
+								TimedHardwareButtonsEvent(
+									event = HardwareButtonsEvent.VOLUME_DOWN,
+									creationTime = System.currentTimeMillis(),
+								),
+						)
 						_uiState.value =
 							_uiState.value.copy(volumeDownLastPressedTime = System.currentTimeMillis())
 					}
@@ -269,14 +278,42 @@ class SoundTapAccessibilityService : AccessibilityService() {
 
 	override fun onInterrupt() {}
 
-	private suspend fun keySequenceTimeout() {
-		val keySequenceCopy = keySequence.toImmutableList()
+	private fun keySequenceTimeout(
+		keyPressed: TimedHardwareButtonsEvent,
+	) {
+		if (System.currentTimeMillis() - lastKeySequenceTime >= 1000) {
+			keySequence.clear()
+		}
+
+		lastKeySequenceTime = System.currentTimeMillis()
+		keySequence.add(keyPressed)
+
+		val keySequenceCopy =
+			keySequence.toMutableList().apply {
+				if (size >= 2) {
+					val lastEvent = last()
+					val secondLastEvent = this[size - 2]
+
+					if (setOf(lastEvent.event, secondLastEvent.event) == setOf(HardwareButtonsEvent.VOLUME_UP, HardwareButtonsEvent.VOLUME_DOWN)) {
+						val timeDifference = abs(lastEvent.creationTime - secondLastEvent.creationTime)
+						if (timeDifference < 65) {
+							// Remove the last two elements
+							removeAt(size - 1)
+							removeAt(size - 1)
+
+							// Add a new BOTH_VOLUME event
+							add(TimedHardwareButtonsEvent(HardwareButtonsEvent.BOTH_VOLUME, System.currentTimeMillis()))
+						}
+					}
+				}
+			}
+		keySequence = keySequenceCopy
 
 		// Check if the key sequence is valid
 		val customActions = customizationSettings.customMediaActions.filter { it.enabled }
 
 		customActions.forEach { customAction ->
-			if (customAction.eventsSequenceList.toImmutableList() == keySequenceCopy) {
+			if (customAction.eventsSequenceList.toImmutableList() == keySequenceCopy.map { it.event }) {
 				vibratorHelper.createHapticFeedback(hapticFeedbackLevel)
 				executeAction(customAction.action)
 
@@ -284,10 +321,6 @@ class SoundTapAccessibilityService : AccessibilityService() {
 				return
 			}
 		}
-
-		// Delay before clearing the key sequence
-		delay(1000)
-		keySequence.clear()
 	}
 
 	/**
