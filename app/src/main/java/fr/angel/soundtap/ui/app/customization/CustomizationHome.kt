@@ -520,6 +520,7 @@ fun CustomizationHome(
 										bluetoothConnectPermissionState.launchPermissionRequest()
 									}
 								},
+								backgroundColor = MaterialTheme.colorScheme.error.copy(0.1f),
 							)
 						}
 						Row(
