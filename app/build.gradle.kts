@@ -41,8 +41,8 @@ android {
 		applicationId = "fr.angel.soundtap"
 		minSdk = 30
 		targetSdk = 34
-		versionCode = 38
-		versionName = "1.1.2"
+		versionCode = 39
+		versionName = "1.1.3"
 
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 		vectorDrawables {
