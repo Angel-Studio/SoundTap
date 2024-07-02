@@ -29,7 +29,7 @@ enabling users to skip tracks, pause, and resume music playback with ease.
   simultaneously.
 - [x] **Working Mode**: Choose when the actions should be available (when screen is on, off, or
   always).
-- [ ] **Customizable Controls**: Customize which actions (skip forward, skip backward, pause,
+- [x] **Customizable Controls**: Customize which actions (skip forward, skip backward, pause,
   resume) are performed by long-pressing or double-pressing the volume buttons.
 - [x] **Widget**: Includes a widget for quick access to media playback controls directly from the
   home screen.
@@ -40,7 +40,7 @@ enabling users to skip tracks, pause, and resume music playback with ease.
 - [x] **Sleep Timer**: Set a timer to stop playback after a certain period.
 - [x] **Customizable Haptics**: Adjust the haptic feedback intensity to suit your preferences.
 - [x] **Customizable Delays**: Adjust the long-press delay to fit your preferred interaction speed.
-- [ ] **Localization**: Available in multiple languages for a global audience.
+- [x] **Localization**: Available in multiple languages for a global audience.
 - [x] **Dark Mode**: Supports both light and dark themes for a comfortable viewing experience.
 - [x] **Accessibility**: Designed with accessibility in mind to ensure a seamless user experience
   for all users.
@@ -60,9 +60,9 @@ enabling users to skip tracks, pause, and resume music playback with ease.
 ## 🌏 Languages
 
 - [x] **en-US**
-- [ ] **fr-FR**
+- [x] **fr-FR**
 - [ ] **es-ES**
-- [ ] **de-DE**
+- [x] **de-DE**
 - More languages coming soon!
 
 ## 🚀 Getting Started
