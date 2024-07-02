@@ -19,6 +19,7 @@
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 
 plugins {
+	alias(libs.plugins.compose.compiler)
 	alias(libs.plugins.kotlin.ksp)
 	alias(libs.plugins.android.application)
 
@@ -41,8 +42,8 @@ android {
 		applicationId = "fr.angel.soundtap"
 		minSdk = 30
 		targetSdk = 34
-		versionCode = 39
-		versionName = "1.1.3"
+		versionCode = 40
+		versionName = "1.1.4"
 
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 		vectorDrawables {
@@ -98,6 +99,13 @@ android {
 			excludes += "/META-INF/{AL2.0,LGPL2.1}"
 		}
 	}
+}
+
+composeCompiler {
+	enableStrongSkippingMode = true
+
+	reportsDestination = layout.buildDirectory.dir("compose_compiler")
+	// stabilityConfigurationFile = rootProject.layout.projectDirectory.file("stability_config.conf")
 }
 
 dependencies {

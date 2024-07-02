@@ -17,7 +17,6 @@
   -->
 
 <resources>
-	<string name="app_name" translatable="false">SoundTap</string>
 	<string name="accessibility_service_description">SoundTap verwendet den Barrierefreiheitsdienst, um Ereignisse der Lautstärketastenbetätigung zu empfangen.\n\nEs werden keine Daten außer Ereignissen der Lautstärketasten erfasst.</string>
 
 	<!-- General -->
@@ -128,7 +127,7 @@
 	<string name="customization_long_press_duration">Lange Druckdauer - %1$s ms</string>
 	<string name="customization_long_press_duration_subtitle">Legen Sie die Dauer für eine lange Druckaktion fest.</string>
 	<string name="customization_auto_play">Automatisch abspielen</string>
-	<string name="customization_auto_play_subtitle">Starten Sie automatisch die Musik Ihres ausgewählten Lieblingsmediaplayers, wenn Sie Ihre Kopfhörer anschließen.</string>
+	<string name="customization_auto_play_subtitle">Versucht, die Wiedergabe Ihres bevorzugten Medienplayers automatisch fortzusetzen, wenn Sie Ihre Kopfhörer anschließen.  (Funktioniert möglicherweise nicht mit jedem Media Player)</string>
 	<string name="customization_set_preferred_media_player">Bevorzugten Mediaplayer festlegen</string>
 	<string name="customization_custom_actions">Benutzerdefinierte Aktionen</string>
 	<string name="customization_add_custom_action">Benutzerdefinierte Aktion hinzufügen</string>
@@ -158,5 +157,7 @@
 	<!-- Sleep Timer -->
 	<string name="app_sleep_timer_message">Die Musik wird gestoppt, wenn der Timer endet.</string>
 	<string name="app_sleep_timer_add_time_15_min">15 Minuten hinzufügen</string>
+	<string name="always_on_display_warning_title">Probleme bei ausgeschaltetem Bildschirm</string>
+	<string name="always_on_display_warning_description">Ab Android 12 muss aufgrund eines Fehlers in Android die Option Always On Display aktiviert sein, damit die App auch bei ausgeschaltetem Bildschirm funktioniert. Ich hoffe, dass dieses Problem bald behoben wird!</string>
 
 </resources>

@@ -128,7 +128,7 @@
 	<string name="customization_long_press_duration">Long press duration - %1$s ms</string>
 	<string name="customization_long_press_duration_subtitle">Set the duration for a long press action.</string>
 	<string name="customization_auto_play">Auto play</string>
-	<string name="customization_auto_play_subtitle">Automatically resume your selected favorite media player music when you connect your headphones.</string>
+	<string name="customization_auto_play_subtitle">Automatically try to resume your selected favorite media player music when you connect your headphones. (May not work with every media player)</string>
 	<string name="customization_set_preferred_media_player">Set preferred media player</string>
 	<string name="customization_custom_actions">Custom actions</string>
 	<string name="customization_add_custom_action">Add custom action</string>
@@ -158,5 +158,7 @@
 	<!-- Sleep Timer -->
 	<string name="app_sleep_timer_message">Music will stop when the timer ends.</string>
 	<string name="app_sleep_timer_add_time_15_min">Add 15 minutes</string>
+	<string name="always_on_display_warning_title">Screen Off issues</string>
+	<string name="always_on_display_warning_description">Starting with Android 12, Always On Display needs to be enabled for the app to work when the screen turns off due to a bug in Android. Hope they fix this soon!</string>
 
 </resources>

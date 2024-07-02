@@ -1,17 +1,19 @@
 /*
- * Copyright 2024 Angel Studio
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  * Copyright (c) 2024 Angel Studio
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *     http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
  */
 package fr.angel.soundtap.service.media
 
@@ -33,6 +35,11 @@ object MediaReceiver {
 
 	val firstCallback: MediaCallback?
 		get() = callbackMap.values.firstOrNull()
+
+	fun getBetterCallback(preferredMediaPlayer: String?): MediaCallback? =
+		callbackMap.values
+			.sortedBy { it.packageName == preferredMediaPlayer }
+			.firstOrNull { it.isPlaying } ?: callbackMap.values.firstOrNull { it.isStopped.not() } ?: callbackMap.values.firstOrNull()
 
 	private fun provideListener(context: Context) =
 		MediaSessionManager.OnActiveSessionsChangedListener { mediaControllers ->
@@ -68,14 +75,14 @@ object MediaReceiver {
 	fun register(context: Context) {
 		// val dataStore = DataStore(context)
 
-        /*scope.launch {
-            dataStore.unsupportedMediaPlayers.collect { unsupportedPlayers ->
-                callbackMap.values.forEach { it.onUnsupportedPlayersChanged(unsupportedPlayers) }
+		/*scope.launch {
+			dataStore.unsupportedMediaPlayers.collect { unsupportedPlayers ->
+				callbackMap.values.forEach { it.onUnsupportedPlayersChanged(unsupportedPlayers) }
 
-                // Update the list of unsupported players
-                this@MediaReceiver.unsupportedPlayers = unsupportedPlayers
-            }
-        }*/
+				// Update the list of unsupported players
+				this@MediaReceiver.unsupportedPlayers = unsupportedPlayers
+			}
+		}*/
 
 		// Get the media session manager
 		if (!MediaReceiver::mediaSessionManager.isInitialized) {

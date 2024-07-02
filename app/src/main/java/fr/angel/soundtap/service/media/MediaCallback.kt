@@ -36,147 +36,160 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MediaCallback
-	@Inject
-	constructor(
-		private val mediaController: MediaController,
-		val onDestroyed: () -> Unit,
-		val onToggleSupportedPlayer: (Boolean) -> Unit,
-		private val statsDataStore: DataStore<StatsSettings>,
-		private val context: Context,
-	) : MediaController.Callback() {
-		private var playbackState: MutableState<PlaybackState?> = mutableStateOf(null)
-		var playingSong: Song? by mutableStateOf(null)
+@Inject
+constructor(
+	private val mediaController: MediaController,
+	val onDestroyed: () -> Unit,
+	val onToggleSupportedPlayer: (Boolean) -> Unit,
+	private val statsDataStore: DataStore<StatsSettings>,
+	private val context: Context,
+) : MediaController.Callback() {
+	private var playbackState: MutableState<PlaybackState?> = mutableStateOf(null)
+	var playingSong: Song? by mutableStateOf(null)
 
-		private val scope by lazy { CoroutineScope(Dispatchers.IO) }
+	private val scope by lazy { CoroutineScope(Dispatchers.IO) }
 
-		private var debounceCount = 0
+	private var debounceCount = 0
 
-		var isPlaying: Boolean
-			get() = playbackState.value?.state == PlaybackState.STATE_PLAYING
-			set(value) {
-				if (value) {
-					mediaController.transportControls.play()
-				} else {
-					mediaController.transportControls.pause()
-				}
-			}
-
-		init {
-			if (mediaController.metadata != null && mediaController.playbackState != null) {
-
-				// Set the initial values for the media controller
-				playbackState.value = mediaController.playbackState!!
-
-				updatePlayingSong()
-			}
-		}
-
-		fun skipToNext() {
-			mediaController.transportControls.skipToNext()
-			scope.launch { statsDataStore.updateData { it.incrementTotalSongsSkipped() } }
-		}
-
-		fun skipToPrevious() {
-			mediaController.transportControls.skipToPrevious()
-			scope.launch { statsDataStore.updateData { it.incrementTotalSongsSkipped() } }
-		}
-
-		fun togglePlayPause() =
-			if (isPlaying) {
-				mediaController.transportControls.pause()
-			} else {
+	val packageName: String
+		get() = mediaController.packageName
+	var isPlaying: Boolean
+		get() = playbackState.value?.state == PlaybackState.STATE_PLAYING
+		set(value) {
+			if (value) {
 				mediaController.transportControls.play()
+			} else {
+				mediaController.transportControls.pause()
 			}
-
-		fun stop() = mediaController.transportControls.stop()
-
-		override fun onPlaybackStateChanged(state: PlaybackState?) {
-			super.onPlaybackStateChanged(state)
-			playbackState.value = state ?: return
 		}
+	val isStopped: Boolean
+		get() = playbackState.value?.state == PlaybackState.STATE_STOPPED
 
-		override fun onMetadataChanged(metadata: MediaMetadata?) {
-			super.onMetadataChanged(metadata)
+	init {
+		if (mediaController.metadata != null && mediaController.playbackState != null) {
+
+			// Set the initial values for the media controller
+			playbackState.value = mediaController.playbackState!!
 
 			updatePlayingSong()
 		}
+	}
 
-		override fun onSessionDestroyed() {
-			super.onSessionDestroyed()
-			onDestroyed()
-		}
+	fun skipToNext() {
+		mediaController.transportControls.skipToNext()
+		scope.launch { statsDataStore.updateData { it.incrementTotalSongsSkipped() } }
+	}
 
-		private fun updatePlayingSong() {
-			mediaController.metadata?.let { metadata ->
-				val bitmap =
-					metadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART) ?: run {
-						Log.w("MediaCallback", "No album art found")
-						return
-					}
-				val filename =
-					metadata.getString(MediaMetadata.METADATA_KEY_TITLE) +
-						"_${metadata.getString(MediaMetadata.METADATA_KEY_ALBUM)}" +
-						"_${metadata.getString(MediaMetadata.METADATA_KEY_ARTIST)}" +
-						"_${bitmap.hashCode()}" +
-						"_cover.png"
-				val coverFilePath = saveBitmapToFile(context, bitmap, filename)
+	fun skipToPrevious() {
+		mediaController.transportControls.skipToPrevious()
+		scope.launch { statsDataStore.updateData { it.incrementTotalSongsSkipped() } }
+	}
 
-				Song(
-					id = bitmap.hashCode(),
-					title = metadata.getString(MediaMetadata.METADATA_KEY_TITLE) ?: return,
-					artist = metadata.getString(MediaMetadata.METADATA_KEY_ARTIST) ?: return,
-					album = metadata.getString(MediaMetadata.METADATA_KEY_ALBUM) ?: return,
-					duration = metadata.getLong(MediaMetadata.METADATA_KEY_DURATION),
-					coverFilePath = coverFilePath ?: return,
-				).run {
-					val duplicate =
-						playingSong != null &&
-							(addedTime - (playingSong?.addedTime ?: 0)) > 250
-
-					if (
-						this == playingSong ||
-						this.isPartial() ||
-						duplicate &&
-						debounceCount == 0
-					) {
-						debounceCount = 1
-						return
-					}
-
-					debounceCount = 0
-
-					scope.launch {
-						statsDataStore.updateData { settings ->
-							settings.addSongToHistory(this@run)
-						}
-					}
-
-					playingSong = this
-				}
-			}
-		}
-
-		fun onUnsupportedPlayersChanged(unsupportedPlayers: Set<String>) {
-			if (mediaController.packageName in unsupportedPlayers) {
-				onToggleSupportedPlayer(false)
-			} else {
-				onToggleSupportedPlayer(true)
-			}
-		}
-
-		fun fastForward() {
-			mediaController.transportControls.seekTo(mediaController.playbackState?.position?.plus(10000) ?: 0)
-		}
-
-		fun rewind() {
-			mediaController.transportControls.seekTo(mediaController.playbackState?.position?.minus(10000) ?: 0)
-		}
-
-		fun play() {
+	fun togglePlayPause() =
+		if (isPlaying) {
+			mediaController.transportControls.pause()
+		} else {
 			mediaController.transportControls.play()
 		}
 
-		fun pause() {
-			mediaController.transportControls.pause()
+	fun stop() = mediaController.transportControls.stop()
+
+	fun likeSong() {
+		val ACTION_LIKE = "custom-ADD_TO"
+		mediaController.sendCommand(
+			ACTION_LIKE,
+			null,
+			null,
+		)
+	}
+
+	override fun onPlaybackStateChanged(state: PlaybackState?) {
+		super.onPlaybackStateChanged(state)
+		playbackState.value = state ?: return
+	}
+
+	override fun onMetadataChanged(metadata: MediaMetadata?) {
+		super.onMetadataChanged(metadata)
+
+		updatePlayingSong()
+	}
+
+	override fun onSessionDestroyed() {
+		super.onSessionDestroyed()
+		onDestroyed()
+	}
+
+	private fun updatePlayingSong() {
+		mediaController.metadata?.let { metadata ->
+			val bitmap =
+				metadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART) ?: run {
+					Log.w("MediaCallback", "No album art found")
+					return
+				}
+			val filename =
+				metadata.getString(MediaMetadata.METADATA_KEY_TITLE) +
+					"_${metadata.getString(MediaMetadata.METADATA_KEY_ALBUM)}" +
+					"_${metadata.getString(MediaMetadata.METADATA_KEY_ARTIST)}" +
+					"_${bitmap.hashCode()}" +
+					"_cover.png"
+			val coverFilePath = saveBitmapToFile(context, bitmap, filename)
+
+			Song(
+				id = bitmap.hashCode(),
+				title = metadata.getString(MediaMetadata.METADATA_KEY_TITLE) ?: return,
+				artist = metadata.getString(MediaMetadata.METADATA_KEY_ARTIST) ?: return,
+				album = metadata.getString(MediaMetadata.METADATA_KEY_ALBUM) ?: return,
+				duration = metadata.getLong(MediaMetadata.METADATA_KEY_DURATION),
+				coverFilePath = coverFilePath ?: return,
+			).run {
+				val duplicate =
+					playingSong != null &&
+						(addedTime - (playingSong?.addedTime ?: 0)) > 250
+
+				if (
+					this == playingSong ||
+					this.isPartial() ||
+					duplicate &&
+					debounceCount == 0
+				) {
+					debounceCount = 1
+					return
+				}
+
+				debounceCount = 0
+
+				scope.launch {
+					statsDataStore.updateData { settings ->
+						settings.addSongToHistory(this@run)
+					}
+				}
+
+				playingSong = this
+			}
 		}
 	}
+
+	fun onUnsupportedPlayersChanged(unsupportedPlayers: Set<String>) {
+		if (mediaController.packageName in unsupportedPlayers) {
+			onToggleSupportedPlayer(false)
+		} else {
+			onToggleSupportedPlayer(true)
+		}
+	}
+
+	fun fastForward() {
+		mediaController.transportControls.seekTo(mediaController.playbackState?.position?.plus(10000) ?: 0)
+	}
+
+	fun rewind() {
+		mediaController.transportControls.seekTo(mediaController.playbackState?.position?.minus(10000) ?: 0)
+	}
+
+	fun play() {
+		mediaController.transportControls.play()
+	}
+
+	fun pause() {
+		mediaController.transportControls.pause()
+	}
+}

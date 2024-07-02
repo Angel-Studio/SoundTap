@@ -1,39 +1,37 @@
 [versions]
 accompanistDrawablepainter = "0.34.0"
 accompanistPermissions = "0.34.0"
-agp = "8.4.1"
+agp = "8.5.0"
 appcompat = "1.7.0"
 appcompatResources = "1.7.0"
 coilCompose = "2.6.0"
 datastorePreferences = "1.1.1"
-firebaseBom = "33.1.0"
-gradle = "8.4.1"
+firebaseBom = "33.1.1"
+gradle = "8.5.0"
 gson = "2.11.0"
 hiltAndroid = "2.51.1"
 hiltNavigationFragment = "1.2.0"
-kotlin = "1.9.24"
+kotlin = "2.0.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
 kotlinxCollectionsImmutable = "0.3.7"
-kotlinxSerializationJson = "1.6.3"
-lifecycleRuntimeKtx = "2.8.1"
+kotlinxSerializationJson = "1.7.0"
+lifecycleRuntimeKtx = "2.8.3"
 activityCompose = "1.9.0"
-composeBom = "2024.05.00"
+composeBom = "2024.06.00"
 core-splashscreen = "1.0.1"
 lottieCompose = "6.4.1"
-material-icons-extended = "1.6.7"
-navigationCompose = "2.8.0-beta02"
-uiCompose = "1.7.0-beta02"
-animationCompose = "1.7.0-beta02"
-foundationCompose = "1.7.0-beta02"
+material-icons-extended = "1.6.8"
+navigationCompose = "2.8.0-beta04"
+uiCompose = "1.7.0-beta04"
 paletteKtx = "1.0.0"
-ksp = "1.9.24-1.0.20"
+ksp = "2.0.0-1.0.22"
 google-services = "4.4.2"
-firebase-crashlytics = "3.0.1"
+firebase-crashlytics = "3.0.2"
 firebase-perfs = "1.4.2"
-lifecycle = "2.8.1"
+lifecycle = "2.8.3"
 ktlint = "12.1.1"
 
 [libraries]
@@ -46,8 +44,8 @@ androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-com
 androidx-hilt-navigation-fragment = { module = "androidx.hilt:hilt-navigation-fragment", version.ref = "hiltNavigationFragment" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "uiCompose" }
-androidx-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "animationCompose" }
-androidx-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundationCompose" }
+androidx-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "uiCompose" }
+androidx-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "uiCompose" }
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "material-icons-extended" }
@@ -91,3 +89,4 @@ google-services = { id = "com.google.gms.google-services", version.ref = "google
 firebase-perf = { id = "com.google.firebase.firebase-perf", version.ref = "firebase-perfs" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ci-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

@@ -43,7 +43,6 @@ import fr.angel.soundtap.service.media.MediaReceiver
 import kotlin.math.abs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -80,7 +79,7 @@ data class AccessibilityServiceState(
 			(
 				System.currentTimeMillis() - volumeUpLastPressedTime >= doublePressThreshold ||
 					System.currentTimeMillis() - volumeDownLastPressedTime >= doublePressThreshold
-			)
+				)
 }
 
 data class TimedHardwareButtonsEvent(
@@ -130,7 +129,6 @@ class SoundTapAccessibilityService : AccessibilityService() {
 		}
 	}
 
-	@OptIn(ExperimentalCoroutinesApi::class)
 	override fun onKeyEvent(event: KeyEvent?): Boolean {
 		// Skip the event if the service is not activated or that no media receiver is registered
 		if (event == null ||
@@ -173,10 +171,10 @@ class SoundTapAccessibilityService : AccessibilityService() {
 					KeyEvent.KEYCODE_VOLUME_UP -> {
 						keySequenceTimeout(
 							keyPressed =
-								TimedHardwareButtonsEvent(
-									event = HardwareButtonsEvent.VOLUME_UP,
-									creationTime = System.currentTimeMillis(),
-								),
+							TimedHardwareButtonsEvent(
+								event = HardwareButtonsEvent.VOLUME_UP,
+								creationTime = System.currentTimeMillis(),
+							),
 						)
 						_uiState.value =
 							_uiState.value.copy(
@@ -187,10 +185,10 @@ class SoundTapAccessibilityService : AccessibilityService() {
 					KeyEvent.KEYCODE_VOLUME_DOWN -> {
 						keySequenceTimeout(
 							keyPressed =
-								TimedHardwareButtonsEvent(
-									event = HardwareButtonsEvent.VOLUME_DOWN,
-									creationTime = System.currentTimeMillis(),
-								),
+							TimedHardwareButtonsEvent(
+								event = HardwareButtonsEvent.VOLUME_DOWN,
+								creationTime = System.currentTimeMillis(),
+							),
 						)
 						_uiState.value =
 							_uiState.value.copy(volumeDownLastPressedTime = System.currentTimeMillis())
@@ -414,14 +412,14 @@ class SoundTapAccessibilityService : AccessibilityService() {
 
 	private fun executeAction(action: MediaAction) {
 		when (action) {
-			MediaAction.PLAY_PAUSE -> MediaReceiver.firstCallback?.togglePlayPause()
-			MediaAction.NEXT -> MediaReceiver.firstCallback?.skipToNext()
-			MediaAction.PREVIOUS -> MediaReceiver.firstCallback?.skipToPrevious()
-			MediaAction.STOP -> MediaReceiver.firstCallback?.stop()
-			MediaAction.FAST_FORWARD -> MediaReceiver.firstCallback?.fastForward()
-			MediaAction.REWIND -> MediaReceiver.firstCallback?.rewind()
-			MediaAction.PLAY -> MediaReceiver.firstCallback?.play()
-			MediaAction.PAUSE -> MediaReceiver.firstCallback?.pause()
+			MediaAction.PLAY_PAUSE -> MediaReceiver.getBetterCallback(preferredMediaPlayer)?.togglePlayPause()
+			MediaAction.NEXT -> MediaReceiver.getBetterCallback(preferredMediaPlayer)?.skipToNext()
+			MediaAction.PREVIOUS -> MediaReceiver.getBetterCallback(preferredMediaPlayer)?.skipToPrevious()
+			MediaAction.STOP -> MediaReceiver.getBetterCallback(preferredMediaPlayer)?.stop()
+			MediaAction.FAST_FORWARD -> MediaReceiver.getBetterCallback(preferredMediaPlayer)?.fastForward()
+			MediaAction.REWIND -> MediaReceiver.getBetterCallback(preferredMediaPlayer)?.rewind()
+			MediaAction.PLAY -> MediaReceiver.getBetterCallback(preferredMediaPlayer)?.play()
+			MediaAction.PAUSE -> MediaReceiver.getBetterCallback(preferredMediaPlayer)?.pause()
 			MediaAction.NONE -> { // Do Nothing
 			}
 		}

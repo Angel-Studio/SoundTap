@@ -1,7 +1,26 @@
+/*
+ *
+ *  * Copyright (c) 2024 Angel Studio
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *     http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *
+ */
+
 import com.google.gms.googleservices.GoogleServicesTask
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
+	alias(libs.plugins.compose.compiler) apply false
 	alias(libs.plugins.kotlin.ksp) apply false
 	alias(libs.plugins.android.application) apply false
 	alias(libs.plugins.google.services) apply false
@@ -11,15 +30,12 @@ plugins {
 	alias(libs.plugins.firebase.crashlytics) apply false
 
 	// CI plugins
-	alias(libs.plugins.ci.ktlint)
+	//alias(libs.plugins.ci.ktlint)
 }
 
 val ktlintVersion: String = "1.2.1"
 
 subprojects {
-	apply {
-		plugin("org.jlleitschuh.gradle.ktlint")
-	}
 
 	// https://github.com/firebase/firebase-android-sdk/issues/5962#:~:text=project.afterEvaluate%20%7B%0A%20%20%20%20tasks.withType%3CGoogleServicesTask%3E%20%7B%0A%20%20%20%20%20%20%20%20gmpAppId.set(project.layout.buildDirectory.file(%22%24name%2DgmpAppId.txt%22))%0A%20%20%20%20%7D%0A%7D
 	project.afterEvaluate {
@@ -34,31 +50,7 @@ subprojects {
 		}
 	}
 
-	ktlint {
-		debug.set(false)
-		version.set(ktlintVersion)
-		verbose.set(true)
-		android.set(false)
-		outputToConsole.set(true)
-		ignoreFailures.set(false)
-		enableExperimentalRules.set(true)
-		filter {
-			exclude("**/generated/**")
-			include("**/kotlin/**")
-		}
-	}
-
 	tasks {
-		withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-			kotlinOptions {
-				// Treat all Kotlin warnings as errors (disabled by default)
-				// allWarningsAsErrors = project.hasProperty("warningsAsErrors") ? project.warningsAsErrors : false
-				// Opt-in to experimental compose APIs
-				freeCompilerArgs = freeCompilerArgs + listOf("-opt-in=kotlin.RequiresOptIn")
-
-				jvmTarget = "17"
-			}
-		}
 
 		withType<Test>().configureEach {
 			jvmArgs =

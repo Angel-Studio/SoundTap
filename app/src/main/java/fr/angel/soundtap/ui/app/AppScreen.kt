@@ -17,6 +17,7 @@
  */
 package fr.angel.soundtap.ui.app
 
+import android.os.Build
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -24,15 +25,14 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Settings
@@ -40,6 +40,7 @@ import androidx.compose.material.icons.filled.Support
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material.icons.outlined.NotificationImportant
 import androidx.compose.material.icons.outlined.SettingsAccessibility
+import androidx.compose.material.icons.rounded.WarningAmber
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -95,122 +96,145 @@ fun SharedTransitionScope.App(
 		}
 	}
 
-	Column(
-		modifier =
-			modifier
-				.fillMaxWidth()
-				.verticalScroll(rememberScrollState())
-				.padding(top = innerPadding.calculateTopPadding()),
+	LazyColumn(
+		modifier = modifier.fillMaxWidth(),
 		verticalArrangement = Arrangement.spacedBy(8.dp),
+		contentPadding = innerPadding,
 	) {
-		Text(
-			modifier =
+		item {
+			Text(
+				modifier =
 				Modifier
-					.align(Alignment.CenterHorizontally)
+					.fillMaxWidth()
+					.wrapContentWidth(align = Alignment.CenterHorizontally)
 					.padding(horizontal = 8.dp),
-			text = stringResource(id = R.string.app_take_control),
-			style = MaterialTheme.typography.labelLarge,
-			fontWeight = FontWeight.SemiBold,
-			textAlign = TextAlign.Center,
-		)
-		Spacer(modifier = Modifier.height(8.dp))
+				text = stringResource(id = R.string.app_take_control),
+				style = MaterialTheme.typography.labelLarge,
+				fontWeight = FontWeight.SemiBold,
+				textAlign = TextAlign.Center,
+			)
+			Spacer(modifier = Modifier.height(8.dp))
+		}
 
-		when {
-			uiState.hasNotificationListenerPermission.not() -> {
-				InfoCard(
-					modifier =
+		item {
+			when {
+				uiState.hasNotificationListenerPermission.not() -> {
+					InfoCard(
+						modifier =
 						Modifier
 							.fillMaxWidth()
 							.padding(horizontal = 8.dp),
-					cardType = InfoCardType.Notification,
-					icon = Icons.Outlined.NotificationImportant,
-					title = stringResource(id = R.string.app_notification_listener_permission),
-					body = stringResource(id = R.string.app_notification_listener_permission_description),
-					onCardClick = {
-						GlobalHelper.openNotificationListenerSettings(context = context)
-					},
-				)
-			}
+						cardType = InfoCardType.Notification,
+						icon = Icons.Outlined.NotificationImportant,
+						title = stringResource(id = R.string.app_notification_listener_permission),
+						body = stringResource(id = R.string.app_notification_listener_permission_description),
+						onCardClick = {
+							GlobalHelper.openNotificationListenerSettings(context = context)
+						},
+					)
+				}
 
-			accessibilityServiceState.isRunning.not() -> {
-				InfoCard(
-					modifier =
+				accessibilityServiceState.isRunning.not() -> {
+					InfoCard(
+						modifier =
 						Modifier
 							.fillMaxWidth()
 							.padding(horizontal = 8.dp),
-					cardType = InfoCardType.Accessibility,
-					icon = Icons.Outlined.SettingsAccessibility,
-					title = stringResource(id = R.string.app_accessibility_service),
-					body = stringResource(id = R.string.app_accessibility_service_description),
-					onCardClick = {
-						GlobalHelper.openAccessibilitySettings(context = context)
-					},
-				)
-			}
+						cardType = InfoCardType.Accessibility,
+						icon = Icons.Outlined.SettingsAccessibility,
+						title = stringResource(id = R.string.app_accessibility_service),
+						body = stringResource(id = R.string.app_accessibility_service_description),
+						onCardClick = {
+							GlobalHelper.openAccessibilitySettings(context = context)
+						},
+					)
+				}
 
-			else -> {
-				MediaCards(
-					modifier =
+				else -> {
+					MediaCards(
+						modifier =
 						Modifier
 							.fillMaxWidth()
 							.height(200.dp),
-					mainViewModel = mainViewModel,
+						mainViewModel = mainViewModel,
+					)
+				}
+			}
+		}
+
+		// if build > android 12
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+			item {
+				InfoCard(
+					modifier =
+					Modifier
+						.fillMaxWidth()
+						.padding(horizontal = 8.dp),
+					cardType = InfoCardType.Warnings,
+					icon = Icons.Rounded.WarningAmber,
+					title = stringResource(id = R.string.always_on_display_warning_title),
+					body = stringResource(id = R.string.always_on_display_warning_description),
 				)
 			}
 		}
 
-		Row(
-			modifier =
+		item {
+			Row(
+				modifier =
 				Modifier
 					.fillMaxWidth()
 					.padding(horizontal = 8.dp),
-			horizontalArrangement = Arrangement.spacedBy(8.dp),
-		) {
-			GridCard(
-				modifier = Modifier.weight(1f),
-				animationId = "Customize",
-				icon = Icons.Default.Tune,
-				label = stringResource(id = R.string.app_customize),
-				animatedVisibilityScope = animatedVisibilityScope,
-				onClick = navigateToCustomization,
-			)
-			GridCard(
-				modifier = Modifier.weight(1f),
-				animationId = "Settings",
-				icon = Icons.Default.Settings,
-				label = stringResource(id = R.string.app_settings),
-				animatedVisibilityScope = animatedVisibilityScope,
-				onClick = navigateToSettings,
-			)
+				horizontalArrangement = Arrangement.spacedBy(8.dp),
+			) {
+				GridCard(
+					modifier = Modifier.weight(1f),
+					animationId = "Customize",
+					icon = Icons.Default.Tune,
+					label = stringResource(id = R.string.app_customize),
+					animatedVisibilityScope = animatedVisibilityScope,
+					onClick = navigateToCustomization,
+				)
+				GridCard(
+					modifier = Modifier.weight(1f),
+					animationId = "Settings",
+					icon = Icons.Default.Settings,
+					label = stringResource(id = R.string.app_settings),
+					animatedVisibilityScope = animatedVisibilityScope,
+					onClick = navigateToSettings,
+				)
+			}
 		}
 
-		Row(
-			modifier =
+		item {
+			Row(
+				modifier =
 				Modifier
 					.fillMaxWidth()
 					.padding(horizontal = 8.dp),
-			horizontalArrangement = Arrangement.spacedBy(8.dp),
-		) {
-			GridCard(
-				modifier = Modifier.weight(1f),
-				animationId = "History",
-				icon = Icons.Default.History,
-				label = stringResource(id = R.string.app_history),
-				animatedVisibilityScope = animatedVisibilityScope,
-				onClick = navigateToHistory,
-			)
-			GridCard(
-				modifier = Modifier.weight(1f),
-				animationId = "Support",
-				icon = Icons.Default.Support,
-				label = stringResource(id = R.string.app_support),
-				animatedVisibilityScope = animatedVisibilityScope,
-				onClick = navigateToSupport,
-			)
+				horizontalArrangement = Arrangement.spacedBy(8.dp),
+			) {
+				GridCard(
+					modifier = Modifier.weight(1f),
+					animationId = "History",
+					icon = Icons.Default.History,
+					label = stringResource(id = R.string.app_history),
+					animatedVisibilityScope = animatedVisibilityScope,
+					onClick = navigateToHistory,
+				)
+				GridCard(
+					modifier = Modifier.weight(1f),
+					animationId = "Support",
+					icon = Icons.Default.Support,
+					label = stringResource(id = R.string.app_support),
+					animatedVisibilityScope = animatedVisibilityScope,
+					onClick = navigateToSupport,
+				)
+			}
 		}
 
-		Row(
-			modifier =
+		item {
+			Row(
+				modifier =
 				Modifier
 					.fillMaxWidth()
 					.padding(horizontal = 8.dp)
@@ -218,25 +242,25 @@ fun SharedTransitionScope.App(
 					.background(MaterialTheme.colorScheme.surfaceVariant)
 					.clickable { }
 					.padding(vertical = 16.dp, horizontal = 16.dp),
-			horizontalArrangement = Arrangement.spacedBy(8.dp),
-			verticalAlignment = Alignment.CenterVertically,
-		) {
-			Text(
-				modifier =
+				horizontalArrangement = Arrangement.spacedBy(8.dp),
+				verticalAlignment = Alignment.CenterVertically,
+			) {
+				Text(
+					modifier =
 					Modifier
 						.padding(start = 8.dp, end = 16.dp)
 						.weight(1f),
-				text =
+					text =
 					if (SleepTimerService.isRunning) {
 						stringResource(id = R.string.app_music_will_stop, GlobalHelper.formatTime(SleepTimerService.remainingTime))
 					} else {
 						stringResource(id = R.string.app_sleep_timer)
 					},
-				style = MaterialTheme.typography.titleMedium,
-			)
-			Button(
-				shape = MaterialTheme.shapes.large,
-				colors =
+					style = MaterialTheme.typography.titleMedium,
+				)
+				Button(
+					shape = MaterialTheme.shapes.large,
+					colors =
 					if (SleepTimerService.isRunning) {
 						ButtonDefaults.buttonColors(
 							containerColor = MaterialTheme.colorScheme.error,
@@ -245,34 +269,32 @@ fun SharedTransitionScope.App(
 					} else {
 						ButtonDefaults.buttonColors()
 					},
-				onClick = {
-					if (SleepTimerService.isRunning) {
-						SleepTimerService.cancelTimer(context)
-					} else {
-						mainViewModel.showBottomSheet(
-							bottomSheetState =
+					onClick = {
+						if (SleepTimerService.isRunning) {
+							SleepTimerService.cancelTimer(context)
+						} else {
+							mainViewModel.showBottomSheet(
+								bottomSheetState =
 								BottomSheetState.SetTimer(onTimerSet = { duration -> mainViewModel.setSleepTimer(duration) }),
-						)
-					}
-				},
-			) {
-				Text(
-					modifier = Modifier.animateContentSize(),
-					text =
+							)
+						}
+					},
+				) {
+					Text(
+						modifier = Modifier.animateContentSize(),
+						text =
 						when (SleepTimerService.isRunning) {
 							true -> stringResource(id = R.string.app_cancel_timer)
 							false -> stringResource(id = R.string.app_set_timer)
 						},
-					textAlign = TextAlign.Center,
-				)
+						textAlign = TextAlign.Center,
+					)
+				}
 			}
 		}
 
-		Spacer(
-			modifier =
-				Modifier
-					.height(8.dp)
-					.padding(bottom = innerPadding.calculateBottomPadding()),
-		)
+		item {
+			Spacer(modifier = Modifier.height(8.dp))
+		}
 	}
 }

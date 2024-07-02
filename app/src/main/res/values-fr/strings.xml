@@ -127,7 +127,7 @@
 	<string name="customization_long_press_duration">Durée de pression longue - %1$s ms</string>
 	<string name="customization_long_press_duration_subtitle">Définir la durée pour une action de pression longue.</string>
 	<string name="customization_auto_play">Lecture automatique</string>
-	<string name="customization_auto_play_subtitle">Reprendre automatiquement la lecture de votre lecteur multimédia préféré lorsque vous connectez vos écouteurs.</string>
+	<string name="customization_auto_play_subtitle">Tente de reprendre automatiquement la lecture de votre lecteur multimédia préféré lorsque vous connectez vos écouteurs. (Peut ne pas fonctionner avec tous les lecteurs multimédias)</string>
 	<string name="customization_set_preferred_media_player">Définir le lecteur multimédia préféré</string>
 	<string name="customization_custom_actions">Actions personnalisées</string>
 	<string name="customization_add_custom_action">Ajouter une action personnalisée</string>
@@ -157,5 +157,7 @@
 	<!-- Sleep Timer -->
 	<string name="app_sleep_timer_message">La musique s\'arrêtera lorsque le minuteur se terminera.</string>
 	<string name="app_sleep_timer_add_time_15_min">Ajouter 15 minutes</string>
+	<string name="always_on_display_warning_title">Problèmes avec l\'écran éteint</string>
+	<string name="always_on_display_warning_description">À partir d\'Android 12, l\'option Always On Display doit être activée pour que l\'application fonctionne lorsque l\'écran est éteint, en raison d\'un bug dans Android. J\'espère que ce problème sera bientôt résolu !</string>
 
 </resources>
