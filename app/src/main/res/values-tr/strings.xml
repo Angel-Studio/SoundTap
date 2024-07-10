@@ -1,0 +1,148 @@
+<resources>
+
+    <string name="app_name" translatable="false">SoundTap</string>
+    <string name="accessibility_service_description">SoundTap, ses düğmelerinin basılma olaylarını almak için erişilebilirlik hizmetini kullanır.\n\nSes düğmeleri olayları dışında başka hiçbir veri toplanmaz.</string>
+
+    <!-- General -->
+    <string name="previous">Önceki</string>
+    <string name="start">Başlat</string>
+    <string name="finish">Bitir</string>
+    <string name="next">Sonraki</string>
+    <string name="decline">Reddet</string>
+    <string name="agree_continue">Kabul Et ve Devam Et</string>
+    <string name="change">Değiştir</string>
+    <string name="sequence">Sıra</string>
+    <string name="edit">Düzenle</string>
+    <string name="remove">Kaldır</string>
+    <string name="cancel">İptal</string>
+    <string name="done">Tamam</string>
+    <string name="save">Kaydet</string>
+    <string name="sleep">UYKU</string>
+    <string name="awake">UYANIK</string>
+    <string name="start_player">Medya oynatıcısını başlat</string>
+    <string name="pause">Duraklat</string>
+    <string name="stop">Durdur</string>
+    <string name="permission_required">İzin Gerekiyor</string>
+
+    <!-- On-Boarding -->
+    <string name="onboarding_welcome_message">SoundTap\'e Hoş Geldiniz</string>
+    <string name="onboarding_welcome_description">SoundTap, müzik çalma kontrolünü zahmetsizce yapmanız için en iyi arkadaşınızdır.\n\nSezgisel ses düğmesi kontrolleri, özelleştirilebilir ayarlar ve favori medya oynatıcılarınızla sorunsuz entegrasyon ile SoundTap, müziğinizi yönetmeyi çok kolaylaştırır.\n\nBu yolculukta bize katılın ve müzik dinleme deneyiminizi geliştirin!</string>
+    <string name="onboarding_accept_privacy_policy">Gizlilik politikasını okudum ve kabul ediyorum </string>
+    <string name="onboarding_privacy_policy_link">gizlilik politikası</string>
+    <string name="onboarding_and"> ve </string>
+    <string name="onboarding_terms_of_service_link">hizmet şartları</string>
+    <string name="onboarding_notification_access">Medya Kontrollerine Erişim</string>
+    <string name="onboarding_notification_access_description">SoundTap, medya oynatmayı algılamak ve müziğinizi kontrol etmek için bildirimlerinize erişim gerektirir. Uygulama herhangi bir kişisel veri veya bilgi toplamaz.\n\nBu izin, SoundTap\'in doğru çalışması için gereklidir. Devam etmek için Bildirim erişim iznini etkinleştirin.\n\nİzni etkinleştirmek için aşağıdaki düğmeye dokunun ve listeden SoundTap\'i etkinleştirin.</string>
+    <string name="onboarding_open_notification_settings">Bildirim Erişimi Ayarlarını Aç</string>
+    <string name="onboarding_background_optimization">Pil Optimizasyonu</string>
+    <string name="onboarding_background_optimization_description">SoundTap, müzik çalma kontrollerini sorunsuz bir şekilde sağlamak için arka planda çalışır. SoundTap\'in güvenilir bir şekilde çalışmasını sağlamak için uygulama için pil optimizasyonunu devre dışı bırakın.\n\nBu, sistemin SoundTap\'i arka planda kapatmasını önler ve müzik çalma kontrolünü her zaman sağlayabilmenizi sağlar.\n\nPil optimizasyonunu devre dışı bırakmak için aşağıdaki düğmeye dokunun ve SoundTap için 'Optimizasyon yapma\'yı seçin.</string>
+    <string name="onboarding_open_battery_optimization">Pil Optimizasyonunu Devre Dışı Bırak</string>
+    <string name="onboarding_notifications">Bildirimlere Erişim</string>
+    <string name="onboarding_notifications_description">SoundTap, uyku zamanlayıcısı gibi çeşitli amaçlar için bildirimler gönderir.\n\nSoundTap\'in doğru çalışmasını sağlamak için uygulamanın bildirimlerinize erişimine izin verin.\n\nBildirim erişim iznini etkinleştirmek için aşağıdaki düğmeye dokunun ve listeden SoundTap\'i etkinleştirin.\n\nBu izni daha önce reddettiyseniz, uygulama ayarlarından etkinleştirebilirsiniz.</string>
+    <string name="onboarding_accessibility_service">Erişilebilirlik Hizmeti</string>
+    <string name="onboarding_accessibility_service_description">SoundTap, ses düğmesi basmalarını algılamak ve müzik çalma kontrolünü sağlamak için Erişilebilirlik Hizmeti iznine ihtiyaç duyar.\n\nErişilebilirlik Hizmeti yalnızca SoundTap\'in ses düğmesi basmalarını algılamasına izin verir ve başka hiçbir kişisel veri veya bilgi toplamaz. Ekranı okumaz.\n\nErişilebilirlik Hizmetini etkinleştirmek için aşağıdaki düğmeye dokunun ve listeden SoundTap\'i etkinleştirin.</string>
+    <string name="onboarding_open_accessibility_settings">Erişilebilirlik Ayarlarını Aç</string>
+    <string name="onboarding_done">Her Şey Hazır!</string>
+    <string name="onboarding_done_description">Tebrikler! SoundTap\'i kullanmaya başlamak için her şey hazır.\n\nBaşlamak için, müzik çalmayı açmak veya kapatmak için ses açma ve kısma düğmelerine aynı anda basın.\n\nHerhangi bir sorunuz veya yardıma ihtiyacınız olursa, bizimle iletişime geçmekten çekinmeyin.</string>
+    <string name="onboarding_done_bottom_content">İyi dinlemeler!</string>
+    <string name="onboarding_accessibility_service_usage">Erişilebilirlik Hizmeti Kullanımı</string>
+    <string name="onboarding_personal_sensitive_data">Kişisel ve Hassas Kullanıcı Verileri:</string>
+    <string name="onboarding_personal_sensitive_data_description">SoundTap, yalnızca ses düğmesi tıklama olaylarını kaydetmek için erişilebilirlik hizmetini kullanır. Bu, telefonunuzun kilidini açmadan veya uygulamalar arasında geçiş yapmadan müzik çalmayı kontrol etmenizi sağlar. Kişisel veya hassas kullanıcı verileri toplanmaz, saklanmaz veya paylaşılmaz.</string>
+    <string name="onboarding_core_functionality">Ana Fonksiyon:</string>
+    <string name="onboarding_core_functionality_description">SoundTap\'in doğru çalışabilmesi için ses düğmesi basmalarını algılamak için erişilebilirlik izni gereklidir. Bu izin, uygulamanın ana işlevi için gereklidir ve müzik çalmayı sorunsuz bir şekilde kontrol etmenizi sağlar. Bu izni vererek, yalnızca bu amaçla kullanılacağını kabul edersiniz.</string>
+    <string name="onboarding_data_security_privacy">Veri Güvenliği ve Gizliliği:</string>
+    <string name="onboarding_data_security_privacy_description">SoundTap, erişilebilirlik hizmetini yalnızca ses düğmesi olaylarını kaydetmek için kullanır ve herhangi bir kişisel veya hassas veriye erişmez, toplamaz veya iletmez. Gizliliğiniz en büyük önceliğimizdir.\n\nSoundTap, erişilebilirlik hizmeti aracılığıyla hiçbir kişisel veri veya bilgi toplamaz veya paylaşmaz. Tüm işlemler cihazınızda yerel olarak gerçekleştirilir, böylece verileriniz güvende ve özel kalır.\n\nDaha fazla bilgi için lütfen Gizlilik Politikamıza bakın.</string>
+    <string name="onboarding_accessibility_service_usage_consent">SoundTap için erişilebilirlik hizmetini etkinleştirerek, bu hizmetin yalnızca medya çalmayı kontrol etmek için ses düğmesi olaylarını algılamak amacıyla kullanılmasına izin vermiş olursunuz. Bu izni herhangi bir zamanda cihazınızın erişilebilirlik ayarlarından devre dışı bırakabilirsiniz.</string>
+
+    <!-- App -->
+    <string name="app_take_control">Müziğinizin Kontrolünü Ele Alın</string>
+    <string name="app_notification_listener_permission">Bildirim Dinleyici İzni</string>
+    <string name="app_notification_listener_permission_description">SoundTap, medya bilgilerini almak ve müziğinizi kontrol etmek için Bildirim Dinleyici iznine ihtiyaç duyar. Ekranın altındaki düğmeye basarak bunu etkinleştirin.</string>
+    <string name="app_accessibility_service">Erişilebilirlik Hizmeti</string>
+    <string name="app_accessibility_service_description">SoundTap, ses tuşu olaylarını almak için Erişilebilirlik Hizmetine ihtiyaç duyar. Ekranın altındaki düğmeye basarak bunu etkinleştirin.</string>
+    <string name="app_customize">Özelleştir</string>
+    <string name="app_settings">Ayarlar</string>
+    <string name="app_history">Geçmiş</string>
+    <string name="app_support">Destek</string>
+    <string name="app_sleep_timer">Uyku Zamanlayıcısı</string>
+    <string name="app_music_will_stop">Müzik %1$s içinde duracak</string>
+    <string name="app_cancel_timer">Zamanlayıcıyı İptal Et</string>
+    <string name="app_set_timer">Zamanlayıcıyı Ayarla</string>
+
+    <!-- History -->
+    <string name="history_title">Geçmiş</string>
+    <string name="history_no_history">Geçmiş yok</string>
+    <string name="history_your_history_and_stats_will_be_displayed_here">Geçmişiniz ve istatistikleriniz burada görüntülenecek</string>
+    <string name="history_total_songs_played">Toplam çalınan şarkılar</string>
+    <string name="history_total_songs_skipped">Toplam atlanan şarkılar</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Ayarlar</string>
+    <string name="settings_add_quick_tile">Hızlı döşeme ekle</string>
+    <string name="settings_add_quick_tile_subtitle">SoundTap\'e hızlı erişim sağlamak için hızlı ayarlar paneline bir döşeme ekleyin</string>
+    <string name="settings_notifications">Bildirim ayarları</string>
+    <string name="settings_notifications_subtitle">SoundTap\'in göstermesi gereken bildirimleri yapılandırın</string>
+    <string name="settings_supported_players">Desteklenen oynatıcılar</string>
+    <string name="settings_supported_players_subtitle">SoundTap ile kontrol etmek istediğiniz oynatıcıları seçin</string>
+    <string name="settings_preferred_player">Tercih edilen oynatıcı</string>
+    <string name="settings_preferred_player_subtitle">SoundTap\'in varsayılan olarak kontrol etmesi gereken tercih edilen oynatıcıyı seçin</string>
+
+    <!-- Support -->
+    <string name="support_title">Destek</string>
+    <string name="support_report_bug_feature">Hata Bildir veya Özellik Öner</string>
+    <string name="support_report_bug_feature_description">Uygulamayla ilgili bir hatayı bildirin veya görmek istediğiniz bir özelliği önerin</string>
+    <string name="support_view_github">GitHub\'da Görüntüle</string>
+    <string name="support_view_github_description">Kaynak kodunu görüntüleyin ve projeye katkıda bulunun</string>
+    <string name="support_discord_server">Discord Sunucusu</string>
+    <string name="support_discord_server_description">Topluluğa katılın ve destek alın</string>
+    <string name="support_privacy_policy">Gizlilik Politikası</string>
+    <string name="support_privacy_policy_description">Uygulamanın gizlilik politikasını okuyun</string>
+    <string name="support_terms_of_service">Hizmet Şartları</string>
+    <string name="support_terms_of_service_description">Uygulamanın hizmet şartlarını okuyun</string>
+
+    <!-- Customization -->
+    <string name="customization_title">Özelleştirme</string>
+    <string name="customization_customize_controls">Kontrolleri özelleştir</string>
+    <string name="customization_customize_controls_subtitle">Ses düğmelerinin davranışını istediğiniz gibi değiştirin</string>
+    <string name="customization_working_mode">Çalışma modu</string>
+    <string name="customization_working_mode_subtitle">Atlama işleminin ne zaman kullanılabilir olacağını seçin</string>
+    <string name="customization_haptic_feedback">Haptic geri bildirim</string>
+    <string name="customization_haptic_feedback_subtitle">Bir işlem yapıldığında titreşim</string>
+    <string name="customization_long_press_duration">Uzun basma süresi - %1$s ms</string>
+    <string name="customization_long_press_duration_subtitle">Uzun basma işlemi için süreyi ayarlayın</string>
+    <string name="customization_auto_play">Otomatik oynatma</string>
+    <string name="customization_auto_play_subtitle">Kulaklığınızı bağladığınızda seçilen favori medya oynatıcınızın müziğini otomatik olarak devam ettirmeye çalışır. (Her medya oynatıcı ile çalışmayabilir)</string>
+    <string name="customization_set_preferred_media_player">Tercih edilen medya oynatıcısını ayarlayın</string>
+    <string name="customization_custom_actions">Özel eylemler</string>
+    <string name="customization_add_custom_action">Özel eylem ekle</string>
+    <string name="customization_auto_play_bluetooth_subtitle">SoundTap\'in bir cihaz bağlandığında algılayabilmesi için yakındaki cihazlara izin verilmesi gerekmektedir</string>
+
+    <!-- Bottom Sheet -->
+    <string name="custom_control_media_action_sequence_description">Eylemi tetiklemek için bir donanım düğmesi olayları dizisi oluşturun</string>
+    <string name="custom_control_media_action_sequence_current">Mevcut dizi:</string>
+    <string name="custom_control_media_action_sequence_empty">Dizide olay yok</string>
+
+    <!-- Auto Play -->
+    <string name="auto_play_mode_on_headset_connected">Kulaklık bağlandığında</string>
+    <string name="auto_play_mode_on_double_volume_long_press">Çift ses düğmesine uzun basıldığında</string>
+    <string name="auto_play_mode_both">Her ikisi</string>
+
+    <!-- Working Mode -->
+    <string name="working_mode_screen_on_off">Ekran AÇIK ve KAPALI</string>
+    <string name="working_mode_screen_on">Ekran AÇIK</string>
+    <string name="working_mode_screen_off">Ekran KAPALI</string>
+
+    <!-- Haptic Feedback -->
+    <string name="haptic_feedback_none">Yok</string>
+    <string name="haptic_feedback_light">Hafif</string>
+    <string name="haptic_feedback_medium">Orta</string>
+    <string name="haptic_feedback_strong">Güçlü</string>
+
+    <!-- Sleep Timer -->
+    <string name="app_sleep_timer_message">Müzik, zamanlayıcı sona erdiğinde duracak.</string>
+    <string name="app_sleep_timer_add_time_15_min">15 dakika ekle</string>
+    <string name="always_on_display_warning_title">Ekran Kapalı sorunları</string>
+    <string name="always_on_display_warning_description">Android 12\'den itibaren, ekranda bir hata nedeniyle uygulamanın ekran kapandığında çalışabilmesi için her zaman açık ekranın etkinleştirilmesi gerekmektedir. Umarım bunu yakında düzeltirler!</string>
+
+</resources>
+
